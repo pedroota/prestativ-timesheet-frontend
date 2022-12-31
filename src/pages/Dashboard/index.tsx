@@ -1,5 +1,5 @@
-import React from "react";
+import { SidebarAndAppBar } from "components/SidebarAndAppBar";
 
 export function Dashboard() {
-  return <h1>Essa é a página de Dashboard</h1>;
+  return <SidebarAndAppBar />;
 }
