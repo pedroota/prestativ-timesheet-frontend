@@ -1,7 +1,8 @@
-import React from 'react';
+import React from "react";
+import { Router } from "./routes/router";
 
 function App() {
-	return <h1>Oi</h1>;
+  return <Router />;
 }
 
 export default App;
