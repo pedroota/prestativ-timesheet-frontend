@@ -2,6 +2,7 @@ import { Router } from "./routes/router";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { AuthProvider } from "context/AuthContext";
+import "./sass/main.scss";
 
 function App() {
   const theme = createTheme();
