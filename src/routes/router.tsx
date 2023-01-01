@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 // Pages imports
 import { LoginPage } from "pages/LoginPage";
 import { Dashboard } from "pages/Dashboard";
+import { Timesheet } from "pages/Dashboard/pages/Timesheet";
 
 export function Router() {
   return (
@@ -10,7 +11,7 @@ export function Router() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/dashboard" element={<Dashboard />}>
-          <Route path="timesheet" element={<h1>Timesheet</h1>} />
+          <Route path="timesheet" element={<Timesheet />} />
           <Route path="register-client" element={<h1>Cadastrar Cliente</h1>} />
           <Route path="register-project" element={<h1>Cadastrar Projeto</h1>} />
           <Route

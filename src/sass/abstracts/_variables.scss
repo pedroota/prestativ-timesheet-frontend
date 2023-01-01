@@ -1,0 +1,22 @@
+// Breakpoints
+$breakpoints: (
+  "sm": 375px,
+  "smx": 475px,
+  "md": 768px,
+  "lg": 1220px,
+  "xl": 1440px,
+);
+
+// Inserting weight variables
+$fontWeight: (
+  "thin": 300,
+  "regular": 400,
+  "medium": 500,
+  "semibold": 600,
+  "bold": 700,
+  "extrabold": 800,
+);
+
+$colors: (
+  "primary": #F26522,
+);

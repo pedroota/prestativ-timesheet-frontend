@@ -28,7 +28,7 @@ import Logo from "assets/logo.png";
 import { Typography } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 
-const drawerWidth = 240;
+const drawerWidth = 250;
 
 type SidebarProps = {
   children: JSX.Element;
