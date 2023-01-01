@@ -54,7 +54,7 @@ export function RegisterUser() {
       <Select
         labelId="select-label-helper"
         label="Permissão"
-        defaultValue="Administrador"
+        defaultValue="Consultor"
         {...register("permission")}
       >
         <MenuItem value="">Selecione uma opção</MenuItem>
