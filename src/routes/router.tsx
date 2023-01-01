@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LoginPage } from "pages/LoginPage";
 import { Dashboard } from "pages/Dashboard";
 import { Timesheet } from "pages/Dashboard/pages/Timesheet";
+import { RegisterUser } from "pages/Dashboard/pages/RegisterUser";
 
 export function Router() {
   return (
@@ -18,7 +19,7 @@ export function Router() {
             path="register-activity"
             element={<h1>Cadastrar Atividade</h1>}
           />
-          <Route path="register-user" element={<h1>Cadastrar User</h1>} />
+          <Route path="register-user" element={<RegisterUser />} />
           <Route path="timesheet-admin" element={<h1>Timesheet admin</h1>} />
           <Route path="projects" element={<h1>Projects</h1>} />
           <Route path="consultants" element={<h1>consultants</h1>} />
