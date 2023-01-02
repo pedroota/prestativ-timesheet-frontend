@@ -2,7 +2,7 @@ import { Button, FormControl, TextField } from "@mui/material";
 import { useForm } from "react-hook-form";
 
 export function RegisterClient() {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit } = useForm({});
   // async function handleChange(event: any) {
   //   const tamanho = event.target.value.length;
   //   console.log(tamanho);

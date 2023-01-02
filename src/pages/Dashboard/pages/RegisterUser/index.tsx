@@ -54,6 +54,7 @@ export function RegisterUser() {
       <Select
         labelId="select-label-helper"
         label="Permissão"
+        color="warning"
         defaultValue="Consultor"
         {...register("permission")}
       >
