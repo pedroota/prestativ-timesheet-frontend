@@ -5,6 +5,7 @@ import { LoginPage } from "pages/LoginPage";
 import { Dashboard } from "pages/Dashboard";
 import { Timesheet } from "pages/Dashboard/pages/Timesheet";
 import { RegisterUser } from "pages/Dashboard/pages/RegisterUser";
+import { RegisterClient } from "pages/Dashboard/pages/RegisterClient";
 
 export function Router() {
   return (
@@ -13,7 +14,7 @@ export function Router() {
         <Route path="/" element={<LoginPage />} />
         <Route path="/dashboard" element={<Dashboard />}>
           <Route path="timesheet" element={<Timesheet />} />
-          <Route path="register-client" element={<h1>Cadastrar Cliente</h1>} />
+          <Route path="register-client" element={<RegisterClient />} />
           <Route path="register-project" element={<h1>Cadastrar Projeto</h1>} />
           <Route
             path="register-activity"
