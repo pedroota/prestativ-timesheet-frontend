@@ -61,6 +61,8 @@ export function RegisterUser() {
         <MenuItem value="">Selecione uma opção</MenuItem>
         <MenuItem value="Administrador">Administrador</MenuItem>
         <MenuItem value="Consultor">Consultor</MenuItem>
+        <MenuItem value="Operação">Operação</MenuItem>
+        <MenuItem value="Gestor de Projetos">Gestor de Projetos</MenuItem>
       </Select>
       <Button id="button-primary" type="submit" variant="contained">
         Cadastrar
