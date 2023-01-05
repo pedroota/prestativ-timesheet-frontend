@@ -1,24 +1,34 @@
 import { Button, TextField } from "@mui/material";
+import { Clients } from "interfaces/clients.interface";
 import { useForm } from "react-hook-form";
 
 export function RegisterClient() {
-  const { register, handleSubmit } = useForm({});
-  // async function handleChange(event: any) {
-  //   const tamanho = event.target.value.length;
-  //   console.log(tamanho);
-  //   if (tamanho == 8) {
-  //     console.log(event.target.value);
-  //     await fetch(`https://viacep.com.br/ws/${event.target.value}/json/`).then(
-  //       async (response) => {
-  //         console.log(response.json());
-  //       }
-  //     );
-  //   }
-  // }
+  const { register, handleSubmit } = useForm<Clients>({});
 
-  const onSubmit = handleSubmit((data) => {
-    console.log(data);
-  });
+  const onSubmit = handleSubmit(
+    ({
+      code,
+      name,
+      cnpj,
+      cep,
+      street,
+      streetNumber,
+      complement,
+      district,
+      city,
+      state,
+      periodIn,
+      periodUntil,
+      billingLimit,
+      payDay,
+      valueClient,
+      gpClient,
+    }) => {
+      // Só chama a função createClient() e manda esses dados ai, desse jeito {name, etc...}
+      // Embaixo, ali no formulário, corrige os campos, adiciona certinho as propriedades dentro dos ...register() e adiciona os campos que faltam (caso tenha)
+      // Verifica e testa TUDO antes de enviar para o GitHub
+    }
+  );
 
   return (
     <form className="c-register-client" onSubmit={onSubmit}>
@@ -29,21 +39,21 @@ export function RegisterClient() {
         color="warning"
         label="Código do cliente"
         type="text"
-        {...register("clientCode")}
+        {...register("code")}
       />
       <TextField
         required
         color="warning"
         label="Nome / Razão Social"
         type="text"
-        {...register("nameSocial")}
+        {...register("name")}
       />
       <TextField
         required
         color="warning"
         label="CNPJ"
         type="text"
-        {...register("clientCNPJ")}
+        {...register("cnpj")}
       />
       <p>Endereço do cliente</p>
       <div className="c-register-client--input-container">
@@ -53,7 +63,7 @@ export function RegisterClient() {
           sx={{ width: "100%" }}
           label="CEP"
           type="text"
-          {...register("clientCEP")}
+          {...register("cep")}
         />
         <TextField
           required
@@ -61,7 +71,7 @@ export function RegisterClient() {
           sx={{ width: "100%" }}
           label="Logradouro"
           type="text"
-          {...register("clientLogradouro")}
+          {...register("street")}
         />
       </div>
       <div className="c-register-client--input-container">
@@ -71,7 +81,7 @@ export function RegisterClient() {
           sx={{ width: "100%" }}
           label="Cidade"
           type="text"
-          {...register("clientCidade")}
+          {...register("city")}
         />
         <TextField
           required
@@ -79,7 +89,7 @@ export function RegisterClient() {
           sx={{ width: "100%" }}
           label="Estado"
           type="text"
-          {...register("clientEstado")}
+          {...register("state")}
         />
       </div>
       <div className="c-register-client--input-container">
@@ -89,7 +99,7 @@ export function RegisterClient() {
           sx={{ width: "100%" }}
           label="Bairro"
           type="text"
-          {...register("clientBairro")}
+          {...register("district")}
         />
         <TextField
           required
@@ -97,7 +107,7 @@ export function RegisterClient() {
           sx={{ width: "100%" }}
           label="Número"
           type="text"
-          {...register("clientNúmero")}
+          {...register("streetNumber")}
         />
         <TextField
           required
@@ -105,7 +115,7 @@ export function RegisterClient() {
           sx={{ width: "100%" }}
           label="Complemento"
           type="text"
-          {...register("clientComplemento")}
+          {...register("complement")}
         />
       </div>
       <p>Período de faturamento</p>
@@ -116,7 +126,7 @@ export function RegisterClient() {
           sx={{ width: "100%" }}
           label="De"
           type="text"
-          {...register("clientFaturamentoDe")}
+          {...register("periodIn")}
         />
         <TextField
           required
@@ -124,7 +134,7 @@ export function RegisterClient() {
           sx={{ width: "100%" }}
           label="Até"
           type="text"
-          {...register("clientFaturamentoAte")}
+          {...register("periodUntil")}
         />
       </div>
       <div className="c-register-client--input-container">
@@ -134,7 +144,7 @@ export function RegisterClient() {
           sx={{ width: "100%" }}
           label="Dia limite de faturamento"
           type="text"
-          {...register("clientFaturamentoDia")}
+          {...register("billingLimit")}
         />
         <TextField
           required
@@ -142,7 +152,7 @@ export function RegisterClient() {
           sx={{ width: "100%" }}
           label="Dia de pagamento"
           type="text"
-          {...register("clientDiaPagamento")}
+          {...register("payDay")}
         />
       </div>
       <Button type="submit" id="button-primary" variant="contained">

@@ -1,7 +1,7 @@
 import { Api } from "./api.service";
 
-export const getRoles = () => {
-  const result = Api.get("/roles");
+export const getRoles = async () => {
+  const result = await Api.get("/roles");
 
   return result;
 };
