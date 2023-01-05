@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -18,6 +18,8 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Logo from "assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "context/AuthContext";
+import Cookies from "js-cookie";
 
 // Icons
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -107,11 +109,14 @@ interface SidebarAndAppBarProps {
 }
 
 export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
+  const { setUser } = useContext(AuthContext);
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
   const logOut = () => {
+    Cookies.remove("token");
+    setUser(null);
     navigate("/");
   };
 

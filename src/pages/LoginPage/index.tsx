@@ -2,12 +2,19 @@ import { Button, TextField } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { User } from "interfaces/users.interface";
 import Logo from "assets/logo.png";
+import { useContext } from "react";
+import { AuthContext } from "context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export function LoginPage() {
+  const { signIn } = useContext(AuthContext);
   const { register, handleSubmit } = useForm<User>({});
+  const navigate = useNavigate();
 
-  const onSubmit = handleSubmit(({ email, password }) => {
-    console.log(email, password);
+  const onSubmit = handleSubmit(async ({ email, password }) => {
+    await signIn({ email, password }).then(() =>
+      navigate("/dashboard/timesheet")
+    );
   });
 
   return (
