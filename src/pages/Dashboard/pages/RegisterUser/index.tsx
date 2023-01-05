@@ -1,19 +1,21 @@
+import { useContext } from "react";
 import { TextField, Button, MenuItem, Select } from "@mui/material";
+import { AuthContext } from "context/AuthContext";
 import { useForm } from "react-hook-form";
-
-type newUserRegister = {
-  name: string;
-  surname: string;
-  email: string;
-  password: string;
-  permission: string;
-};
+import { UserRegister } from "interfaces/users.interface";
+import { useQuery } from "@tanstack/react-query";
+import { getRoles } from "services/roles.service";
+import { Roles } from "interfaces/roles.interface";
 
 export function RegisterUser() {
-  const { register, handleSubmit } = useForm<newUserRegister>({});
+  const { data } = useQuery(["roles"], getRoles);
+  const { signUp } = useContext(AuthContext);
+  const { register, handleSubmit, reset } = useForm<UserRegister>({});
 
-  const onSubmit = handleSubmit((data) => {
-    console.log(data);
+  const onSubmit = handleSubmit(({ name, surname, email, password, role }) => {
+    signUp({ name, surname, email, password, role }).then(() => {
+      reset();
+    });
   });
 
   return (
@@ -56,13 +58,14 @@ export function RegisterUser() {
         label="Permissão"
         color="warning"
         defaultValue="Consultor"
-        {...register("permission")}
+        {...register("role")}
       >
         <MenuItem value="">Selecione uma opção</MenuItem>
-        <MenuItem value="Administrador">Administrador</MenuItem>
-        <MenuItem value="Consultor">Consultor</MenuItem>
-        <MenuItem value="Operação">Operação</MenuItem>
-        <MenuItem value="Gestor de Projetos">Gestor de Projetos</MenuItem>
+        {data?.data.map((role: Roles) => (
+          <MenuItem value={role?.name} key={role?.name}>
+            {role?.name}
+          </MenuItem>
+        ))}
       </Select>
       <Button id="button-primary" type="submit" variant="contained">
         Cadastrar

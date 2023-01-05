@@ -1,6 +1,6 @@
-import { User } from "interfaces/users.interface";
+import { User, UserRegister } from "interfaces/users.interface";
 import { createContext, useState } from "react";
-import { signin } from "services/auth.service";
+import { signin, signup } from "services/auth.service";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import { Api } from "services/api.service";
@@ -10,6 +10,13 @@ type AuthContextType = {
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
   signIn: ({ email, password }: User) => Promise<void>;
+  signUp: ({
+    name,
+    surname,
+    email,
+    password,
+    role,
+  }: UserRegister) => Promise<void>;
 };
 
 type AuthContextProps = {
@@ -45,8 +52,36 @@ export function AuthProvider({ children }: AuthContextProps) {
       });
   }
 
+  async function signUp({
+    name,
+    surname,
+    email,
+    password,
+    role,
+  }: UserRegister) {
+    await signup({
+      name,
+      surname,
+      email,
+      password,
+      role,
+    })
+      .then(({ data }) =>
+        toast.success(data?.message || "Usuário criado com sucesso", {
+          autoClose: 1500,
+        })
+      )
+      .catch(({ data }) =>
+        toast.error(data?.message || "Ocorreu um erro ao criar o usuário", {
+          autoClose: 1500,
+        })
+      );
+  }
+
   return (
-    <AuthContext.Provider value={{ user, setUser, isAuthenticated, signIn }}>
+    <AuthContext.Provider
+      value={{ user, setUser, isAuthenticated, signIn, signUp }}
+    >
       {children}
     </AuthContext.Provider>
   );
