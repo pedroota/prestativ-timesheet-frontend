@@ -1,8 +1,11 @@
-import { Button, TextField } from "@mui/material";
+import { Button, MenuItem, Select, TextField } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
 import { Clients } from "interfaces/clients.interface";
 import { useForm } from "react-hook-form";
+import { getUserByRole } from "services/auth.service";
 
 export function RegisterClient() {
+  const { data } = useQuery('users', getUserByRole);
   const { register, handleSubmit } = useForm<Clients>({});
 
   const onSubmit = handleSubmit(
@@ -154,6 +157,40 @@ export function RegisterClient() {
           type="text"
           {...register("payDay")}
         />
+      </div>
+      <p>Valor e Gerente de Projetos</p>
+      <div className="c-register-client--input-container">
+        <TextField
+          required
+          color="warning"
+          sx={{ width: "100%" }}
+          label="Valor"
+          type="text"
+          {...register("valueClient")}
+        />
+        <TextField
+          required
+          color="warning"
+          sx={{ width: "100%" }}
+          label="Gerente de Projetos"
+          type="text"
+          {...register("gpClient")}
+        />
+        <Select
+        labelId="select-label-helper"
+        label="Permissão"
+        color="warning"
+        value=""
+        defaultValue="Consultor"
+        {...register("gpClient")}
+      >
+        <MenuItem value="">Selecione uma opção</MenuItem>
+        {data?.data.map(({ name }) => (
+          <MenuItem value={name} key={name}>
+            {name}
+          </MenuItem>
+        ))}
+      </Select>
       </div>
       <Button type="submit" id="button-primary" variant="contained">
         Cadastrar

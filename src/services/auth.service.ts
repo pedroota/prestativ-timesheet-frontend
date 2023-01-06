@@ -10,6 +10,12 @@ export const signin = async ({ email, password }: User) => {
   return result;
 };
 
+export const getUserByRole = async (role: string = 'Gerente-De-Projetos') => {
+  const result = await Api.get(`/auth/users?role=${role}`);
+
+  return result;
+};
+
 export const signup = async ({
   name,
   surname,
