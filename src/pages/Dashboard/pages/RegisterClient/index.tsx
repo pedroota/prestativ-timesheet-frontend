@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { getUserByRole } from "services/auth.service";
 
 export function RegisterClient() {
-  const { data } = useQuery('users', getUserByRole);
+  const { data } = useQuery("users", getUserByRole);
   const { register, handleSubmit } = useForm<Clients>({});
 
   const onSubmit = handleSubmit(
@@ -177,20 +177,20 @@ export function RegisterClient() {
           {...register("gpClient")}
         />
         <Select
-        labelId="select-label-helper"
-        label="Permissão"
-        color="warning"
-        value=""
-        defaultValue="Consultor"
-        {...register("gpClient")}
-      >
-        <MenuItem value="">Selecione uma opção</MenuItem>
-        {data?.data.map(({ name }) => (
-          <MenuItem value={name} key={name}>
-            {name}
-          </MenuItem>
-        ))}
-      </Select>
+          labelId="select-label-helper"
+          label="Permissão"
+          color="warning"
+          value=""
+          defaultValue="Consultor"
+          {...register("gpClient")}
+        >
+          <MenuItem value="">Selecione uma opção</MenuItem>
+          {data?.data.map(({ name }) => (
+            <MenuItem value={name} key={name}>
+              {name}
+            </MenuItem>
+          ))}
+        </Select>
       </div>
       <Button type="submit" id="button-primary" variant="contained">
         Cadastrar
