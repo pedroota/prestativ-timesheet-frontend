@@ -27,7 +27,7 @@ export const createActivities = async ({
   return result;
 };
 
-export const deleteActivity = async (_id: string ) => {
+export const deleteActivity = async (_id: string) => {
   const result = await Api.delete(`/activities/${_id}`);
 
   return result;

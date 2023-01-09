@@ -22,7 +22,7 @@ export const getAllUsers = async () => {
   return result;
 };
 
-export const deleteUser = async (_id: string ) => {
+export const deleteUser = async (_id: string) => {
   const result = await Api.delete(`/auth/users/${_id}`);
 
   return result;

@@ -29,7 +29,7 @@ export function Router() {
             <Route path="clients" element={<ListClients />} />
             <Route path="projects" element={<ListProjects />} />
             <Route path="activities" element={<ListActivities />} />
-            <Route path="users" element={<ListUsers />} /> 
+            <Route path="users" element={<ListUsers />} />
           </Route>
         </Route>
       </Routes>

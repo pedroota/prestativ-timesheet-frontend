@@ -81,10 +81,20 @@ export function ListClients() {
                 <StyledTableRow key={_id}>
                   <StyledTableCell align="center">{name}</StyledTableCell>
                   <StyledTableCell align="center">{cnpj}</StyledTableCell>
-                  <StyledTableCell align="center">{cep+' '+street+' '+streetNumber+' '+complement}<br/>{"Bairro "+district+' '+city+' '+state}</StyledTableCell>
-                  <StyledTableCell align="center">{"de: "+periodIn+"  até: "+periodUntil}</StyledTableCell>
-                  <StyledTableCell align="center">{billingLimit+" / "+payDay}</StyledTableCell>
-                  <StyledTableCell align="center">{valueClient}</StyledTableCell>
+                  <StyledTableCell align="center">
+                    {cep + " " + street + " " + streetNumber + " " + complement}
+                    <br />
+                    {"Bairro " + district + " " + city + " " + state}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {"de: " + periodIn + "  até: " + periodUntil}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {billingLimit + " / " + payDay}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {valueClient}
+                  </StyledTableCell>
                   <StyledTableCell align="center">{gpClient}</StyledTableCell>
                   <StyledTableCell align="center">
                     <EditIcon />
