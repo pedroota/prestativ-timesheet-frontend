@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { deleteUser, getAllUsers } from "services/auth.service";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
+import Input from "@mui/material/Input";
 import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
@@ -10,6 +11,7 @@ import Paper from "@mui/material/Paper";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { UserInfo } from "interfaces/users.interface";
+import { useState } from "react";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -33,6 +35,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export function ListUsers() {
   const { data: users } = useQuery(["users"], () => getAllUsers());
+  const [isUpdating, setIsUpdating] = useState(false);
 
   return (
     <div>
@@ -54,10 +57,15 @@ export function ListUsers() {
                   <StyledTableCell align="center">
                     {name + " " + surname}
                   </StyledTableCell>
+
                   <StyledTableCell align="center">{email}</StyledTableCell>
                   <StyledTableCell align="center">{role}</StyledTableCell>
                   <StyledTableCell align="center">
-                    <EditIcon />
+                    <EditIcon
+                      onClick={() => {
+                        setIsUpdating(true);
+                      }}
+                    />
                     <DeleteIcon
                       onClick={() => {
                         deleteUser(_id);

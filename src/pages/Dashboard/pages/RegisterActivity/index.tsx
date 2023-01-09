@@ -115,9 +115,9 @@ export function RegisterActivity() {
           defaultValue=""
         >
           <MenuItem value="">Selecione uma opção</MenuItem>
-          {GPList?.data.map(({ name }: UserRegister) => (
-            <MenuItem key={name} value={name}>
-              {name}
+          {GPList?.data.map(({ name, surname }: UserRegister) => (
+            <MenuItem key={name + " " + surname} value={name + " " + surname}>
+              {name + " " + surname}
             </MenuItem>
           ))}
         </Select>
@@ -132,9 +132,9 @@ export function RegisterActivity() {
           label="Consultores relacionado"
         >
           <MenuItem value="">Selecione uma opção</MenuItem>
-          {consultantList?.data.map(({ name }: UserRegister) => (
-            <MenuItem key={name} value={name}>
-              {name}
+          {consultantList?.data.map(({ name, surname }: UserRegister) => (
+            <MenuItem key={name + " " + surname} value={name + " " + surname}>
+              {name + " " + surname}
             </MenuItem>
           ))}
         </Select>
