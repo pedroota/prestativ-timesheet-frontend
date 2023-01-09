@@ -336,31 +336,6 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
               </ListItemButton>
             </ListItem>
           </Link>
-          <Link to="consultants">
-            <ListItem disablePadding>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  <HailIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary={"Ver Consultores"}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </Link>
           <Link to="activities">
             <ListItem disablePadding>
               <ListItemButton
@@ -381,6 +356,31 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                 </ListItemIcon>
                 <ListItemText
                   primary={"Ver Atividades"}
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+              </ListItemButton>
+            </ListItem>
+          </Link>
+          <Link to="consultants">
+            <ListItem disablePadding>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  <HailIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary={"Ver Consultores"}
                   sx={{ opacity: open ? 1 : 0 }}
                 />
               </ListItemButton>

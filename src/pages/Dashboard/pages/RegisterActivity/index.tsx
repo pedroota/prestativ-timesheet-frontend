@@ -5,16 +5,48 @@ import {
   MenuItem,
   SelectChangeEvent,
 } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
+import { getProjects } from "services/project.service";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { getUserByRole } from "services/auth.service";
+import { createActivities } from "services/activities.service";
 
 export function RegisterActivity() {
-  const { register, handleSubmit } = useForm({});
+  const { data: projectList } = useQuery(["client-project", "project"], () =>
+    getProjects()
+  );
+  const { data: GPList } = useQuery(["users-role", "Gerente de Projetos"], () =>
+    getUserByRole("Gerente de Projetos")
+  );
+  const { data: consultantList } = useQuery(
+    ["user-consultant", "Consultor"],
+    () => getUserByRole("Consultor")
+  );
+  const { register, handleSubmit, reset } = useForm({});
   const [multipleSelect, setMultipleSelect] = useState<string[]>([]);
 
-  const onSubmit = handleSubmit((data) => {
-    console.log(data);
-  });
+  const onSubmit = handleSubmit(
+    ({
+      title,
+      project,
+      valueActivity,
+      gpActivity,
+      description,
+      userString,
+    }) => {
+      createActivities({
+        title,
+        project,
+        valueActivity,
+        gpActivity,
+        description,
+        userString,
+      }).then(() => {
+        reset();
+      });
+    }
+  );
 
   const multipleSelectChange = (
     event: SelectChangeEvent<typeof multipleSelect>
@@ -26,30 +58,6 @@ export function RegisterActivity() {
     );
   };
 
-  const projects = [
-    {
-      name: "Projeto 1",
-    },
-    {
-      name: "Projeto 2",
-    },
-    {
-      name: "Projeto 3",
-    },
-  ];
-
-  const consultant = [
-    {
-      name: "Pedro",
-    },
-    {
-      name: "Filipe",
-    },
-    {
-      name: "Pietro",
-    },
-  ];
-
   return (
     <form className="c-register-activity" onSubmit={onSubmit}>
       <h1>Cadastrar atividade</h1>
@@ -58,7 +66,7 @@ export function RegisterActivity() {
         color="warning"
         label="Nome da atividade"
         type="text"
-        {...register("name-activity")}
+        {...register("title")}
       />
       <Select
         color="warning"
@@ -68,9 +76,9 @@ export function RegisterActivity() {
         defaultValue=""
       >
         <MenuItem value="">Selecione uma opção</MenuItem>
-        {projects.map(({ name }) => (
-          <MenuItem key={name} value={name}>
-            {name}
+        {projectList?.data.map(({ title }) => (
+          <MenuItem key={title} value={title}>
+            {title}
           </MenuItem>
         ))}
       </Select>
@@ -86,26 +94,26 @@ export function RegisterActivity() {
         color="warning"
         label="Valor da atividade"
         type="text"
-        {...register("callNumber")}
+        {...register("valueActivity")}
       />
       <TextField
         required
         color="warning"
         label="Observação"
         type="text"
-        {...register("obs")}
+        {...register("description")}
       />
       <div className="c-register-activity--input-container">
         <Select
           color="warning"
           labelId="select-label-helper"
-          {...register("gestor-relacionado")}
+          {...register("gpActivity")}
           sx={{ width: "100%" }}
-          label="Gestor de projetos relacionado"
+          label="Gerente de projetos relacionado"
           defaultValue=""
         >
           <MenuItem value="">Selecione uma opção</MenuItem>
-          {consultant.map(({ name }) => (
+          {GPList?.data.map(({ name }) => (
             <MenuItem key={name} value={name}>
               {name}
             </MenuItem>
@@ -114,7 +122,7 @@ export function RegisterActivity() {
         <Select
           color="warning"
           labelId="select-label-helper"
-          {...register("consultor-relacionado")}
+          {...register("userString")}
           sx={{ width: "100%" }}
           value={multipleSelect}
           onChange={multipleSelectChange}
@@ -122,7 +130,7 @@ export function RegisterActivity() {
           label="Consultores relacionado"
         >
           <MenuItem value="">Selecione uma opção</MenuItem>
-          {consultant.map(({ name }) => (
+          {consultantList?.data.map(({ name }) => (
             <MenuItem key={name} value={name}>
               {name}
             </MenuItem>

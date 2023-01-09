@@ -43,6 +43,9 @@ export function LoginPage() {
           <Button id="button-primary" type="submit" variant="contained">
             Acessar
           </Button>
+          <a>
+            <p>Esqueci Minha Senha</p>
+          </a>
         </div>
       </form>
     </section>
