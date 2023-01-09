@@ -1,6 +1,7 @@
 import { Button, MenuItem, Select, TextField } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { Clients } from "interfaces/clients.interface";
+import { UserRegister } from "interfaces/users.interface";
 import { useForm } from "react-hook-form";
 import { getUserByRole } from "services/auth.service";
 import { createClients } from "services/clients.service";
@@ -201,7 +202,7 @@ export function RegisterClient() {
           {...register("gpClient")}
         >
           <MenuItem value="">Selecione uma opção</MenuItem>
-          {data?.data.map(({ name, surname }) => (
+          {data?.data.map(({ name, surname }: UserRegister) => (
             <MenuItem value={name + " " + surname} key={name + " " + surname}>
               {name + " " + surname}
             </MenuItem>

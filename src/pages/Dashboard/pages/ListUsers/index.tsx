@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { deleteProject, getProjects } from "services/project.service";
+import { deleteUser, getAllUsers } from "services/auth.service";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -9,7 +9,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { ProjectsInfo } from "interfaces/projects.interface";
+import { UserInfo } from "interfaces/users.interface";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -31,53 +31,36 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-export function ListProjects() {
-  const { data: projects } = useQuery(["projects"], () => getProjects());
+export function ListUsers() {
+  const { data: users } = useQuery(["users"], () => getAllUsers());
 
   return (
     <div>
-      <h1>Listagem de Projetos</h1>
+      <h1>Listagem de Usuários</h1>
       <Paper className="c-timesheet">
         <Table aria-label="customized table">
           <TableHead>
             <TableRow>
-              <StyledTableCell align="center">Titulo</StyledTableCell>
-              <StyledTableCell align="center">
-                Cliente Relacionado
-              </StyledTableCell>
-              <StyledTableCell align="center">Valor Projeto</StyledTableCell>
-              <StyledTableCell align="center">
-                Gerente de Projetos
-              </StyledTableCell>
-              <StyledTableCell align="center">Descrição</StyledTableCell>
+              <StyledTableCell align="center">Nome</StyledTableCell>
+              <StyledTableCell align="center">Email</StyledTableCell>
+              <StyledTableCell align="center">Permissão</StyledTableCell>
               <StyledTableCell align="center">Controles</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {projects?.data.map(
-              ({
-                _id,
-                title,
-                idClient,
-                valueProject,
-                gpProject,
-                description,
-              }: ProjectsInfo) => (
+            {users?.data.map(
+              ({ name, surname, email, role, _id }: UserInfo) => (
                 <StyledTableRow key={_id}>
-                  <StyledTableCell align="center">{title}</StyledTableCell>
-                  <StyledTableCell align="center">{idClient}</StyledTableCell>
                   <StyledTableCell align="center">
-                    {valueProject}
+                    {name + " " + surname}
                   </StyledTableCell>
-                  <StyledTableCell align="center">{gpProject}</StyledTableCell>
-                  <StyledTableCell align="center">
-                    {description}
-                  </StyledTableCell>
+                  <StyledTableCell align="center">{email}</StyledTableCell>
+                  <StyledTableCell align="center">{role}</StyledTableCell>
                   <StyledTableCell align="center">
                     <EditIcon />
                     <DeleteIcon
                       onClick={() => {
-                        deleteProject(_id);
+                        deleteUser(_id);
                       }}
                     />
                   </StyledTableCell>

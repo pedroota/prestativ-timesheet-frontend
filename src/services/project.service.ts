@@ -24,3 +24,9 @@ export const createProjects = async ({
 
   return result;
 };
+
+export const deleteProject = async (_id: string ) => {
+  const result = await Api.delete(`/projects/${_id}`);
+
+  return result;
+};

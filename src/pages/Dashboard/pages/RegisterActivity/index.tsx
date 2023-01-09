@@ -11,6 +11,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { getUserByRole } from "services/auth.service";
 import { createActivities } from "services/activities.service";
+import { Projects } from "interfaces/projects.interface";
+import { UserRegister } from "interfaces/users.interface";
 
 export function RegisterActivity() {
   const { data: projectList } = useQuery(["client-project", "project"], () =>
@@ -76,7 +78,7 @@ export function RegisterActivity() {
         defaultValue=""
       >
         <MenuItem value="">Selecione uma opção</MenuItem>
-        {projectList?.data.map(({ title }) => (
+        {projectList?.data.map(({ title }: Projects) => (
           <MenuItem key={title} value={title}>
             {title}
           </MenuItem>
@@ -113,7 +115,7 @@ export function RegisterActivity() {
           defaultValue=""
         >
           <MenuItem value="">Selecione uma opção</MenuItem>
-          {GPList?.data.map(({ name }) => (
+          {GPList?.data.map(({ name }: UserRegister) => (
             <MenuItem key={name} value={name}>
               {name}
             </MenuItem>
@@ -130,7 +132,7 @@ export function RegisterActivity() {
           label="Consultores relacionado"
         >
           <MenuItem value="">Selecione uma opção</MenuItem>
-          {consultantList?.data.map(({ name }) => (
+          {consultantList?.data.map(({ name }: UserRegister) => (
             <MenuItem key={name} value={name}>
               {name}
             </MenuItem>

@@ -286,7 +286,7 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
         </List>
         <Divider />
         <List>
-          <Link to="timesheet-admin">
+          <Link to="clients">
             <ListItem disablePadding>
               <ListItemButton
                 sx={{
@@ -305,7 +305,7 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                   <PublicIcon />
                 </ListItemIcon>
                 <ListItemText
-                  primary={"TimeSheet Admin"}
+                  primary={"Ver Clientes"}
                   sx={{ opacity: open ? 1 : 0 }}
                 />
               </ListItemButton>
@@ -361,7 +361,7 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
               </ListItemButton>
             </ListItem>
           </Link>
-          <Link to="consultants">
+          <Link to="users">
             <ListItem disablePadding>
               <ListItemButton
                 sx={{
@@ -380,7 +380,7 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                   <HailIcon />
                 </ListItemIcon>
                 <ListItemText
-                  primary={"Ver Consultores"}
+                  primary={"Ver Usuários"}
                   sx={{ opacity: open ? 1 : 0 }}
                 />
               </ListItemButton>

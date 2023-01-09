@@ -5,6 +5,8 @@ import { Projects } from "interfaces/projects.interface";
 import { getClients } from "services/clients.service";
 import { getUserByRole } from "services/auth.service";
 import { createProjects } from "services/project.service";
+import { UserRegister } from "interfaces/users.interface";
+import { Clients } from "interfaces/clients.interface";
 
 export function RegisterProject() {
   const { data: clientList } = useQuery([], () => getClients());
@@ -43,7 +45,7 @@ export function RegisterProject() {
         defaultValue=""
       >
         <MenuItem value="">Selecione uma opção</MenuItem>
-        {clientList?.data.map(({ code, name }) => (
+        {clientList?.data.map(({ code, name }: Clients) => (
           <MenuItem key={code} value={name}>
             {name}
           </MenuItem>
@@ -63,7 +65,7 @@ export function RegisterProject() {
         defaultValue=""
       >
         <MenuItem value="">Selecione uma opção</MenuItem>
-        {GPList?.data.map(({ name, surname }) => (
+        {GPList?.data.map(({ name, surname }: UserRegister) => (
           <MenuItem value={name + " " + surname} key={name + " " + surname}>
             {name + " " + surname}
           </MenuItem>
