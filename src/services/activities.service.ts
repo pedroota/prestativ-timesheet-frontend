@@ -8,12 +8,12 @@ export const getActivities = async () => {
 };
 
 export const createActivities = async ({
-    title,
-    project,
-    valueActivity,
-    gpActivity,
-    description,
-    userString,
+  title,
+  project,
+  valueActivity,
+  gpActivity,
+  description,
+  userString,
 }: Activities) => {
   const result = await Api.post("/activities", {
     title,
