@@ -286,7 +286,7 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
         </List>
         <Divider />
         <List>
-          <Link to="timesheet-admin">
+          <Link to="clients">
             <ListItem disablePadding>
               <ListItemButton
                 sx={{
@@ -305,7 +305,7 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                   <PublicIcon />
                 </ListItemIcon>
                 <ListItemText
-                  primary={"TimeSheet Admin"}
+                  primary={"Ver Clientes"}
                   sx={{ opacity: open ? 1 : 0 }}
                 />
               </ListItemButton>
@@ -336,31 +336,6 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
               </ListItemButton>
             </ListItem>
           </Link>
-          <Link to="consultants">
-            <ListItem disablePadding>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  <HailIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary={"Ver Consultores"}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </Link>
           <Link to="activities">
             <ListItem disablePadding>
               <ListItemButton
@@ -381,6 +356,31 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                 </ListItemIcon>
                 <ListItemText
                   primary={"Ver Atividades"}
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+              </ListItemButton>
+            </ListItem>
+          </Link>
+          <Link to="users">
+            <ListItem disablePadding>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  <HailIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary={"Ver Usuários"}
                   sx={{ opacity: open ? 1 : 0 }}
                 />
               </ListItemButton>

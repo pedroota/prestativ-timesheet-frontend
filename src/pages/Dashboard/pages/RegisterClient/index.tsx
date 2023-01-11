@@ -1,9 +1,17 @@
-import { Button, TextField } from "@mui/material";
+import { Button, MenuItem, Select, TextField } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
 import { Clients } from "interfaces/clients.interface";
+import { UserRegister } from "interfaces/users.interface";
 import { useForm } from "react-hook-form";
+import { getUserByRole } from "services/auth.service";
+import { createClients } from "services/clients.service";
 
 export function RegisterClient() {
-  const { register, handleSubmit } = useForm<Clients>({});
+  const { data } = useQuery(["users-role", "Gerente de Projetos"], () =>
+    getUserByRole("Gerente de Projetos")
+  );
+  console.log(data);
+  const { register, handleSubmit, reset } = useForm<Clients>({});
 
   const onSubmit = handleSubmit(
     ({
@@ -24,12 +32,32 @@ export function RegisterClient() {
       valueClient,
       gpClient,
     }) => {
-      // Só chama a função createClient() e manda esses dados ai, desse jeito {name, etc...}
-      // Embaixo, ali no formulário, corrige os campos, adiciona certinho as propriedades dentro dos ...register() e adiciona os campos que faltam (caso tenha)
-      // Verifica e testa TUDO antes de enviar para o GitHub
+      createClients({
+        code,
+        name,
+        cnpj,
+        cep,
+        street,
+        streetNumber,
+        complement,
+        district,
+        city,
+        state,
+        periodIn,
+        periodUntil,
+        billingLimit,
+        payDay,
+        valueClient,
+        gpClient,
+      }).then(() => {
+        reset();
+      });
     }
   );
 
+  // Só chama a função createClient() e manda esses dados ai, desse jeito {name, etc...}
+  // Embaixo, ali no formulário, corrige os campos, adiciona certinho as propriedades dentro dos ...register() e adiciona os campos que faltam (caso tenha)
+  // Verifica e testa TUDO antes de enviar para o GitHub
   return (
     <form className="c-register-client" onSubmit={onSubmit}>
       <h1 className="c-register-client--title">Cadastrar novo cliente</h1>
@@ -154,6 +182,32 @@ export function RegisterClient() {
           type="text"
           {...register("payDay")}
         />
+      </div>
+      <p>Valor e Gerente de Projetos</p>
+      <div className="c-register-client--input-container">
+        <TextField
+          required
+          color="warning"
+          sx={{ width: "100%" }}
+          label="Valor"
+          type="text"
+          {...register("valueClient")}
+        />
+        <Select
+          required
+          labelId="select-label-helper"
+          label="Gerente de Projetos"
+          color="warning"
+          sx={{ width: "100%" }}
+          {...register("gpClient")}
+        >
+          <MenuItem value="">Selecione uma opção</MenuItem>
+          {data?.data.map(({ name, surname }: UserRegister) => (
+            <MenuItem value={name + " " + surname} key={name + " " + surname}>
+              {name + " " + surname}
+            </MenuItem>
+          ))}
+        </Select>
       </div>
       <Button type="submit" id="button-primary" variant="contained">
         Cadastrar

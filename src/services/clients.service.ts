@@ -46,3 +46,9 @@ export const createClients = async ({
 
   return result;
 };
+
+export const deleteClient = async (_id: string) => {
+  const result = await Api.delete(`/clients/${_id}`);
+
+  return result;
+};

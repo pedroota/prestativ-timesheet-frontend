@@ -1,25 +1,31 @@
 import { useForm } from "react-hook-form";
 import { Button, Select, TextField, MenuItem } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
+import { Projects } from "interfaces/projects.interface";
+import { getClients } from "services/clients.service";
+import { getUserByRole } from "services/auth.service";
+import { createProjects } from "services/project.service";
+import { UserRegister } from "interfaces/users.interface";
+import { Clients } from "interfaces/clients.interface";
 
 export function RegisterProject() {
-  const { register, handleSubmit } = useForm({});
+  const { data: clientList } = useQuery([], () => getClients());
+  const { data: GPList } = useQuery(["users-role", "Gerente de Projetos"], () =>
+    getUserByRole("Gerente de Projetos")
+  );
+  const { register, handleSubmit } = useForm<Projects>({});
 
-  const onSubmit = handleSubmit((data) => {
-    console.log(data);
-  });
-
-  // Isso é somente para exemplificar como receberá do backend
-  const clients = [
-    {
-      name: "Meta",
-    },
-    {
-      name: "Gerdau",
-    },
-    {
-      name: "Accenture",
-    },
-  ];
+  const onSubmit = handleSubmit(
+    ({ title, idClient, valueProject, gpProject, description }) => {
+      createProjects({
+        title,
+        idClient,
+        valueProject,
+        gpProject,
+        description,
+      });
+    }
+  );
 
   return (
     <form className="c-register-project" onSubmit={onSubmit}>
@@ -27,42 +33,50 @@ export function RegisterProject() {
       <p>Informações do projeto</p>
       <TextField
         label="Nome do Projeto"
-        {...register("name-project")}
-        color="warning"
-        variant="outlined"
-      />
-      <TextField
-        label="Valor"
-        {...register("value-project")}
-        color="warning"
-        variant="outlined"
-      />
-      <TextField
-        label="Numero do Chamado"
-        {...register("numero-chamado")}
-        color="warning"
-        variant="outlined"
-      />
-      <TextField
-        label="Descrição do Projeto"
-        {...register("project-description")}
+        {...register("title")}
         color="warning"
         variant="outlined"
       />
       <Select
         color="warning"
         labelId="select-label-helper"
-        {...register("client")}
-        label="Empresa ou Cliente Relacionado"
+        {...register("idClient")}
+        label="Cliente Relacionado"
         defaultValue=""
       >
         <MenuItem value="">Selecione uma opção</MenuItem>
-        {clients.map(({ name }) => (
-          <MenuItem key={name} value={name}>
+        {clientList?.data.map(({ code, name }: Clients) => (
+          <MenuItem key={code} value={name}>
             {name}
           </MenuItem>
         ))}
       </Select>
+      <TextField
+        label="Valor"
+        {...register("valueProject")}
+        color="warning"
+        variant="outlined"
+      />
+      <Select
+        color="warning"
+        labelId="select-label-helper"
+        {...register("gpProject")}
+        label="Gerente de Projetos Relacionado"
+        defaultValue=""
+      >
+        <MenuItem value="">Selecione uma opção</MenuItem>
+        {GPList?.data.map(({ name, surname }: UserRegister) => (
+          <MenuItem value={name + " " + surname} key={name + " " + surname}>
+            {name + " " + surname}
+          </MenuItem>
+        ))}
+      </Select>
+      <TextField
+        label="Descrição do Projeto"
+        {...register("description")}
+        color="warning"
+        variant="outlined"
+      />
       <Button type="submit" id="button-primary" variant="contained">
         Cadastrar
       </Button>

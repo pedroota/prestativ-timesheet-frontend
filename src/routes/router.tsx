@@ -9,6 +9,10 @@ import { RegisterUser } from "pages/Dashboard/pages/RegisterUser";
 import { RegisterClient } from "pages/Dashboard/pages/RegisterClient";
 import { RegisterProject } from "pages/Dashboard/pages/RegisterProject";
 import { RegisterActivity } from "pages/Dashboard/pages/RegisterActivity";
+import { ListClients } from "pages/Dashboard/pages/ListClients";
+import { ListProjects } from "pages/Dashboard/pages/ListProjects";
+import { ListActivities } from "pages/Dashboard/pages/ListActivities";
+import { ListUsers } from "pages/Dashboard/pages/ListUsers";
 
 export function Router() {
   return (
@@ -22,10 +26,10 @@ export function Router() {
             <Route path="register-project" element={<RegisterProject />} />
             <Route path="register-activity" element={<RegisterActivity />} />
             <Route path="register-user" element={<RegisterUser />} />
-            <Route path="timesheet-admin" element={<h1>Timesheet admin</h1>} />
-            <Route path="projects" element={<h1>Projects</h1>} />
-            <Route path="consultants" element={<h1>consultants</h1>} />
-            <Route path="activities" element={<h1>activities</h1>} />
+            <Route path="clients" element={<ListClients />} />
+            <Route path="projects" element={<ListProjects />} />
+            <Route path="activities" element={<ListActivities />} />
+            <Route path="users" element={<ListUsers />} />
           </Route>
         </Route>
       </Routes>
