@@ -139,6 +139,9 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
             <MenuIcon />
           </IconButton>
           <img src={Logo} alt="Prestativ SAP Logo" width="200px" />
+          <h2>
+            Seja Bem Vindo <label htmlFor="">USUÁRIO</label>
+          </h2>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>

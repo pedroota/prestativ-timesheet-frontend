@@ -7,6 +7,19 @@ import { getUserByRole } from "services/auth.service";
 import { createClients } from "services/clients.service";
 
 export function RegisterClient() {
+  async function buscarData(event: any) {
+    const tamanho = event.target.value.length;
+    console.log(tamanho);
+    if (tamanho == 8) {
+      console.log(event.target.value);
+      await fetch(`https://viacep.com.br/ws/${event.target.value}/json/`).then(
+        async (response) => {
+          console.log(response.json());
+        }
+      );
+    }
+  }
+
   const { data } = useQuery(["users-role", "Gerente de Projetos"], () =>
     getUserByRole("Gerente de Projetos")
   );
@@ -84,6 +97,7 @@ export function RegisterClient() {
         {...register("cnpj")}
       />
       <p>Endereço do cliente</p>
+      <p>DEV: Digite o CEP com o console aberto</p>
       <div className="c-register-client--input-container">
         <TextField
           required
@@ -92,6 +106,9 @@ export function RegisterClient() {
           label="CEP"
           type="text"
           {...register("cep")}
+          onChange={(e) => {
+            buscarData(e);
+          }}
         />
         <TextField
           required

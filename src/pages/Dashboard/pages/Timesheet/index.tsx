@@ -11,6 +11,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { Hours } from "interfaces/hours.interface";
 import { Button, Checkbox } from "@mui/material";
+import { useState } from "react";
+import { NewHourRow } from "components/NewHourRow";
+import { Filters } from "components/Filters";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -34,9 +37,14 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export function Timesheet() {
   const { data: hours } = useQuery(["hours"], () => getHours());
+  const [addNew, setAddNew] = useState(false);
+  const option: any = { weekday: "short" };
+  const locale = "pt-br";
 
   return (
     <div>
+      <Filters />
+      {/* Quando adiciona uma nova linha não é para a tabela ficar mudando de tamanho */}
       <Paper className="c-timesheet">
         <Table aria-label="customized table">
           <TableHead>
@@ -106,13 +114,31 @@ export function Timesheet() {
                     {new Date(initial).getHours() +
                       ":" +
                       new Date(initial).getMinutes()}
+                    <br />
+                    {new Date(initial)
+                      .toLocaleDateString(locale, option)
+                      .toUpperCase()}
                   </StyledTableCell>
                   <StyledTableCell align="center">
+                    {/* como as datas estão salvas em TIMESTAMP - para filtrar pode inserir a data, o sistema trata esses dados:
+                    se inserir o dia 25/01/2023 nos filtros por exemplo:
+                    o sistema pega o timestamp desse dia às 00:00:00 até 23:59:59 do mesmo dia - no caso:
+                    1674604800 até 1674691199
+                    e então filtra todos os lançamentos (iniciais e finais) que estão entre isso, por exemplo 16h do dia 25:
+                    1674604800 < 1674662400 < 1674691199 
+                    em código seria algo como:
+                    if ( dataFiltroInicial < lancamento && lancamento < dataFiltroFinal ) { exibir esse registro na tela do timesheet }
+                    https://rogertakemiya.com.br/converter-data-para-timestamp/
+                    */}
                     {new Date(final).toLocaleDateString()}
                     <br />
                     {new Date(final).getHours() +
                       ":" +
                       new Date(final).getMinutes()}
+                    <br />
+                    {new Date(final)
+                      .toLocaleDateString(locale, option)
+                      .toUpperCase()}
                   </StyledTableCell>
                   <StyledTableCell align="center">total</StyledTableCell>
                   <StyledTableCell align="center">
@@ -127,19 +153,19 @@ export function Timesheet() {
                   <StyledTableCell align="center">{relUser}</StyledTableCell>
                   <StyledTableCell align="center">
                     {!closedScope ? <Checkbox /> : <Checkbox defaultChecked />}
-                    {closedScope ? "sim" : "Não"}
+                    {closedScope ? "Sim" : "Não"}
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     {!billable ? <Checkbox /> : <Checkbox defaultChecked />}
-                    {billable ? "sim" : "Não"}
+                    {billable ? "Sim" : "Não"}
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     {!released ? <Checkbox /> : <Checkbox defaultChecked />}
-                    {released ? "sim" : "Não"}
+                    {released ? "Sim" : "Não"}
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     {!approved ? <Checkbox /> : <Checkbox defaultChecked />}
-                    {approved ? "sim" : "Não"}
+                    {approved ? "Sim" : "Não"}
                   </StyledTableCell>
                   <StyledTableCell align="center">{callNumber}</StyledTableCell>
                   <StyledTableCell align="center">
@@ -167,9 +193,18 @@ export function Timesheet() {
                 </StyledTableRow>
               )
             )}
+            {addNew && <NewHourRow />}
           </TableBody>
         </Table>
-        <Button>Novo Lançamento</Button>
+        {!addNew && (
+          <Button
+            onClick={() => {
+              setAddNew(true);
+            }}
+          >
+            Novo Lançamento
+          </Button>
+        )}
       </Paper>
     </div>
   );
