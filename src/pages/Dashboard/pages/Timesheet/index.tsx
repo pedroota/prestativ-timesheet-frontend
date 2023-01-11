@@ -38,8 +38,64 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export function Timesheet() {
   const { data: hours } = useQuery(["hours"], () => getHours());
   const [addNew, setAddNew] = useState(false);
-  const option: any = { weekday: "short" };
-  const locale = "pt-br";
+
+  function generateDateWithTimestamp(timestamp: number) {
+    return new Date(timestamp).toLocaleDateString();
+  }
+
+  function generateTimeWithTimestamp(timestamp: number) {
+    const date = new Date(timestamp);
+    const hours =
+      date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+    const minutes =
+      date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+    return hours + ":" + minutes;
+  }
+
+  function generateDayWeekWithTimestamp(timestamp: number) {
+    const option: any = { weekday: "short" };
+    const locale = "pt-br";
+    return new Date(timestamp)
+      .toLocaleDateString(locale, option)
+      .toUpperCase()
+      .slice(0, -1);
+  }
+
+  function generateTotalHours(initial: number, final: number) {
+    let hours = Math.trunc((final - initial) / 60 / 60 / 1000);
+    let minutes = ((final - initial) / 60 / 1000) % 60;
+    if (hours > 60) {
+      minutes = hours % 60;
+      hours = Math.trunc(hours / 60);
+    }
+    return hours + ":" + (minutes < 10 ? "0" + minutes : minutes);
+  }
+
+  function generateAdjustmentWithNumberInMilliseconds(number: number) {
+    if (!number) {
+      return "0";
+    }
+    let hours = Math.trunc(number / 60 / 60 / 60 / 1000);
+    let minutes = (number / 60 / 60 / 1000) % 60;
+    if (hours > 60) {
+      minutes = hours % 60;
+      hours = Math.trunc(hours / 60);
+    }
+    return hours + ":" + (minutes < 10 ? "0" + minutes : minutes);
+    // 3600000 equivale a um minuto
+  }
+
+  function generateTotalHoursWithAdjustment(
+    initial: number,
+    final: number,
+    adjustment: number
+  ) {
+    if (!adjustment) {
+      return generateTotalHours(initial, final);
+    } else {
+      return generateTotalHours(initial, final + adjustment / 60);
+    }
+  }
 
   return (
     <div>
@@ -109,42 +165,32 @@ export function Timesheet() {
               }: Hours) => (
                 <StyledTableRow key={_id}>
                   <StyledTableCell align="center">
-                    {new Date(initial).toLocaleDateString()}
+                    {generateDateWithTimestamp(initial)}
                     <br />
-                    {new Date(initial).getHours() +
-                      ":" +
-                      new Date(initial).getMinutes()}
+                    {generateTimeWithTimestamp(initial)}
                     <br />
-                    {new Date(initial)
-                      .toLocaleDateString(locale, option)
-                      .toUpperCase()}
+                    {generateDayWeekWithTimestamp(initial)}
                   </StyledTableCell>
                   <StyledTableCell align="center">
-                    {/* como as datas estão salvas em TIMESTAMP - para filtrar pode inserir a data, o sistema trata esses dados:
-                    se inserir o dia 25/01/2023 nos filtros por exemplo:
-                    o sistema pega o timestamp desse dia às 00:00:00 até 23:59:59 do mesmo dia - no caso:
-                    1674604800 até 1674691199
-                    e então filtra todos os lançamentos (iniciais e finais) que estão entre isso, por exemplo 16h do dia 25:
-                    1674604800 < 1674662400 < 1674691199 
-                    em código seria algo como:
-                    if ( dataFiltroInicial < lancamento && lancamento < dataFiltroFinal ) { exibir esse registro na tela do timesheet }
-                    https://rogertakemiya.com.br/converter-data-para-timestamp/
-                    */}
-                    {new Date(final).toLocaleDateString()}
+                    {generateDateWithTimestamp(final)}
                     <br />
-                    {new Date(final).getHours() +
-                      ":" +
-                      new Date(final).getMinutes()}
+                    {generateTimeWithTimestamp(final)}
                     <br />
-                    {new Date(final)
-                      .toLocaleDateString(locale, option)
-                      .toUpperCase()}
+                    {generateDayWeekWithTimestamp(final)}
                   </StyledTableCell>
-                  <StyledTableCell align="center">total</StyledTableCell>
                   <StyledTableCell align="center">
-                    {adjustment / 60 / 60 / 1000}
+                    {generateTotalHours(initial, final)}
                   </StyledTableCell>
-                  <StyledTableCell align="center">total ajuste</StyledTableCell>
+                  <StyledTableCell align="center">
+                    {generateAdjustmentWithNumberInMilliseconds(adjustment)}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {generateTotalHoursWithAdjustment(
+                      initial,
+                      final,
+                      adjustment
+                    )}
+                  </StyledTableCell>
                   <StyledTableCell align="center">{relClient}</StyledTableCell>
                   <StyledTableCell align="center">{relProject}</StyledTableCell>
                   <StyledTableCell align="center">
@@ -153,42 +199,48 @@ export function Timesheet() {
                   <StyledTableCell align="center">{relUser}</StyledTableCell>
                   <StyledTableCell align="center">
                     {!closedScope ? <Checkbox /> : <Checkbox defaultChecked />}
+                    <br />
                     {closedScope ? "Sim" : "Não"}
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     {!billable ? <Checkbox /> : <Checkbox defaultChecked />}
+                    <br />
                     {billable ? "Sim" : "Não"}
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     {!released ? <Checkbox /> : <Checkbox defaultChecked />}
+                    <br />
                     {released ? "Sim" : "Não"}
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     {!approved ? <Checkbox /> : <Checkbox defaultChecked />}
+                    <br />
                     {approved ? "Sim" : "Não"}
                   </StyledTableCell>
                   <StyledTableCell align="center">{callNumber}</StyledTableCell>
                   <StyledTableCell align="center">
-                    {new Date(createdAt).toLocaleDateString()}
+                    {generateDateWithTimestamp(createdAt)}
                     <br />
-                    {new Date(createdAt).getHours() +
-                      ":" +
-                      new Date(createdAt).getMinutes()}
+                    {generateTimeWithTimestamp(createdAt)}
                   </StyledTableCell>
                   <StyledTableCell align="center">
-                    {new Date(updatedAt).toLocaleDateString()}
+                    {generateDateWithTimestamp(updatedAt)}
                     <br />
-                    {new Date(updatedAt).getHours() +
-                      ":" +
-                      new Date(updatedAt).getMinutes()}
+                    {generateTimeWithTimestamp(updatedAt)}
                   </StyledTableCell>
                   <StyledTableCell align="center">
-                    <EditIcon />
-                    <DeleteIcon
-                      onClick={() => {
-                        deleteHours(_id);
-                      }}
-                    />
+                    {closedScope || billable || released || approved ? (
+                      " "
+                    ) : (
+                      <div>
+                        <EditIcon />
+                        <DeleteIcon
+                          onClick={() => {
+                            deleteHours(_id);
+                          }}
+                        />
+                      </div>
+                    )}
                   </StyledTableCell>
                 </StyledTableRow>
               )

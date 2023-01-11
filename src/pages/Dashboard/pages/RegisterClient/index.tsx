@@ -2,6 +2,7 @@ import { Button, MenuItem, Select, TextField } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { Clients } from "interfaces/clients.interface";
 import { UserRegister } from "interfaces/users.interface";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { getUserByRole } from "services/auth.service";
 import { createClients } from "services/clients.service";
@@ -9,16 +10,24 @@ import { createClients } from "services/clients.service";
 export function RegisterClient() {
   async function buscarData(event: any) {
     const tamanho = event.target.value.length;
-    console.log(tamanho);
     if (tamanho == 8) {
-      console.log(event.target.value);
-      await fetch(`https://viacep.com.br/ws/${event.target.value}/json/`).then(
-        async (response) => {
-          console.log(response.json());
-        }
+      const APIResponse = await fetch(
+        `https://viacep.com.br/ws/${event.target.value}/json/`
       );
+      if (APIResponse.status === 200) {
+        const data = await APIResponse.json();
+        setDadosEndereco([
+          data.logradouro,
+          data.localidade,
+          data.uf,
+          data.bairro,
+        ]);
+      }
     }
   }
+
+  const [dadosEndereco, setDadosEndereco] = useState(["", "", "", ""]);
+  // rua - cidade - estado - bairro
 
   const { data } = useQuery(["users-role", "Gerente de Projetos"], () =>
     getUserByRole("Gerente de Projetos")
@@ -97,7 +106,6 @@ export function RegisterClient() {
         {...register("cnpj")}
       />
       <p>Endereço do cliente</p>
-      <p>DEV: Digite o CEP com o console aberto</p>
       <div className="c-register-client--input-container">
         <TextField
           required
@@ -114,6 +122,7 @@ export function RegisterClient() {
           required
           color="warning"
           sx={{ width: "100%" }}
+          value={dadosEndereco[0]}
           label="Logradouro"
           type="text"
           {...register("street")}
@@ -124,6 +133,7 @@ export function RegisterClient() {
           required
           color="warning"
           sx={{ width: "100%" }}
+          value={dadosEndereco[1]}
           label="Cidade"
           type="text"
           {...register("city")}
@@ -132,6 +142,7 @@ export function RegisterClient() {
           required
           color="warning"
           sx={{ width: "100%" }}
+          value={dadosEndereco[2]}
           label="Estado"
           type="text"
           {...register("state")}
@@ -142,6 +153,7 @@ export function RegisterClient() {
           required
           color="warning"
           sx={{ width: "100%" }}
+          value={dadosEndereco[3]}
           label="Bairro"
           type="text"
           {...register("district")}
@@ -155,7 +167,6 @@ export function RegisterClient() {
           {...register("streetNumber")}
         />
         <TextField
-          required
           color="warning"
           sx={{ width: "100%" }}
           label="Complemento"
