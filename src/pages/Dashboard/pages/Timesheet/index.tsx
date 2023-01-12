@@ -88,8 +88,9 @@ export function Timesheet() {
                 <br />
                 Chamado
               </StyledTableCell>
-              <StyledTableCell align="center">Data Sistema</StyledTableCell>
-              <StyledTableCell align="center">Data Edição</StyledTableCell>
+              <StyledTableCell align="center">
+                Data Sistema / Data Edição
+              </StyledTableCell>
               <StyledTableCell align="center">Controles</StyledTableCell>
             </TableRow>
           </TableHead>
@@ -147,35 +148,50 @@ export function Timesheet() {
                   </StyledTableCell>
                   <StyledTableCell align="center">{relUser}</StyledTableCell>
                   <StyledTableCell align="center">
-                    {!closedScope ? <Checkbox /> : <Checkbox defaultChecked />}
+                    {!closedScope ? (
+                      <Checkbox disabled />
+                    ) : (
+                      <Checkbox disabled defaultChecked />
+                    )}
                     <br />
                     {closedScope ? "Sim" : "Não"}
                   </StyledTableCell>
                   <StyledTableCell align="center">
-                    {!billable ? <Checkbox /> : <Checkbox defaultChecked />}
+                    {!billable ? (
+                      <Checkbox disabled />
+                    ) : (
+                      <Checkbox disabled defaultChecked />
+                    )}
                     <br />
                     {billable ? "Sim" : "Não"}
                   </StyledTableCell>
                   <StyledTableCell align="center">
-                    {!released ? <Checkbox /> : <Checkbox defaultChecked />}
+                    {!released ? (
+                      <Checkbox disabled />
+                    ) : (
+                      <Checkbox disabled defaultChecked />
+                    )}
                     <br />
                     {released ? "Sim" : "Não"}
                   </StyledTableCell>
                   <StyledTableCell align="center">
-                    {!approved ? <Checkbox /> : <Checkbox defaultChecked />}
+                    {!approved ? (
+                      <Checkbox disabled />
+                    ) : (
+                      <Checkbox disabled defaultChecked />
+                    )}
                     <br />
                     {approved ? "Sim" : "Não"}
                   </StyledTableCell>
                   <StyledTableCell align="center">{callNumber}</StyledTableCell>
                   <StyledTableCell align="center">
-                    {generateDateWithTimestamp(createdAt)}
-                    <br />
-                    {generateTimeWithTimestamp(createdAt)}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {generateDateWithTimestamp(updatedAt)}
-                    <br />
-                    {generateTimeWithTimestamp(updatedAt)}
+                    {`${generateDateWithTimestamp(
+                      createdAt
+                    )}-${generateTimeWithTimestamp(
+                      createdAt
+                    )} ${generateDateWithTimestamp(
+                      updatedAt
+                    )}-${generateTimeWithTimestamp(updatedAt)}`}
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     {closedScope || billable || released || approved ? (

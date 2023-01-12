@@ -120,11 +120,7 @@ export function NewHourRow() {
       <StyledTableCell align="center">
         <Input type="text" />
       </StyledTableCell>
-      {/* DATA SISTEMA = Data que foi lançado no sistema */}
-      <StyledTableCell align="center">
-        <p>aguardando lançamento...</p>
-      </StyledTableCell>
-      {/* DATA EDIÇÃO = Data que foi editado */}
+      {/* DATA SISTEMA e DATA EDIÇÃO = Data que foi lançado no sistema e data da ultima edição */}
       <StyledTableCell align="center">
         <p>aguardando lançamento...</p>
       </StyledTableCell>
