@@ -13,6 +13,7 @@ import { ListClients } from "pages/Dashboard/pages/ListClients";
 import { ListProjects } from "pages/Dashboard/pages/ListProjects";
 import { ListActivities } from "pages/Dashboard/pages/ListActivities";
 import { ListUsers } from "pages/Dashboard/pages/ListUsers";
+import TesteGrid from "pages/Dashboard/pages/TesteGrid";
 
 export function Router() {
   return (
@@ -30,6 +31,7 @@ export function Router() {
             <Route path="projects" element={<ListProjects />} />
             <Route path="activities" element={<ListActivities />} />
             <Route path="users" element={<ListUsers />} />
+            <Route path="teste-grid" element={<TesteGrid />} />
           </Route>
         </Route>
       </Routes>
