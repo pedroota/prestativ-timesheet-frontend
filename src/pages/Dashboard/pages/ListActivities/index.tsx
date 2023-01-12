@@ -10,6 +10,7 @@ import Paper from "@mui/material/Paper";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { ActivitiesInfo } from "interfaces/activities.interface";
+import { EmptyList } from "components/EmptyList";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -37,61 +38,75 @@ export function ListActivities() {
   return (
     <div>
       <h1>Listagem de Atividades</h1>
-      <Paper className="c-timesheet">
-        <Table aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell align="center">Titulo</StyledTableCell>
-              <StyledTableCell align="center">
-                Projeto Relacionado
-              </StyledTableCell>
-              <StyledTableCell align="center">Valor Atividade</StyledTableCell>
-              <StyledTableCell align="center">
-                Gerente de Projetos
-              </StyledTableCell>
-              <StyledTableCell align="center">Descrição</StyledTableCell>
-              <StyledTableCell align="center">
-                Usuários Vinculados
-              </StyledTableCell>
-              <StyledTableCell align="center">Controles</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {activities?.data.map(
-              ({
-                _id,
-                title,
-                project,
-                valueActivity,
-                gpActivity,
-                description,
-                userString,
-              }: ActivitiesInfo) => (
-                <StyledTableRow key={_id}>
-                  <StyledTableCell align="center">{title}</StyledTableCell>
-                  <StyledTableCell align="center">{project}</StyledTableCell>
+      {activities?.data.length ? (
+        <div>
+          <Paper className="c-timesheet">
+            <Table aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell align="center">Titulo</StyledTableCell>
                   <StyledTableCell align="center">
-                    {valueActivity}
+                    Projeto Relacionado
                   </StyledTableCell>
-                  <StyledTableCell align="center">{gpActivity}</StyledTableCell>
                   <StyledTableCell align="center">
-                    {description}
+                    Valor Atividade
                   </StyledTableCell>
-                  <StyledTableCell align="center">{userString}</StyledTableCell>
                   <StyledTableCell align="center">
-                    <EditIcon />
-                    <DeleteIcon
-                      onClick={() => {
-                        deleteActivity(_id);
-                      }}
-                    />
+                    Gerente de Projetos
                   </StyledTableCell>
-                </StyledTableRow>
-              )
-            )}
-          </TableBody>
-        </Table>
-      </Paper>
+                  <StyledTableCell align="center">Descrição</StyledTableCell>
+                  <StyledTableCell align="center">
+                    Usuários Vinculados
+                  </StyledTableCell>
+                  <StyledTableCell align="center">Controles</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {activities?.data.map(
+                  ({
+                    _id,
+                    title,
+                    project,
+                    valueActivity,
+                    gpActivity,
+                    description,
+                    userString,
+                  }: ActivitiesInfo) => (
+                    <StyledTableRow key={_id}>
+                      <StyledTableCell align="center">{title}</StyledTableCell>
+                      <StyledTableCell align="center">
+                        {project}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {valueActivity}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {gpActivity}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {description}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {userString}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        <EditIcon />
+                        <DeleteIcon
+                          onClick={() => {
+                            deleteActivity(_id);
+                          }}
+                        />
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  )
+                )}
+              </TableBody>
+            </Table>
+          </Paper>
+        </div>
+      ) : (
+        <EmptyList />
+      )}
     </div>
   );
 }

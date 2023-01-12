@@ -10,6 +10,7 @@ import Paper from "@mui/material/Paper";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { ClientsInfo } from "interfaces/clients.interface";
+import { EmptyList } from "components/EmptyList";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -37,79 +38,87 @@ export function ListClients() {
   return (
     <div>
       <h1>Listagem de Clientes</h1>
-      <Paper className="c-timesheet">
-        <Table aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell align="center">Nome</StyledTableCell>
-              <StyledTableCell align="center">CNPJ</StyledTableCell>
-              <StyledTableCell align="center">Endereço</StyledTableCell>
-              <StyledTableCell align="center">Período Faturado</StyledTableCell>
-              <StyledTableCell align="center">
-                Limite de Cobrança + <br /> Dia de Pagamento
-              </StyledTableCell>
-              <StyledTableCell align="center">Valor</StyledTableCell>
-              <StyledTableCell align="center">
-                Gerente de Projetos
-              </StyledTableCell>
-              <StyledTableCell align="center">Controles</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {clients?.data.map(
-              ({
-                _id,
-                code,
-                name,
-                cnpj,
-                cep,
-                street,
-                streetNumber,
-                complement,
-                district,
-                city,
-                state,
-                createdAt,
-                updatedAt,
-                periodIn,
-                periodUntil,
-                billingLimit,
-                payDay,
-                valueClient,
-                gpClient,
-              }: ClientsInfo) => (
-                <StyledTableRow key={_id}>
-                  <StyledTableCell align="center">{name}</StyledTableCell>
-                  <StyledTableCell align="center">{cnpj}</StyledTableCell>
+      {clients?.data.length ? (
+        <div>
+          <Paper>
+            <Table aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell align="center">Nome</StyledTableCell>
+                  <StyledTableCell align="center">CNPJ</StyledTableCell>
+                  <StyledTableCell align="center">Endereço</StyledTableCell>
                   <StyledTableCell align="center">
-                    {cep + " " + street + " " + streetNumber + " " + complement}
-                    <br />
-                    {"Bairro " + district + " " + city + " " + state}
+                    Período Faturado
                   </StyledTableCell>
                   <StyledTableCell align="center">
-                    {"de: " + periodIn + "  até: " + periodUntil}
+                    Limite de Cobrança + <br /> Dia de Pagamento
                   </StyledTableCell>
+                  <StyledTableCell align="center">Valor</StyledTableCell>
                   <StyledTableCell align="center">
-                    {billingLimit + " / " + payDay}
+                    Gerente de Projetos
                   </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {valueClient}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">{gpClient}</StyledTableCell>
-                  <StyledTableCell align="center">
-                    <EditIcon />
-                    <DeleteIcon
-                      onClick={() => {
-                        deleteClient(_id);
-                      }}
-                    />
-                  </StyledTableCell>
-                </StyledTableRow>
-              )
-            )}
-          </TableBody>
-        </Table>
-      </Paper>
+                  <StyledTableCell align="center">Controles</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {clients?.data.map(
+                  ({
+                    _id,
+                    name,
+                    cnpj,
+                    cep,
+                    street,
+                    streetNumber,
+                    complement,
+                    district,
+                    city,
+                    state,
+                    periodIn,
+                    periodUntil,
+                    billingLimit,
+                    payDay,
+                    valueClient,
+                    gpClient,
+                  }: ClientsInfo) => (
+                    <StyledTableRow key={_id}>
+                      <StyledTableCell align="center">{name}</StyledTableCell>
+                      <StyledTableCell align="center">{cnpj}</StyledTableCell>
+                      <StyledTableCell align="center">
+                        {`${cep} ${street} ${streetNumber} ${complement}`}
+                        <br />
+                        {`Bairro ${district} ${city} ${state}`}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {`De: ${periodIn} Até: ${periodUntil}`}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {`${billingLimit} / ${payDay}`}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {valueClient}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {gpClient}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        <EditIcon />
+                        <DeleteIcon
+                          cursor="pointer"
+                          onClick={() => {
+                            deleteClient(_id);
+                          }}
+                        />
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  )
+                )}
+              </TableBody>
+            </Table>
+          </Paper>
+        </div>
+      ) : (
+        <EmptyList />
+      )}
     </div>
   );
 }

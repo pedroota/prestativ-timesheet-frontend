@@ -1,4 +1,4 @@
-import { User, UserRegister, UserInfo } from "interfaces/users.interface";
+import { User, UserRegister } from "interfaces/users.interface";
 import { Api } from "./api.service";
 
 export const signin = async ({ email, password }: User) => {
@@ -10,7 +10,7 @@ export const signin = async ({ email, password }: User) => {
   return result;
 };
 
-export const getUserByRole = async (role: string = "Gerente-De-Projetos") => {
+export const getUserByRole = async (role = "Gerente de Projetos") => {
   const result = await Api.get(`/auth/users?role=${role}`);
 
   return result;

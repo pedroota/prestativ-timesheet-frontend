@@ -15,7 +15,7 @@ import { Projects } from "interfaces/projects.interface";
 import { UserRegister } from "interfaces/users.interface";
 
 export function RegisterActivity() {
-  const { data: projectList } = useQuery(["client-project", "project"], () =>
+  const { data: projectList } = useQuery(["client-project"], () =>
     getProjects()
   );
   const { data: GPList } = useQuery(["users-role", "Gerente de Projetos"], () =>
@@ -115,11 +115,13 @@ export function RegisterActivity() {
           defaultValue=""
         >
           <MenuItem value="">Selecione uma opção</MenuItem>
-          {GPList?.data.map(({ name, surname }: UserRegister) => (
-            <MenuItem key={name + " " + surname} value={name + " " + surname}>
-              {name + " " + surname}
-            </MenuItem>
-          ))}
+          {GPList?.data.map(
+            ({ name, surname }: UserRegister, index: number) => (
+              <MenuItem key={index} value={`${name} ${surname}`}>
+                {`${name} ${surname}`}
+              </MenuItem>
+            )
+          )}
         </Select>
         <Select
           color="warning"
@@ -132,11 +134,13 @@ export function RegisterActivity() {
           label="Consultores relacionado"
         >
           <MenuItem value="">Selecione uma opção</MenuItem>
-          {consultantList?.data.map(({ name, surname }: UserRegister) => (
-            <MenuItem key={name + " " + surname} value={name + " " + surname}>
-              {name + " " + surname}
-            </MenuItem>
-          ))}
+          {consultantList?.data.map(
+            ({ name, surname }: UserRegister, index: number) => (
+              <MenuItem key={index} value={`${name} ${surname}`}>
+                {`${name} ${surname}`}
+              </MenuItem>
+            )
+          )}
         </Select>
       </div>
       <Button type="submit" id="button-primary" variant="contained">

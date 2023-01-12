@@ -1,0 +1,18 @@
+@use "../abstracts/mixins" as mixin;
+@use "../abstracts/functions" as function;
+
+.c-empty-list {
+  @include mixin.flex();
+  flex-direction: column;
+  gap: function.rem(25px);
+  margin: function.rem(50px) 0;
+
+  &--icon {
+    color: gray;
+    font-size: function.rem(80px) !important;
+  }
+
+  &--title {
+    color: gray;
+  }
+}

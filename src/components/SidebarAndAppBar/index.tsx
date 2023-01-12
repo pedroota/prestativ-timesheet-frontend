@@ -32,7 +32,6 @@ import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import WorkIcon from "@mui/icons-material/Work";
 import ExitToApp from "@mui/icons-material/ExitToApp";
 import PublicIcon from "@mui/icons-material/Public";
-import GridOnIcon from "@mui/icons-material/GridOn";
 
 const drawerWidth = 240;
 
@@ -139,9 +138,6 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
             <MenuIcon />
           </IconButton>
           <img src={Logo} alt="Prestativ SAP Logo" width="200px" />
-          <h2>
-            Seja Bem Vindo <label htmlFor="">USUÁRIO</label>
-          </h2>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
@@ -385,31 +381,6 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                 </ListItemIcon>
                 <ListItemText
                   primary={"Ver Usuários"}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-          <Link to="teste-grid">
-            <ListItem disablePadding>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  <GridOnIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary={"Teste Grid"}
                   sx={{ opacity: open ? 1 : 0 }}
                 />
               </ListItemButton>

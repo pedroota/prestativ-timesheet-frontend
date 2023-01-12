@@ -1,39 +1,33 @@
 import { Button, MenuItem, Select, TextField } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
+import { useCep } from "cep-hook";
 import { Clients } from "interfaces/clients.interface";
 import { UserRegister } from "interfaces/users.interface";
-import { useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { getUserByRole } from "services/auth.service";
 import { createClients } from "services/clients.service";
 
 export function RegisterClient() {
-  async function buscarData(event: any) {
-    const tamanho = event.target.value.length;
-    if (tamanho == 8) {
-      const APIResponse = await fetch(
-        `https://viacep.com.br/ws/${event.target.value}/json/`
-      );
-      if (APIResponse.status === 200) {
-        const data = await APIResponse.json();
-        setDadosEndereco([
-          data.logradouro,
-          data.localidade,
-          data.uf,
-          data.bairro,
-        ]);
-      }
-    }
-  }
-
-  const [dadosEndereco, setDadosEndereco] = useState(["", "", "", ""]);
-  // rua - cidade - estado - bairro
-
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue: setValueForm,
+  } = useForm<Clients>({});
   const { data } = useQuery(["users-role", "Gerente de Projetos"], () =>
     getUserByRole("Gerente de Projetos")
   );
-  console.log(data);
-  const { register, handleSubmit, reset } = useForm<Clients>({});
+  const [value, setValue, getZip] = useCep("");
+
+  useEffect(() => {
+    getZip().then((res) => {
+      setValueForm("street", `${res.logradouro}`);
+      setValueForm("city", `${res.localidade}`);
+      setValueForm("state", `${res.uf}`);
+      setValueForm("district", `${res.bairro}`);
+    });
+  }, [value]);
 
   const onSubmit = handleSubmit(
     ({
@@ -77,9 +71,6 @@ export function RegisterClient() {
     }
   );
 
-  // Só chama a função createClient() e manda esses dados ai, desse jeito {name, etc...}
-  // Embaixo, ali no formulário, corrige os campos, adiciona certinho as propriedades dentro dos ...register() e adiciona os campos que faltam (caso tenha)
-  // Verifica e testa TUDO antes de enviar para o GitHub
   return (
     <form className="c-register-client" onSubmit={onSubmit}>
       <h1 className="c-register-client--title">Cadastrar novo cliente</h1>
@@ -114,15 +105,13 @@ export function RegisterClient() {
           label="CEP"
           type="text"
           {...register("cep")}
-          onChange={(e) => {
-            buscarData(e);
-          }}
+          value={value}
+          onChange={(event) => setValue(event.target.value)}
         />
         <TextField
           required
           color="warning"
           sx={{ width: "100%" }}
-          value={dadosEndereco[0]}
           label="Logradouro"
           type="text"
           {...register("street")}
@@ -133,7 +122,6 @@ export function RegisterClient() {
           required
           color="warning"
           sx={{ width: "100%" }}
-          value={dadosEndereco[1]}
           label="Cidade"
           type="text"
           {...register("city")}
@@ -142,7 +130,6 @@ export function RegisterClient() {
           required
           color="warning"
           sx={{ width: "100%" }}
-          value={dadosEndereco[2]}
           label="Estado"
           type="text"
           {...register("state")}
@@ -153,7 +140,6 @@ export function RegisterClient() {
           required
           color="warning"
           sx={{ width: "100%" }}
-          value={dadosEndereco[3]}
           label="Bairro"
           type="text"
           {...register("district")}
@@ -230,9 +216,9 @@ export function RegisterClient() {
           {...register("gpClient")}
         >
           <MenuItem value="">Selecione uma opção</MenuItem>
-          {data?.data.map(({ name, surname }: UserRegister) => (
-            <MenuItem value={name + " " + surname} key={name + " " + surname}>
-              {name + " " + surname}
+          {data?.data.map(({ name, surname }: UserRegister, index: number) => (
+            <MenuItem value={`${name} ${surname}`} key={index}>
+              {`${name} ${surname}`}
             </MenuItem>
           ))}
         </Select>

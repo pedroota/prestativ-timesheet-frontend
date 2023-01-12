@@ -65,9 +65,9 @@ export function RegisterProject() {
         defaultValue=""
       >
         <MenuItem value="">Selecione uma opção</MenuItem>
-        {GPList?.data.map(({ name, surname }: UserRegister) => (
-          <MenuItem value={name + " " + surname} key={name + " " + surname}>
-            {name + " " + surname}
+        {GPList?.data.map(({ name, surname }: UserRegister, index: number) => (
+          <MenuItem value={`${name} ${surname}`} key={index}>
+            {`${name} ${surname}`}
           </MenuItem>
         ))}
       </Select>
