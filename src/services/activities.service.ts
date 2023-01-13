@@ -32,3 +32,26 @@ export const deleteActivity = async (_id: string) => {
 
   return result;
 };
+
+export const updateActivity = async (
+  id: string,
+  {
+    title,
+    project,
+    description,
+    gpActivity,
+    userString,
+    valueActivity,
+  }: Activities
+) => {
+  const result = await Api.put(`/activities/${id}`, {
+    title,
+    project,
+    description,
+    gpActivity,
+    userString,
+    valueActivity,
+  });
+
+  return result;
+};

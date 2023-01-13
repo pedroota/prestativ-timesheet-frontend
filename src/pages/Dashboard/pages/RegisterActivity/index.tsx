@@ -14,6 +14,7 @@ import { createActivities } from "services/activities.service";
 import { Projects } from "interfaces/projects.interface";
 import { UserRegister } from "interfaces/users.interface";
 import { toast } from "react-toastify";
+import { Activities } from "interfaces/activities.interface";
 
 export function RegisterActivity() {
   const { data: projectList } = useQuery(["client-project"], () =>
@@ -26,7 +27,7 @@ export function RegisterActivity() {
     ["user-consultant", "Consultor"],
     () => getUserByRole("Consultor")
   );
-  const { register, handleSubmit, reset } = useForm({});
+  const { register, handleSubmit, reset } = useForm<Activities>({});
   const [multipleSelect, setMultipleSelect] = useState<string[]>([]);
 
   const onSubmit = handleSubmit(
@@ -88,13 +89,6 @@ export function RegisterActivity() {
           </MenuItem>
         ))}
       </Select>
-      <TextField
-        required
-        color="warning"
-        label="Número do chamado"
-        type="text"
-        {...register("callNumber")}
-      />
       <TextField
         required
         color="warning"
