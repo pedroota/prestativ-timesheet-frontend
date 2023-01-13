@@ -64,7 +64,7 @@ export function ModalEditProject({
         open={isOpen}
         onClose={() => setIsOpen((prevState) => !prevState)}
       >
-        <Box sx={{ padding: 4 }}>
+        <Box sx={{ padding: 4, minWidth: 420 }}>
           <Box
             sx={{
               display: "flex",
