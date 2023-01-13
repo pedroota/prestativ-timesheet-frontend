@@ -66,10 +66,12 @@ export function RegisterClient() {
         payDay,
         valueClient,
         gpClient,
-      }).then(() => {
-        reset();
-        toast.success("Cliente criado com sucesso.");
-      });
+      })
+        .then(() => {
+          reset();
+          toast.success("Cliente criado com sucesso.");
+        })
+        .catch(() => toast.error("Erro ao cadastrar o cliente."));
     }
   );
 

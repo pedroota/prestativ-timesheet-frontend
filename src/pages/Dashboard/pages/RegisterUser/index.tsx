@@ -6,6 +6,7 @@ import { UserRegister } from "interfaces/users.interface";
 import { useQuery } from "@tanstack/react-query";
 import { getRoles } from "services/roles.service";
 import { Roles } from "interfaces/roles.interface";
+import { toast } from "react-toastify";
 
 export function RegisterUser() {
   const { data } = useQuery(["roles"], getRoles);
@@ -13,9 +14,12 @@ export function RegisterUser() {
   const { register, handleSubmit, reset } = useForm<UserRegister>({});
 
   const onSubmit = handleSubmit(({ name, surname, email, password, role }) => {
-    signUp({ name, surname, email, password, role }).then(() => {
-      reset();
-    });
+    signUp({ name, surname, email, password, role })
+      .then(() => {
+        reset();
+        toast.success("Usuário cadastrado com sucesso.");
+      })
+      .catch(() => toast.error("Erro ao cadastrar o usuário."));
   });
 
   return (

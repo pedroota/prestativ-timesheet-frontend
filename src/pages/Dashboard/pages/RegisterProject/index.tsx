@@ -7,6 +7,7 @@ import { getUserByRole } from "services/auth.service";
 import { createProjects } from "services/project.service";
 import { UserRegister } from "interfaces/users.interface";
 import { Clients } from "interfaces/clients.interface";
+import { toast } from "react-toastify";
 
 export function RegisterProject() {
   const { data: clientList } = useQuery([], () => getClients());
@@ -23,7 +24,9 @@ export function RegisterProject() {
         valueProject,
         gpProject,
         description,
-      });
+      })
+        .then(() => toast.success("Projeto criado com sucesso."))
+        .catch(() => toast.error("Erro ao criar o projeto."));
     }
   );
 

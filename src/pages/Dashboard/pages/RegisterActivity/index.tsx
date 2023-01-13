@@ -13,6 +13,7 @@ import { getUserByRole } from "services/auth.service";
 import { createActivities } from "services/activities.service";
 import { Projects } from "interfaces/projects.interface";
 import { UserRegister } from "interfaces/users.interface";
+import { toast } from "react-toastify";
 
 export function RegisterActivity() {
   const { data: projectList } = useQuery(["client-project"], () =>
@@ -44,9 +45,12 @@ export function RegisterActivity() {
         gpActivity,
         description,
         userString,
-      }).then(() => {
-        reset();
-      });
+      })
+        .then(() => {
+          reset();
+          toast.success("Atividade cadastrada com sucesso.");
+        })
+        .catch(() => toast.error("Erro ao cadastrar a atividade."));
     }
   );
 
