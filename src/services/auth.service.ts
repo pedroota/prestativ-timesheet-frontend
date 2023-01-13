@@ -16,6 +16,12 @@ export const getUserByRole = async (role = "Gerente de Projetos") => {
   return result;
 };
 
+export const getUserById = async (id: string) => {
+  const result = await Api.get(`/auth/users/${id}`);
+
+  return result;
+};
+
 export const getAllUsers = async () => {
   const result = await Api.get("/auth/users");
 
@@ -24,6 +30,21 @@ export const getAllUsers = async () => {
 
 export const deleteUser = async (_id: string) => {
   const result = await Api.delete(`/auth/users/${_id}`);
+
+  return result;
+};
+
+export const updateUser = async (
+  _id: string | undefined,
+  { name, surname, email, password, role }: UserRegister
+) => {
+  const result = await Api.put(`/auth/users/${_id}`, {
+    name,
+    surname,
+    email,
+    password,
+    role,
+  });
 
   return result;
 };

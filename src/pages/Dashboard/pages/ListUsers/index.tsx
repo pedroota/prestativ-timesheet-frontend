@@ -1,15 +1,21 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { deleteUser, getAllUsers } from "services/auth.service";
 import { styled } from "@mui/material/styles";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableRow,
+  Paper,
+  Typography,
+} from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { UserInfo } from "interfaces/users.interface";
+import { EmptyList } from "components/EmptyList";
+import { ModalEditUser } from "./components/ModalEditUser";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -32,45 +38,73 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export function ListUsers() {
+  const [isEditingUser, setIsEditingUser] = useState(false);
+  const [currentUser, setCurrentUser] = useState("");
   const { data: users } = useQuery(["users"], () => getAllUsers());
 
   return (
     <div>
-      <h1>Listagem de Usuários</h1>
-      <Paper className="c-timesheet">
-        <Table aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell align="center">Nome</StyledTableCell>
-              <StyledTableCell align="center">Email</StyledTableCell>
-              <StyledTableCell align="center">Permissão</StyledTableCell>
-              <StyledTableCell align="center">Controles</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {users?.data.map(
-              ({ name, surname, email, role, _id }: UserInfo) => (
-                <StyledTableRow key={_id}>
-                  <StyledTableCell align="center">
-                    {`${name} ${surname}`}
-                  </StyledTableCell>
+      <Typography variant="h4" sx={{ marginBlock: "1.3rem" }}>
+        Listagem de Usuários
+      </Typography>
+      {users?.data.length ? (
+        <div>
+          <Paper className="c-timesheet">
+            <Table aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell align="center">Nome</StyledTableCell>
+                  <StyledTableCell align="center">Email</StyledTableCell>
+                  <StyledTableCell align="center">Permissão</StyledTableCell>
+                  <StyledTableCell align="center">Controles</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {users?.data.map(
+                  ({ name, surname, email, role, _id }: UserInfo) => (
+                    <StyledTableRow key={_id}>
+                      <StyledTableCell align="center">
+                        {`${name} ${surname}`}
+                      </StyledTableCell>
 
-                  <StyledTableCell align="center">{email}</StyledTableCell>
-                  <StyledTableCell align="center">{role}</StyledTableCell>
-                  <StyledTableCell align="center">
-                    <EditIcon />
-                    <DeleteIcon
-                      onClick={() => {
-                        deleteUser(_id);
-                      }}
-                    />
-                  </StyledTableCell>
-                </StyledTableRow>
-              )
-            )}
-          </TableBody>
-        </Table>
-      </Paper>
+                      <StyledTableCell align="center">{email}</StyledTableCell>
+                      <StyledTableCell align="center">{role}</StyledTableCell>
+                      <StyledTableCell
+                        sx={{
+                          display: "flex",
+                          gap: "20px",
+                          justifyContent: "center",
+                          cursor: "pointer",
+                        }}
+                        align="center"
+                      >
+                        <EditIcon
+                          onClick={() => {
+                            setCurrentUser(_id);
+                            setIsEditingUser((prevState) => !prevState);
+                          }}
+                        />
+                        <DeleteIcon
+                          onClick={() => {
+                            deleteUser(_id);
+                          }}
+                        />
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  )
+                )}
+              </TableBody>
+            </Table>
+          </Paper>
+          <ModalEditUser
+            isOpen={isEditingUser}
+            setIsOpen={setIsEditingUser}
+            currentUser={currentUser}
+          />
+        </div>
+      ) : (
+        <EmptyList />
+      )}
     </div>
   );
 }

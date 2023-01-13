@@ -1,0 +1,8 @@
+@use "../abstracts/functions" as function;
+
+.c-form-spacing {
+  display: flex;
+  flex-direction: column;
+  gap: function.rem(15px);
+  margin: function.rem(20px) 0;
+}

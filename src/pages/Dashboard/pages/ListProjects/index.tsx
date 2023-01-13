@@ -10,6 +10,7 @@ import Paper from "@mui/material/Paper";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { ProjectsInfo } from "interfaces/projects.interface";
+import { EmptyList } from "components/EmptyList";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -37,56 +38,68 @@ export function ListProjects() {
   return (
     <div>
       <h1>Listagem de Projetos</h1>
-      <Paper className="c-timesheet">
-        <Table aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell align="center">Titulo</StyledTableCell>
-              <StyledTableCell align="center">
-                Cliente Relacionado
-              </StyledTableCell>
-              <StyledTableCell align="center">Valor Projeto</StyledTableCell>
-              <StyledTableCell align="center">
-                Gerente de Projetos
-              </StyledTableCell>
-              <StyledTableCell align="center">Descrição</StyledTableCell>
-              <StyledTableCell align="center">Controles</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {projects?.data.map(
-              ({
-                _id,
-                title,
-                idClient,
-                valueProject,
-                gpProject,
-                description,
-              }: ProjectsInfo) => (
-                <StyledTableRow key={_id}>
-                  <StyledTableCell align="center">{title}</StyledTableCell>
-                  <StyledTableCell align="center">{idClient}</StyledTableCell>
+      {projects?.data.length ? (
+        <div>
+          <Paper className="c-timesheet">
+            <Table aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell align="center">Titulo</StyledTableCell>
                   <StyledTableCell align="center">
-                    {valueProject}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">{gpProject}</StyledTableCell>
-                  <StyledTableCell align="center">
-                    {description}
+                    Cliente Relacionado
                   </StyledTableCell>
                   <StyledTableCell align="center">
-                    <EditIcon />
-                    <DeleteIcon
-                      onClick={() => {
-                        deleteProject(_id);
-                      }}
-                    />
+                    Valor Projeto
                   </StyledTableCell>
-                </StyledTableRow>
-              )
-            )}
-          </TableBody>
-        </Table>
-      </Paper>
+                  <StyledTableCell align="center">
+                    Gerente de Projetos
+                  </StyledTableCell>
+                  <StyledTableCell align="center">Descrição</StyledTableCell>
+                  <StyledTableCell align="center">Controles</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {projects?.data.map(
+                  ({
+                    _id,
+                    title,
+                    idClient,
+                    valueProject,
+                    gpProject,
+                    description,
+                  }: ProjectsInfo) => (
+                    <StyledTableRow key={_id}>
+                      <StyledTableCell align="center">{title}</StyledTableCell>
+                      <StyledTableCell align="center">
+                        {idClient}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {valueProject}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {gpProject}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {description}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        <EditIcon />
+                        <DeleteIcon
+                          onClick={() => {
+                            deleteProject(_id);
+                          }}
+                        />
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  )
+                )}
+              </TableBody>
+            </Table>
+          </Paper>
+        </div>
+      ) : (
+        <EmptyList />
+      )}
     </div>
   );
 }

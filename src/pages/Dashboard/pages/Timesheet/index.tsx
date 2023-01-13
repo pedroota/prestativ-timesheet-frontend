@@ -51,152 +51,148 @@ export function Timesheet() {
     <div>
       <Filters />
       <Paper className="c-timesheet">
-        <Table aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell align="center">
-                Horário
-                <br />
-                Inicial
-              </StyledTableCell>
-              <StyledTableCell align="center">
-                Horário
-                <br />
-                Final
-              </StyledTableCell>
-              <StyledTableCell align="center">Total</StyledTableCell>
-              <StyledTableCell align="center">Ajuste</StyledTableCell>
-              <StyledTableCell align="center">
-                Total
-                <br />
-                c/ Ajuste
-              </StyledTableCell>
-              <StyledTableCell align="center">Cliente</StyledTableCell>
-              <StyledTableCell align="center">Projeto</StyledTableCell>
-              <StyledTableCell align="center">Atividade</StyledTableCell>
-              <StyledTableCell align="center">Consultor</StyledTableCell>
-              <StyledTableCell align="center">
-                Escopo
-                <br />
-                Fechado
-              </StyledTableCell>
-              <StyledTableCell align="center">Faturável</StyledTableCell>
-              <StyledTableCell align="center">Lançado</StyledTableCell>
-              <StyledTableCell align="center">Aprovado</StyledTableCell>
-              <StyledTableCell align="center">
-                Número do
-                <br />
-                Chamado
-              </StyledTableCell>
-              <StyledTableCell align="center">Data Sistema</StyledTableCell>
-              <StyledTableCell align="center">Data Edição</StyledTableCell>
-              <StyledTableCell align="center">Controles</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {hours?.data.map(
-              ({
-                _id,
-                initial,
-                final,
-                adjustment,
-                relClient,
-                relProject,
-                relActivity,
-                relUser,
-                closedScope,
-                billable,
-                released,
-                approved,
-                callNumber,
-                createdAt,
-                updatedAt,
-              }: Hours) => (
-                <StyledTableRow key={_id}>
+        <div className="c-table">
+          <div className="c-table--helper">
+            <Table className="c-table" aria-label="customized table">
+              <TableHead>
+                <TableRow className="c-table--reset-head">
                   <StyledTableCell align="center">
-                    {generateDateWithTimestamp(initial)}
-                    <br />
-                    {generateTimeWithTimestamp(initial)}
-                    <br />
-                    {generateDayWeekWithTimestamp(initial)}
+                    Horário Inicial
                   </StyledTableCell>
                   <StyledTableCell align="center">
-                    {generateDateWithTimestamp(final)}
-                    <br />
-                    {generateTimeWithTimestamp(final)}
-                    <br />
-                    {generateDayWeekWithTimestamp(final)}
+                    Horário Final
                   </StyledTableCell>
+                  <StyledTableCell align="center">Total</StyledTableCell>
+                  <StyledTableCell align="center">Ajuste</StyledTableCell>
                   <StyledTableCell align="center">
-                    {generateTotalHours(initial, final)}
+                    Total c/ Ajuste
                   </StyledTableCell>
+                  <StyledTableCell align="center">Cliente</StyledTableCell>
+                  <StyledTableCell align="center">Projeto</StyledTableCell>
+                  <StyledTableCell align="center">Atividade</StyledTableCell>
+                  <StyledTableCell align="center">Consultor</StyledTableCell>
                   <StyledTableCell align="center">
-                    {generateAdjustmentWithNumberInMilliseconds(adjustment)}
+                    Escopo Fechado
                   </StyledTableCell>
+                  <StyledTableCell align="center">Faturável</StyledTableCell>
+                  <StyledTableCell align="center">Lançado</StyledTableCell>
+                  <StyledTableCell align="center">Aprovado</StyledTableCell>
                   <StyledTableCell align="center">
-                    {generateTotalHoursWithAdjustment(
-                      initial,
-                      final,
-                      adjustment
-                    )}
+                    Número do Chamado
                   </StyledTableCell>
-                  <StyledTableCell align="center">{relClient}</StyledTableCell>
-                  <StyledTableCell align="center">{relProject}</StyledTableCell>
-                  <StyledTableCell align="center">
-                    {relActivity}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">{relUser}</StyledTableCell>
-                  <StyledTableCell align="center">
-                    {!closedScope ? <Checkbox /> : <Checkbox defaultChecked />}
-                    <br />
-                    {closedScope ? "Sim" : "Não"}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {!billable ? <Checkbox /> : <Checkbox defaultChecked />}
-                    <br />
-                    {billable ? "Sim" : "Não"}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {!released ? <Checkbox /> : <Checkbox defaultChecked />}
-                    <br />
-                    {released ? "Sim" : "Não"}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {!approved ? <Checkbox /> : <Checkbox defaultChecked />}
-                    <br />
-                    {approved ? "Sim" : "Não"}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">{callNumber}</StyledTableCell>
-                  <StyledTableCell align="center">
-                    {generateDateWithTimestamp(createdAt)}
-                    <br />
-                    {generateTimeWithTimestamp(createdAt)}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {generateDateWithTimestamp(updatedAt)}
-                    <br />
-                    {generateTimeWithTimestamp(updatedAt)}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {closedScope || billable || released || approved ? (
-                      " "
-                    ) : (
-                      <div>
-                        <EditIcon />
-                        <DeleteIcon
-                          onClick={() => {
-                            deleteHours(_id);
-                          }}
-                        />
-                      </div>
-                    )}
-                  </StyledTableCell>
-                </StyledTableRow>
-              )
-            )}
-            {addNew && <NewHourRow />}
-          </TableBody>
-        </Table>
+                  <StyledTableCell align="center">Data Sistema</StyledTableCell>
+                  <StyledTableCell align="center">Data Edição</StyledTableCell>
+                  <StyledTableCell align="center">Controles</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {hours?.data.map(
+                  ({
+                    _id,
+                    initial,
+                    final,
+                    adjustment,
+                    relClient,
+                    relProject,
+                    relActivity,
+                    relUser,
+                    closedScope,
+                    billable,
+                    released,
+                    approved,
+                    callNumber,
+                    createdAt,
+                    updatedAt,
+                  }: Hours) => (
+                    <StyledTableRow key={_id}>
+                      <StyledTableCell align="center">
+                        {generateDateWithTimestamp(initial)}
+                        {generateTimeWithTimestamp(initial)}
+                        {generateDayWeekWithTimestamp(initial)}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {generateDateWithTimestamp(final)}
+                        {generateTimeWithTimestamp(final)}
+                        {generateDayWeekWithTimestamp(final)}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {generateTotalHours(initial, final)}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {generateAdjustmentWithNumberInMilliseconds(adjustment)}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {generateTotalHoursWithAdjustment(
+                          initial,
+                          final,
+                          adjustment
+                        )}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {relClient}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {relProject}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {relActivity}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {relUser}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {!closedScope ? (
+                          <Checkbox />
+                        ) : (
+                          <Checkbox defaultChecked />
+                        )}
+                        {closedScope ? "Sim" : "Não"}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {!billable ? <Checkbox /> : <Checkbox defaultChecked />}
+                        {billable ? "Sim" : "Não"}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {!released ? <Checkbox /> : <Checkbox defaultChecked />}
+                        {released ? "Sim" : "Não"}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {!approved ? <Checkbox /> : <Checkbox defaultChecked />}
+                        {approved ? "Sim" : "Não"}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {callNumber}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {generateDateWithTimestamp(createdAt)}
+                        {generateTimeWithTimestamp(createdAt)}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {generateDateWithTimestamp(updatedAt)}
+                        {generateTimeWithTimestamp(updatedAt)}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {closedScope || billable || released || approved ? (
+                          " "
+                        ) : (
+                          <div>
+                            <EditIcon />
+                            <DeleteIcon
+                              onClick={() => {
+                                deleteHours(_id);
+                              }}
+                            />
+                          </div>
+                        )}
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  )
+                )}
+                {addNew && <NewHourRow />}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
         {!addNew && (
           <Button
             onClick={() => {

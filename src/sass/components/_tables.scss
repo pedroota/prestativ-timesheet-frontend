@@ -1,0 +1,15 @@
+.c-table {
+  overflow-x: auto;
+
+  &--helper {
+    width: 100%;
+    display: table;
+    table-layout: fixed;
+  }
+
+  &--reset-head {
+    > th {
+      white-space: nowrap;
+    }
+  }
+}
