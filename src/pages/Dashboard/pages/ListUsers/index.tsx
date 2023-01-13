@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteUser, getAllUsers } from "services/auth.service";
 import { styled } from "@mui/material/styles";
 import {
@@ -41,6 +41,14 @@ export function ListUsers() {
   const [isEditingUser, setIsEditingUser] = useState(false);
   const [currentUser, setCurrentUser] = useState("");
   const { data: users } = useQuery(["users"], () => getAllUsers());
+  const queryClient = useQueryClient();
+
+  // Delete user Mutation
+  const { mutate } = useMutation((id: string) => deleteUser(id), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["users"]);
+    },
+  });
 
   return (
     <div>
@@ -84,11 +92,7 @@ export function ListUsers() {
                             setIsEditingUser((prevState) => !prevState);
                           }}
                         />
-                        <DeleteIcon
-                          onClick={() => {
-                            deleteUser(_id);
-                          }}
-                        />
+                        <DeleteIcon onClick={() => mutate(_id)} />
                       </StyledTableCell>
                     </StyledTableRow>
                   )
