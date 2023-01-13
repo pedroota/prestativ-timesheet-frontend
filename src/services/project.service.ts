@@ -25,6 +25,21 @@ export const createProjects = async ({
   return result;
 };
 
+export const updateProjects = async (
+  id: string,
+  { title, idClient, valueProject, gpProject, description }: Projects
+) => {
+  const results = await Api.put(`/projects/${id}`, {
+    title,
+    idClient,
+    valueProject,
+    gpProject,
+    description,
+  });
+
+  return results;
+};
+
 export const deleteProject = async (_id: string) => {
   const result = await Api.delete(`/projects/${_id}`);
 

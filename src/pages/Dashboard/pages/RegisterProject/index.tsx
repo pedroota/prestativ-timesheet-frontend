@@ -14,7 +14,7 @@ export function RegisterProject() {
   const { data: GPList } = useQuery(["users-role", "Gerente de Projetos"], () =>
     getUserByRole("Gerente de Projetos")
   );
-  const { register, handleSubmit } = useForm<Projects>({});
+  const { register, handleSubmit, reset } = useForm<Projects>({});
 
   const onSubmit = handleSubmit(
     ({ title, idClient, valueProject, gpProject, description }) => {
@@ -25,7 +25,10 @@ export function RegisterProject() {
         gpProject,
         description,
       })
-        .then(() => toast.success("Projeto criado com sucesso."))
+        .then(() => {
+          reset();
+          toast.success("Projeto criado com sucesso.");
+        })
         .catch(() => toast.error("Erro ao criar o projeto."));
     }
   );

@@ -1,16 +1,22 @@
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteProject, getProjects } from "services/project.service";
 import { styled } from "@mui/material/styles";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableRow,
+  Paper,
+  Typography,
+} from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { ProjectsInfo } from "interfaces/projects.interface";
 import { EmptyList } from "components/EmptyList";
+import { formatCurrency } from "utils/formatCurrency";
+import { ModalEditProject } from "./components/ModalEditProjects";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -33,69 +39,106 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export function ListProjects() {
+  const [currentProject, setCurrentProject] = useState("");
+  const [isEditingProject, setIsEditingProject] = useState(false);
+  const queryClient = useQueryClient();
   const { data: projects } = useQuery(["projects"], () => getProjects());
+
+  // Delete project mutation
+  const { mutate } = useMutation((id: string) => deleteProject(id), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["projects"]);
+    },
+  });
 
   return (
     <div>
-      <h1>Listagem de Projetos</h1>
+      <Typography variant="h4" sx={{ marginBlock: "1.3rem" }}>
+        Listagem de Projetos
+      </Typography>
       {projects?.data.length ? (
         <div>
           <Paper className="c-timesheet">
-            <Table aria-label="customized table">
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell align="center">Titulo</StyledTableCell>
-                  <StyledTableCell align="center">
-                    Cliente Relacionado
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    Valor Projeto
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    Gerente de Projetos
-                  </StyledTableCell>
-                  <StyledTableCell align="center">Descrição</StyledTableCell>
-                  <StyledTableCell align="center">Controles</StyledTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {projects?.data.map(
-                  ({
-                    _id,
-                    title,
-                    idClient,
-                    valueProject,
-                    gpProject,
-                    description,
-                  }: ProjectsInfo) => (
-                    <StyledTableRow key={_id}>
-                      <StyledTableCell align="center">{title}</StyledTableCell>
+            <div className="c-table">
+              <div className="c-table--helper">
+                <Table aria-label="customized table">
+                  <TableHead>
+                    <TableRow className="c-table--reset-head">
+                      <StyledTableCell align="center">Titulo</StyledTableCell>
                       <StyledTableCell align="center">
-                        {idClient}
+                        Cliente Relacionado
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {valueProject}
+                        Valor Projeto
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {gpProject}
+                        Gerente de Projetos
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {description}
+                        Descrição
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        <EditIcon />
-                        <DeleteIcon
-                          onClick={() => {
-                            deleteProject(_id);
-                          }}
-                        />
+                        Controles
                       </StyledTableCell>
-                    </StyledTableRow>
-                  )
-                )}
-              </TableBody>
-            </Table>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {projects?.data.map(
+                      ({
+                        _id,
+                        title,
+                        idClient,
+                        valueProject,
+                        gpProject,
+                        description,
+                      }: ProjectsInfo) => (
+                        <StyledTableRow key={_id}>
+                          <StyledTableCell align="center">
+                            {title}
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            {idClient}
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            {formatCurrency(valueProject)}
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            {gpProject}
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            {description}
+                          </StyledTableCell>
+                          <StyledTableCell
+                            sx={{
+                              display: "flex",
+                              gap: "20px",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              cursor: "pointer",
+                            }}
+                            align="center"
+                          >
+                            <EditIcon
+                              onClick={() => {
+                                setCurrentProject(_id);
+                                setIsEditingProject((prevState) => !prevState);
+                              }}
+                            />
+                            <DeleteIcon onClick={() => mutate(_id)} />
+                          </StyledTableCell>
+                        </StyledTableRow>
+                      )
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
           </Paper>
+          <ModalEditProject
+            isOpen={isEditingProject}
+            setIsOpen={setIsEditingProject}
+            currentProject={currentProject}
+          />
         </div>
       ) : (
         <EmptyList />
