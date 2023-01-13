@@ -5,6 +5,7 @@ import { Clients } from "interfaces/clients.interface";
 import { UserRegister } from "interfaces/users.interface";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import { getUserByRole } from "services/auth.service";
 import { createClients } from "services/clients.service";
 
@@ -67,6 +68,7 @@ export function RegisterClient() {
         gpClient,
       }).then(() => {
         reset();
+        toast.success("Cliente criado com sucesso.");
       });
     }
   );

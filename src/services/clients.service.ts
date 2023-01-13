@@ -47,6 +47,49 @@ export const createClients = async ({
   return result;
 };
 
+export const updateClient = async (
+  id: string,
+  {
+    code,
+    name,
+    cnpj,
+    cep,
+    street,
+    streetNumber,
+    complement,
+    district,
+    city,
+    state,
+    periodIn,
+    periodUntil,
+    billingLimit,
+    payDay,
+    valueClient,
+    gpClient,
+  }: Clients
+) => {
+  const results = await Api.put(`/clients/${id}`, {
+    code,
+    name,
+    cnpj,
+    cep,
+    street,
+    streetNumber,
+    complement,
+    district,
+    city,
+    state,
+    periodIn,
+    periodUntil,
+    billingLimit,
+    payDay,
+    valueClient,
+    gpClient,
+  });
+
+  return results;
+};
+
 export const deleteClient = async (_id: string) => {
   const result = await Api.delete(`/clients/${_id}`);
 
