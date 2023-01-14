@@ -1,21 +1,23 @@
 import { useState, useContext } from "react";
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
-import Box from "@mui/material/Box";
+import {
+  Box,
+  Toolbar,
+  List,
+  CssBaseline,
+  Typography,
+  Divider,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
-import CssBaseline from "@mui/material/CssBaseline";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
 import Logo from "assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "context/AuthContext";
@@ -32,6 +34,7 @@ import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import WorkIcon from "@mui/icons-material/Work";
 import ExitToApp from "@mui/icons-material/ExitToApp";
 import PublicIcon from "@mui/icons-material/Public";
+import { HeaderUser } from "components/HeaderUser";
 
 const drawerWidth = 240;
 
@@ -137,7 +140,17 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
           >
             <MenuIcon />
           </IconButton>
-          <img src={Logo} alt="Prestativ SAP Logo" width="200px" />
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: "100%",
+            }}
+          >
+            <img src={Logo} alt="Prestativ SAP Logo" width="200px" />
+            <HeaderUser />
+          </Box>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>

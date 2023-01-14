@@ -7,8 +7,8 @@ import { Api } from "services/api.service";
 
 type AuthContextType = {
   isAuthenticated: boolean;
-  user: User | null;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  user: string | null;
+  setUser: React.Dispatch<React.SetStateAction<string | null>>;
   signIn: ({ email, password }: User) => Promise<void>;
   signUp: ({
     name,
@@ -26,7 +26,7 @@ type AuthContextProps = {
 export const AuthContext = createContext({} as AuthContextType);
 
 export function AuthProvider({ children }: AuthContextProps) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<string | null>(null);
 
   const isAuthenticated = !!user;
 
