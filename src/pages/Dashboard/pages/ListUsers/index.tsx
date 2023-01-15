@@ -58,47 +58,59 @@ export function ListUsers() {
       {users?.data.length ? (
         <div>
           <Paper className="c-timesheet">
-            <Table aria-label="customized table">
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell align="center">Nome</StyledTableCell>
-                  <StyledTableCell align="center">Email</StyledTableCell>
-                  <StyledTableCell align="center">Permissão</StyledTableCell>
-                  <StyledTableCell align="center">Controles</StyledTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {users?.data.map(
-                  ({ name, surname, email, role, _id }: UserInfo) => (
-                    <StyledTableRow key={_id}>
+            <div className="c-table">
+              <div className="c-table--helper">
+                <Table aria-label="customized table">
+                  <TableHead>
+                    <TableRow>
+                      <StyledTableCell align="center">Nome</StyledTableCell>
+                      <StyledTableCell align="center">Email</StyledTableCell>
                       <StyledTableCell align="center">
-                        {`${name} ${surname}`}
+                        Permissão
                       </StyledTableCell>
+                      <StyledTableCell align="center">
+                        Controles
+                      </StyledTableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {users?.data.map(
+                      ({ name, surname, email, role, _id }: UserInfo) => (
+                        <StyledTableRow key={_id}>
+                          <StyledTableCell align="center">
+                            {`${name} ${surname}`}
+                          </StyledTableCell>
 
-                      <StyledTableCell align="center">{email}</StyledTableCell>
-                      <StyledTableCell align="center">{role}</StyledTableCell>
-                      <StyledTableCell
-                        sx={{
-                          display: "flex",
-                          gap: "20px",
-                          justifyContent: "center",
-                          cursor: "pointer",
-                        }}
-                        align="center"
-                      >
-                        <EditIcon
-                          onClick={() => {
-                            setCurrentUser(_id);
-                            setIsEditingUser((prevState) => !prevState);
-                          }}
-                        />
-                        <DeleteIcon onClick={() => mutate(_id)} />
-                      </StyledTableCell>
-                    </StyledTableRow>
-                  )
-                )}
-              </TableBody>
-            </Table>
+                          <StyledTableCell align="center">
+                            {email}
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            {role}
+                          </StyledTableCell>
+                          <StyledTableCell
+                            sx={{
+                              display: "flex",
+                              gap: "20px",
+                              justifyContent: "center",
+                              cursor: "pointer",
+                            }}
+                            align="center"
+                          >
+                            <EditIcon
+                              onClick={() => {
+                                setCurrentUser(_id);
+                                setIsEditingUser((prevState) => !prevState);
+                              }}
+                            />
+                            <DeleteIcon onClick={() => mutate(_id)} />
+                          </StyledTableCell>
+                        </StyledTableRow>
+                      )
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
           </Paper>
           <ModalEditUser
             isOpen={isEditingUser}

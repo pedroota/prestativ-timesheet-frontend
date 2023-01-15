@@ -43,7 +43,7 @@ export function ModalEditUser({
       updateUser(currentUser, { name, surname, email, password, role }),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(["users"]);
+        queryClient.invalidateQueries(["users", "user"]);
         setIsOpen((prevState) => !prevState);
       },
     }
