@@ -16,6 +16,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { ClientsInfo } from "interfaces/clients.interface";
 import { EmptyList } from "components/EmptyList";
 import { ModalEditClient } from "./components/ModalEditClient";
+import { formatCurrency } from "utils/formatCurrency";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -118,7 +119,7 @@ export function ListClients() {
                             {`${billingLimit} / ${payDay}`}
                           </StyledTableCell>
                           <StyledTableCell align="center">
-                            {valueClient}
+                            {formatCurrency(valueClient)}
                           </StyledTableCell>
                           <StyledTableCell align="center">
                             {gpClient}
