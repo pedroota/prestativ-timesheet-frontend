@@ -63,6 +63,22 @@ export const signup = async ({
     password,
     role,
   });
+  return result;
+};
 
+export const forgot = async (email: string) => {
+  const result = await Api.post("/auth/forgot", {
+    email,
+  });
+
+  return result;
+};
+
+export const newpass = async ({ email, password, token }: UserRegister) => {
+  const result = await Api.post("/auth/newpass", {
+    email,
+    password,
+    token,
+  });
   return result;
 };
