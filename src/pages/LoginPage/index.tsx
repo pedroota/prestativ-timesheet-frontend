@@ -4,7 +4,7 @@ import { User } from "interfaces/users.interface";
 import Logo from "assets/logo.png";
 import { useContext } from "react";
 import { AuthContext } from "context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export function LoginPage() {
   const { signIn } = useContext(AuthContext);
@@ -40,20 +40,12 @@ export function LoginPage() {
             type="password"
             {...register("password")}
           />
-          <Button id="button-primary" type="submit" variant="contained">
-            Acessar
-          </Button>
-          <a href="/forgotpass">
-            <p
-              style={{
-                color: "blue",
-                textDecoration: "underline",
-                cursor: "pointer",
-              }}
-            >
-              Esqueci Minha Senha
-            </p>
-          </a>
+          <div className="c-login--helper-form-submit">
+            <Link to="/forgotpass">Esqueceu sua senha?</Link>
+            <Button id="button-primary" type="submit" variant="contained">
+              Acessar
+            </Button>
+          </div>
         </div>
       </form>
     </section>
