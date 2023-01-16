@@ -106,14 +106,18 @@ export function Timesheet() {
                   }: Hours) => (
                     <StyledTableRow key={_id}>
                       <StyledTableCell align="center">
-                        {generateDateWithTimestamp(initial)}
-                        {generateTimeWithTimestamp(initial)}
-                        {generateDayWeekWithTimestamp(initial)}
+                        {`${generateDateWithTimestamp(
+                          initial
+                        )} ${generateTimeWithTimestamp(
+                          initial
+                        )} ${generateDayWeekWithTimestamp(initial)}`}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {generateDateWithTimestamp(final)}
-                        {generateTimeWithTimestamp(final)}
-                        {generateDayWeekWithTimestamp(final)}
+                        {`${generateDateWithTimestamp(
+                          final
+                        )} ${generateTimeWithTimestamp(
+                          final
+                        )} ${generateDayWeekWithTimestamp(final)}`}
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {generateTotalHours(initial, final)}
