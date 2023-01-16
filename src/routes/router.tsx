@@ -13,12 +13,16 @@ import { ListClients } from "pages/Dashboard/pages/ListClients";
 import { ListProjects } from "pages/Dashboard/pages/ListProjects";
 import { ListActivities } from "pages/Dashboard/pages/ListActivities";
 import { ListUsers } from "pages/Dashboard/pages/ListUsers";
+import { ForgotPassword } from "pages/ForgotPassword";
+import { NewPassword } from "pages/NewPassword";
 
 export function Router() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LoginPage />} />
+        <Route path="/forgotpass" element={<ForgotPassword />} />
+        <Route path="/newpass" element={<NewPassword />} />
         <Route element={<PrivateRoutes />}>
           <Route path="/dashboard" element={<Dashboard />}>
             <Route path="timesheet" element={<Timesheet />} />

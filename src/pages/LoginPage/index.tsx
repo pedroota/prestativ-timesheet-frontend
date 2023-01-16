@@ -43,8 +43,16 @@ export function LoginPage() {
           <Button id="button-primary" type="submit" variant="contained">
             Acessar
           </Button>
-          <a>
-            <p>Esqueci Minha Senha</p>
+          <a href="/forgotpass">
+            <p
+              style={{
+                color: "blue",
+                textDecoration: "underline",
+                cursor: "pointer",
+              }}
+            >
+              Esqueci Minha Senha
+            </p>
           </a>
         </div>
       </form>

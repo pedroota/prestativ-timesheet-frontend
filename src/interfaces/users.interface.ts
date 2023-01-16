@@ -4,11 +4,12 @@ export interface User {
 }
 
 export interface UserRegister {
-  name: string;
-  surname: string;
+  name?: string;
+  surname?: string;
   email: string;
   password: string;
-  role: string;
+  role?: string;
+  token?: string;
 }
 
 export interface UserInfo {

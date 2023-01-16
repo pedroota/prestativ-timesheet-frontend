@@ -1,17 +1,17 @@
 import { Button, TextField } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { User } from "interfaces/users.interface";
+import { UserRegister } from "interfaces/users.interface";
 import Logo from "assets/logo.png";
 import { useNavigate } from "react-router-dom";
-import { forgot } from "services/auth.service";
+import { newpass } from "services/auth.service";
 
-export function ForgotPassword() {
-  const { register, handleSubmit } = useForm<User>({});
+export function NewPassword() {
+  const { register, handleSubmit } = useForm<UserRegister>({});
   const navigate = useNavigate();
 
-  const onSubmit = handleSubmit(async ({ email }) => {
-    await forgot(email);
-    navigate("/newpass");
+  const onSubmit = handleSubmit(async ({ email, password, token }) => {
+    await newpass({ email, password, token });
+    navigate("/");
   });
 
   return (
@@ -25,12 +25,27 @@ export function ForgotPassword() {
           <TextField
             required
             color="warning"
+            type="string"
+            label="Token recebido no E-mail"
+            {...register("token")}
+          />
+          <TextField
+            required
+            color="warning"
             type="email"
             label="Seu Email"
             {...register("email")}
           />
+          <TextField
+            required
+            color="warning"
+            type="password"
+            label="Sua Nova Senha"
+            {...register("password")}
+          />
+
           <Button id="button-primary" type="submit" variant="contained">
-            Enviar Token
+            Redefinir Senha
           </Button>
         </div>
       </form>
