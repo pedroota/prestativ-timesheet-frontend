@@ -43,11 +43,11 @@ export function RegisterProject() {
         color="warning"
         variant="outlined"
       />
-      <Select
+      <TextField
         color="warning"
-        labelId="select-label-helper"
         {...register("idClient")}
         label="Cliente Relacionado"
+        select
         defaultValue=""
       >
         <MenuItem value="">Selecione uma opção</MenuItem>
@@ -56,18 +56,18 @@ export function RegisterProject() {
             {name}
           </MenuItem>
         ))}
-      </Select>
+      </TextField>
       <TextField
         label="Valor"
         {...register("valueProject")}
         color="warning"
         variant="outlined"
       />
-      <Select
+      <TextField
         color="warning"
-        labelId="select-label-helper"
         {...register("gpProject")}
         label="Gerente de Projetos Relacionado"
+        select
         defaultValue=""
       >
         <MenuItem value="">Selecione uma opção</MenuItem>
@@ -76,7 +76,7 @@ export function RegisterProject() {
             {`${name} ${surname}`}
           </MenuItem>
         ))}
-      </Select>
+      </TextField>
       <TextField
         label="Descrição do Projeto"
         {...register("description")}
