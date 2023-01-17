@@ -53,9 +53,9 @@ export function RegisterUser() {
         type="password"
         {...register("password")}
       />
-      <Select
-        labelId="select-label-helper"
-        label="Permissão"
+      <TextField
+        label="Nível do Usuário"
+        select
         color="warning"
         defaultValue="Consultor"
         {...register("role")}
@@ -66,7 +66,7 @@ export function RegisterUser() {
             {role?.name}
           </MenuItem>
         ))}
-      </Select>
+      </TextField>
       <Button id="button-primary" type="submit" variant="contained">
         Cadastrar
       </Button>

@@ -4,6 +4,7 @@ import {
   TextField,
   MenuItem,
   SelectChangeEvent,
+  InputLabel,
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { getProjects } from "services/project.service";
@@ -75,20 +76,22 @@ export function RegisterActivity() {
         type="text"
         {...register("title")}
       />
-      <Select
+      <TextField
         color="warning"
-        labelId="select-label-helper"
         {...register("project")}
+        select
         label="Projeto relacionado"
         defaultValue=""
       >
-        <MenuItem value="">Selecione uma opção</MenuItem>
+        <MenuItem selected disabled value="">
+          Projeto - Selecione uma opção
+        </MenuItem>
         {projectList?.data.map(({ title }: Projects) => (
           <MenuItem key={title} value={title}>
             {title}
           </MenuItem>
         ))}
-      </Select>
+      </TextField>
       <TextField
         required
         color="warning"
@@ -103,16 +106,26 @@ export function RegisterActivity() {
         type="text"
         {...register("description")}
       />
+      <div
+        className="c-register-activity--input-container"
+        style={{ justifyContent: "flex-end" }}
+      >
+        <InputLabel id="select-label-consultant">
+          Consultores - Selecione as opções:
+        </InputLabel>
+      </div>
       <div className="c-register-activity--input-container">
-        <Select
+        <TextField
           color="warning"
-          labelId="select-label-helper"
           {...register("gpActivity")}
           sx={{ width: "100%" }}
+          select
           label="Gerente de projetos relacionado"
           defaultValue=""
         >
-          <MenuItem value="">Selecione uma opção</MenuItem>
+          <MenuItem selected disabled value="">
+            GP - Selecione uma opção
+          </MenuItem>
           {GPList?.data.map(
             ({ name, surname }: UserRegister, index: number) => (
               <MenuItem key={index} value={`${name} ${surname}`}>
@@ -120,18 +133,16 @@ export function RegisterActivity() {
               </MenuItem>
             )
           )}
-        </Select>
+        </TextField>
         <Select
           color="warning"
-          labelId="select-label-helper"
+          variant="outlined"
           {...register("userString")}
           sx={{ width: "100%" }}
           value={multipleSelect}
           onChange={multipleSelectChange}
           multiple
-          label="Consultores relacionado"
         >
-          <MenuItem value="">Selecione uma opção</MenuItem>
           {consultantList?.data.map(
             ({ name, surname }: UserRegister, index: number) => (
               <MenuItem key={index} value={`${name} ${surname}`}>
