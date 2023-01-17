@@ -15,7 +15,7 @@ import { UserRegister } from "interfaces/users.interface";
 import { Projects } from "interfaces/projects.interface";
 import { getClients } from "services/clients.service";
 import { Clients } from "interfaces/clients.interface";
-import { updateProjects } from "services/project.service";
+import { getProjectById, updateProjects } from "services/project.service";
 
 interface ModalEditUserProps {
   isOpen: boolean;
@@ -30,6 +30,7 @@ export function ModalEditProject({
 }: ModalEditUserProps) {
   const queryClient = useQueryClient();
   const { data: clientList } = useQuery([], () => getClients());
+  // const { data: actualProject } = useQuery([], () => getProjectById(currentProject));
   const { data: listGps } = useQuery(["users-gp", "Gerente de Projetos"], () =>
     getUserByRole("Gerente de Projetos")
   );
@@ -86,6 +87,7 @@ export function ModalEditProject({
               {...register("title")}
               color="warning"
               variant="outlined"
+              // defaultValue={}
             />
             <Select
               color="warning"

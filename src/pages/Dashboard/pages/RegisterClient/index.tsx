@@ -106,6 +106,7 @@ export function RegisterClient() {
           required
           color="warning"
           sx={{ width: "100%" }}
+          InputLabelProps={{ shrink: true }}
           label="CEP"
           type="text"
           {...register("cep")}
@@ -116,6 +117,7 @@ export function RegisterClient() {
           required
           color="warning"
           sx={{ width: "100%" }}
+          InputLabelProps={{ shrink: true }}
           label="Logradouro"
           type="text"
           {...register("street")}
@@ -126,6 +128,7 @@ export function RegisterClient() {
           required
           color="warning"
           sx={{ width: "100%" }}
+          InputLabelProps={{ shrink: true }}
           label="Cidade"
           type="text"
           {...register("city")}
@@ -134,6 +137,7 @@ export function RegisterClient() {
           required
           color="warning"
           sx={{ width: "100%" }}
+          InputLabelProps={{ shrink: true }}
           label="Estado"
           type="text"
           {...register("state")}
@@ -144,14 +148,15 @@ export function RegisterClient() {
           required
           color="warning"
           sx={{ width: "100%" }}
+          InputLabelProps={{ shrink: true }}
           label="Bairro"
           type="text"
           {...register("district")}
         />
         <TextField
-          required
           color="warning"
           sx={{ width: "100%" }}
+          InputLabelProps={{ shrink: true }}
           label="Número"
           type="text"
           {...register("streetNumber")}
@@ -159,6 +164,7 @@ export function RegisterClient() {
         <TextField
           color="warning"
           sx={{ width: "100%" }}
+          InputLabelProps={{ shrink: true }}
           label="Complemento"
           type="text"
           {...register("complement")}
@@ -211,10 +217,10 @@ export function RegisterClient() {
           type="text"
           {...register("valueClient")}
         />
-        <Select
+        <TextField
           required
-          labelId="select-label-helper"
           label="Gerente de Projetos"
+          select
           color="warning"
           sx={{ width: "100%" }}
           {...register("gpClient")}
@@ -225,7 +231,7 @@ export function RegisterClient() {
               {`${name} ${surname}`}
             </MenuItem>
           ))}
-        </Select>
+        </TextField>
       </div>
       <Button type="submit" id="button-primary" variant="contained">
         Cadastrar

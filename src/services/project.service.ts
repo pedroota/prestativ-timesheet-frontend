@@ -1,5 +1,5 @@
 import { Api } from "./api.service";
-import { Projects } from "interfaces/projects.interface";
+import { ProjectsInfo, Projects } from "interfaces/projects.interface";
 
 export const getProjects = async () => {
   const result = await Api.get("/projects");
@@ -21,6 +21,12 @@ export const createProjects = async ({
     gpProject,
     description,
   });
+
+  return result;
+};
+
+export const getProjectById = async ({ _id }: Pick<ProjectsInfo, "_id">) => {
+  const result = await Api.get(`/projects/${_id}`);
 
   return result;
 };

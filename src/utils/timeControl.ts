@@ -19,6 +19,17 @@ function generateDayWeekWithTimestamp(timestamp: number) {
     .slice(0, -1);
 }
 
+function generateTimestampWithDateAndTime(date: Date, time: Date) {
+  let day = date.getDay();
+  let month = date.getMonth();
+  let year = date.getFullYear();
+  let hours = time.getHours();
+  let minutes = time.getMinutes();
+  let seconds = time.getSeconds();
+  let timestamp = new Date(year, month, day, hours, minutes, seconds);
+  return timestamp;
+}
+
 function generateTotalHours(initial: number, final: number) {
   let hours = Math.trunc((final - initial) / 60 / 60 / 1000);
   let minutes = Math.trunc(((final - initial) / 60 / 1000) % 60);
