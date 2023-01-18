@@ -38,6 +38,11 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
+interface ConsultantUsers {
+  name: string;
+  surname: string;
+}
+
 export function ListActivities() {
   const [currentActivity, setCurrentActivity] = useState("");
   const [isEditingActivity, setIsEditingActivity] = useState(false);
@@ -94,7 +99,7 @@ export function ListActivities() {
                         valueActivity,
                         gpActivity,
                         description,
-                        userString,
+                        users,
                       }: ActivitiesInfo) => (
                         <StyledTableRow key={_id}>
                           <StyledTableCell align="center">
@@ -113,7 +118,10 @@ export function ListActivities() {
                             {description}
                           </StyledTableCell>
                           <StyledTableCell align="center">
-                            {userString}
+                            {users.map(
+                              ({ name, surname }: ConsultantUsers) =>
+                                `${name} ${surname}`
+                            )}
                           </StyledTableCell>
                           <StyledTableCell
                             sx={{

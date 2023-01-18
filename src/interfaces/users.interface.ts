@@ -4,6 +4,7 @@ export interface User {
 }
 
 export interface UserRegister {
+  _id?: string;
   name?: string;
   surname?: string;
   email: string;

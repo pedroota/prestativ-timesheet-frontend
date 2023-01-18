@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { TextField, Button, MenuItem, Select } from "@mui/material";
+import { TextField, Button, MenuItem } from "@mui/material";
 import { AuthContext } from "context/AuthContext";
 import { useForm } from "react-hook-form";
 import { UserRegister } from "interfaces/users.interface";

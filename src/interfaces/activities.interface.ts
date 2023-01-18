@@ -4,7 +4,12 @@ export interface Activities {
   valueActivity: number;
   gpActivity: string;
   description: string;
-  userString: string;
+  users: [
+    {
+      name: string;
+      surname: string;
+    }
+  ];
 }
 
 export interface ActivitiesInfo {
@@ -14,5 +19,10 @@ export interface ActivitiesInfo {
   valueActivity: number;
   gpActivity: string;
   description: string;
-  userString: string;
+  users: [
+    {
+      name: string;
+      surname: string;
+    }
+  ];
 }

@@ -15,7 +15,7 @@ import { UserRegister } from "interfaces/users.interface";
 import { Projects } from "interfaces/projects.interface";
 import { getClients } from "services/clients.service";
 import { Clients } from "interfaces/clients.interface";
-import { getProjectById, updateProjects } from "services/project.service";
+import { updateProjects } from "services/project.service";
 
 interface ModalEditUserProps {
   isOpen: boolean;

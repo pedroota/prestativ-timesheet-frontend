@@ -30,6 +30,9 @@ export function ModalEditActivity({
   setIsOpen,
   currentActivity,
 }: ModalEditActivityProps) {
+  // const { data: singleActivity } = useQuery(["activity", currentActivity], () =>
+  //   getActivityById(currentActivity)
+  // );
   const [multipleSelect, setMultipleSelect] = useState<string[]>([]);
   const queryClient = useQueryClient();
   const { mutate } = useMutation(
@@ -38,7 +41,7 @@ export function ModalEditActivity({
       project,
       description,
       gpActivity,
-      userString,
+      users,
       valueActivity,
     }: Activities) =>
       updateActivity(currentActivity, {
@@ -46,7 +49,7 @@ export function ModalEditActivity({
         project,
         description,
         gpActivity,
-        userString,
+        users,
         valueActivity,
       }),
     {
@@ -66,20 +69,13 @@ export function ModalEditActivity({
   const { register, reset, handleSubmit } = useForm<Activities>({});
 
   const onSubmit = handleSubmit(
-    ({
-      title,
-      project,
-      description,
-      gpActivity,
-      userString,
-      valueActivity,
-    }) => {
+    ({ title, project, description, gpActivity, users, valueActivity }) => {
       mutate({
         title,
         project,
         description,
         gpActivity,
-        userString,
+        users,
         valueActivity,
       });
       reset();
@@ -170,7 +166,7 @@ export function ModalEditActivity({
             <Select
               color="warning"
               labelId="select-label-helper"
-              {...register("userString")}
+              {...register("users")}
               sx={{ width: "100%" }}
               value={multipleSelect}
               onChange={multipleSelectChange}

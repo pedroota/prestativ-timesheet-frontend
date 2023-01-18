@@ -4,7 +4,6 @@ import {
   TextField,
   MenuItem,
   SelectChangeEvent,
-  InputLabel,
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { getProjects } from "services/project.service";
@@ -32,21 +31,14 @@ export function RegisterActivity() {
   const [multipleSelect, setMultipleSelect] = useState<string[]>([]);
 
   const onSubmit = handleSubmit(
-    ({
-      title,
-      project,
-      valueActivity,
-      gpActivity,
-      description,
-      userString,
-    }) => {
+    ({ title, project, valueActivity, gpActivity, description, users }) => {
       createActivities({
         title,
         project,
         valueActivity,
         gpActivity,
         description,
-        userString,
+        users,
       })
         .then(() => {
           reset();
@@ -106,14 +98,6 @@ export function RegisterActivity() {
         type="text"
         {...register("description")}
       />
-      <div
-        className="c-register-activity--input-container"
-        style={{ justifyContent: "flex-end" }}
-      >
-        <InputLabel id="select-label-consultant">
-          Consultores - Selecione as opções:
-        </InputLabel>
-      </div>
       <div className="c-register-activity--input-container">
         <TextField
           color="warning"
@@ -137,15 +121,18 @@ export function RegisterActivity() {
         <Select
           color="warning"
           variant="outlined"
-          {...register("userString")}
+          {...register("users")}
           sx={{ width: "100%" }}
           value={multipleSelect}
           onChange={multipleSelectChange}
           multiple
         >
+          <MenuItem value="" disabled>
+            Selecione uma opção
+          </MenuItem>
           {consultantList?.data.map(
-            ({ name, surname }: UserRegister, index: number) => (
-              <MenuItem key={index} value={`${name} ${surname}`}>
+            ({ name, surname, _id }: UserRegister, index: number) => (
+              <MenuItem key={index} value={_id}>
                 {`${name} ${surname}`}
               </MenuItem>
             )

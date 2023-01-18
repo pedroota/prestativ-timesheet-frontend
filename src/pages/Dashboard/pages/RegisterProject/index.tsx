@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { Button, Select, TextField, MenuItem } from "@mui/material";
+import { Button, TextField, MenuItem } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { Projects } from "interfaces/projects.interface";
 import { getClients } from "services/clients.service";

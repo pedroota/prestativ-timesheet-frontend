@@ -20,13 +20,13 @@ function generateDayWeekWithTimestamp(timestamp: number) {
 }
 
 function generateTimestampWithDateAndTime(date: Date, time: Date) {
-  let day = date.getDay();
-  let month = date.getMonth();
-  let year = date.getFullYear();
-  let hours = time.getHours();
-  let minutes = time.getMinutes();
-  let seconds = time.getSeconds();
-  let timestamp = new Date(year, month, day, hours, minutes, seconds);
+  const day = date.getDay();
+  const month = date.getMonth();
+  const year = date.getFullYear();
+  const hours = time.getHours();
+  const minutes = time.getMinutes();
+  const seconds = time.getSeconds();
+  const timestamp = new Date(year, month, day, hours, minutes, seconds);
   return timestamp;
 }
 
@@ -73,6 +73,7 @@ export {
   generateDateWithTimestamp,
   generateTimeWithTimestamp,
   generateDayWeekWithTimestamp,
+  generateTimestampWithDateAndTime,
   generateTotalHours,
   generateAdjustmentWithNumberInMilliseconds,
   generateTotalHoursWithAdjustment,

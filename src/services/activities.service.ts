@@ -7,13 +7,19 @@ export const getActivities = async () => {
   return result;
 };
 
+export const getActivityById = async (id: string) => {
+  const result = await Api.get(`/activities/${id}`);
+
+  return result;
+};
+
 export const createActivities = async ({
   title,
   project,
   valueActivity,
   gpActivity,
   description,
-  userString,
+  users,
 }: Activities) => {
   const result = await Api.post("/activities", {
     title,
@@ -21,7 +27,7 @@ export const createActivities = async ({
     valueActivity,
     gpActivity,
     description,
-    userString,
+    users,
   });
 
   return result;
@@ -35,21 +41,14 @@ export const deleteActivity = async (_id: string) => {
 
 export const updateActivity = async (
   id: string,
-  {
-    title,
-    project,
-    description,
-    gpActivity,
-    userString,
-    valueActivity,
-  }: Activities
+  { title, project, description, gpActivity, users, valueActivity }: Activities
 ) => {
   const result = await Api.put(`/activities/${id}`, {
     title,
     project,
     description,
     gpActivity,
-    userString,
+    users,
     valueActivity,
   });
 
