@@ -25,7 +25,7 @@ export const createProjects = async ({
   return result;
 };
 
-export const getProjectById = async ({ _id }: Pick<ProjectsInfo, "_id">) => {
+export const getProjectById = async (_id: string) => {
   const result = await Api.get(`/projects/${_id}`);
 
   return result;

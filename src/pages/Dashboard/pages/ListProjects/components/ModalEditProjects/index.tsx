@@ -15,7 +15,7 @@ import { UserRegister } from "interfaces/users.interface";
 import { Projects } from "interfaces/projects.interface";
 import { getClients } from "services/clients.service";
 import { Clients } from "interfaces/clients.interface";
-import { updateProjects } from "services/project.service";
+import { updateProjects, getProjectById } from "services/project.service";
 
 interface ModalEditUserProps {
   isOpen: boolean;
@@ -30,7 +30,9 @@ export function ModalEditProject({
 }: ModalEditUserProps) {
   const queryClient = useQueryClient();
   const { data: clientList } = useQuery([], () => getClients());
-  // const { data: actualProject } = useQuery([], () => getProjectById(currentProject));
+  useQuery(["projects", currentProject], () => getProjectById(currentProject), {
+    onSuccess: ({ data }) => reset(data.project),
+  });
   const { data: listGps } = useQuery(["users-gp", "Gerente de Projetos"], () =>
     getUserByRole("Gerente de Projetos")
   );
@@ -50,7 +52,7 @@ export function ModalEditProject({
       },
     }
   );
-  const { register, reset, handleSubmit } = useForm<Projects>({});
+  const { register, reset, handleSubmit } = useForm<Projects>();
 
   const onSubmit = handleSubmit(
     ({ title, idClient, valueProject, gpProject, description }) => {
@@ -87,7 +89,6 @@ export function ModalEditProject({
               {...register("title")}
               color="warning"
               variant="outlined"
-              // defaultValue={}
             />
             <Select
               color="warning"
@@ -118,8 +119,8 @@ export function ModalEditProject({
             >
               <MenuItem value="">Selecione uma opção</MenuItem>
               {listGps?.data.map(
-                ({ name, surname }: UserRegister, index: number) => (
-                  <MenuItem value={`${name} ${surname}`} key={index}>
+                ({ name, surname, _id }: UserRegister, index: number) => (
+                  <MenuItem value={_id} key={index}>
                     {`${name} ${surname}`}
                   </MenuItem>
                 )
