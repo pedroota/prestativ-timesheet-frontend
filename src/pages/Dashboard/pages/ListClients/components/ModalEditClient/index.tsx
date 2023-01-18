@@ -15,7 +15,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserByRole } from "services/auth.service";
 import { Clients } from "interfaces/clients.interface";
 import { UserRegister } from "interfaces/users.interface";
-import { updateClient } from "services/clients.service";
+import { getClientById, updateClient } from "services/clients.service";
 
 interface ModalEditUserProps {
   isOpen: boolean;
@@ -28,6 +28,11 @@ export function ModalEditClient({
   setIsOpen,
   currentClient,
 }: ModalEditUserProps) {
+  const { data: singleClient } = useQuery(
+    ["clients", currentClient],
+    () => getClientById(currentClient),
+    { onSuccess: ({ data }) => reset(data.client) }
+  );
   const queryClient = useQueryClient();
   const { mutate } = useMutation(
     ({
@@ -81,7 +86,7 @@ export function ModalEditClient({
     reset,
     handleSubmit,
     setValue: setValueForm,
-  } = useForm<Clients>({});
+  } = useForm<Clients>();
 
   const [value, setValue, getZip] = useCep("");
 
@@ -162,6 +167,7 @@ export function ModalEditClient({
               color="warning"
               label="Código do cliente"
               type="text"
+              InputLabelProps={{ shrink: true }}
               {...register("code")}
             />
             <TextField
@@ -169,12 +175,14 @@ export function ModalEditClient({
               color="warning"
               label="Nome / Razão Social"
               type="text"
+              InputLabelProps={{ shrink: true }}
               {...register("name")}
             />
             <TextField
               required
               color="warning"
               label="CNPJ"
+              InputLabelProps={{ shrink: true }}
               type="text"
               {...register("cnpj")}
             />
@@ -185,6 +193,7 @@ export function ModalEditClient({
                 color="warning"
                 sx={{ width: "100%" }}
                 label="CEP"
+                InputLabelProps={{ shrink: true }}
                 type="text"
                 {...register("cep")}
                 value={value}
@@ -195,6 +204,7 @@ export function ModalEditClient({
                 color="warning"
                 sx={{ width: "100%" }}
                 label="Logradouro"
+                InputLabelProps={{ shrink: true }}
                 type="text"
                 {...register("street")}
               />
@@ -206,6 +216,7 @@ export function ModalEditClient({
                 sx={{ width: "100%" }}
                 label="Cidade"
                 type="text"
+                InputLabelProps={{ shrink: true }}
                 {...register("city")}
               />
               <TextField
@@ -213,6 +224,7 @@ export function ModalEditClient({
                 color="warning"
                 sx={{ width: "100%" }}
                 label="Estado"
+                InputLabelProps={{ shrink: true }}
                 type="text"
                 {...register("state")}
               />
@@ -222,6 +234,7 @@ export function ModalEditClient({
                 required
                 color="warning"
                 sx={{ width: "100%" }}
+                InputLabelProps={{ shrink: true }}
                 label="Bairro"
                 type="text"
                 {...register("district")}
@@ -231,6 +244,7 @@ export function ModalEditClient({
                 color="warning"
                 sx={{ width: "100%" }}
                 label="Número"
+                InputLabelProps={{ shrink: true }}
                 type="text"
                 {...register("streetNumber")}
               />
@@ -239,6 +253,7 @@ export function ModalEditClient({
                 sx={{ width: "100%" }}
                 label="Complemento"
                 type="text"
+                InputLabelProps={{ shrink: true }}
                 {...register("complement")}
               />
             </div>
@@ -248,6 +263,7 @@ export function ModalEditClient({
                 required
                 color="warning"
                 sx={{ width: "100%" }}
+                InputLabelProps={{ shrink: true }}
                 label="De"
                 type="text"
                 {...register("periodIn")}
@@ -257,6 +273,7 @@ export function ModalEditClient({
                 color="warning"
                 sx={{ width: "100%" }}
                 label="Até"
+                InputLabelProps={{ shrink: true }}
                 type="text"
                 {...register("periodUntil")}
               />
@@ -268,6 +285,7 @@ export function ModalEditClient({
                 sx={{ width: "100%" }}
                 label="Dia limite de faturamento"
                 type="text"
+                InputLabelProps={{ shrink: true }}
                 {...register("billingLimit")}
               />
               <TextField
@@ -277,6 +295,7 @@ export function ModalEditClient({
                 label="Dia de pagamento"
                 type="text"
                 {...register("payDay")}
+                InputLabelProps={{ shrink: true }}
               />
             </div>
             <p>Valor e Gerente de Projetos</p>
@@ -286,7 +305,8 @@ export function ModalEditClient({
                 color="warning"
                 sx={{ width: "100%" }}
                 label="Valor"
-                type="text"
+                type="number"
+                InputLabelProps={{ shrink: true }}
                 {...register("valueClient")}
               />
               <Select
