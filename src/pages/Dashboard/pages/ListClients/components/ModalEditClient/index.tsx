@@ -319,8 +319,8 @@ export function ModalEditClient({
               >
                 <MenuItem value="">Selecione uma opção</MenuItem>
                 {listGps?.data.map(
-                  ({ name, surname }: UserRegister, index: number) => (
-                    <MenuItem value={`${name} ${surname}`} key={index}>
+                  ({ name, surname, _id }: UserRegister, index: number) => (
+                    <MenuItem value={_id} key={index}>
                       {`${name} ${surname}`}
                     </MenuItem>
                   )
