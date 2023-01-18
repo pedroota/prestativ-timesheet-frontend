@@ -38,7 +38,11 @@ export function ModalEditUser({
   currentUser,
 }: ModalEditUserProps) {
   useQuery(["users", currentUser], () => getUserById(currentUser), {
-    onSuccess: ({ data }) => reset(data.user),
+    onSuccess: ({ data }) => {
+      const userData: UserRegister = data.user;
+      userData.password = "";
+      reset(userData);
+    },
   });
   const queryClient = useQueryClient();
   const { mutate } = useMutation(
@@ -52,7 +56,7 @@ export function ModalEditUser({
     }
   );
   const { data } = useQuery(["roles"], getRoles);
-  const { register, reset, handleSubmit } = useForm<UserRegister>({});
+  const { register, reset, handleSubmit } = useForm<UserRegister>();
 
   const onSubmit = handleSubmit(({ name, surname, email, password, role }) => {
     mutate({ name, surname, email, password, role });
@@ -95,6 +99,7 @@ export function ModalEditUser({
             <TextField
               color="warning"
               label="Email"
+              type="email"
               sx={{ width: "100%" }}
               InputLabelProps={{ shrink: true }}
               {...register("email")}
