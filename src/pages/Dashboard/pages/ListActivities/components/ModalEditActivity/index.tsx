@@ -156,8 +156,8 @@ export function ModalEditActivity({
             >
               <MenuItem value="">Selecione uma opção</MenuItem>
               {listGps?.data.map(
-                ({ name, surname }: UserRegister, index: number) => (
-                  <MenuItem key={index} value={`${name} ${surname}`}>
+                ({ name, surname, _id }: UserRegister, index: number) => (
+                  <MenuItem key={index} value={_id}>
                     {`${name} ${surname}`}
                   </MenuItem>
                 )
