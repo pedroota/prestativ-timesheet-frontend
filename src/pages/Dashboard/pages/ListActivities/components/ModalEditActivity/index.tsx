@@ -12,7 +12,7 @@ import { Close } from "@mui/icons-material";
 import { UserRegister } from "interfaces/users.interface";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { updateActivity } from "services/activities.service";
+import { updateActivity, getActivityById } from "services/activities.service";
 import { Activities } from "interfaces/activities.interface";
 import { getUserByRole } from "services/auth.service";
 import { getProjects } from "services/project.service";
@@ -30,9 +30,15 @@ export function ModalEditActivity({
   setIsOpen,
   currentActivity,
 }: ModalEditActivityProps) {
-  // const { data: singleActivity } = useQuery(["activity", currentActivity], () =>
-  //   getActivityById(currentActivity)
-  // );
+  const { data: singleActivity } = useQuery(
+    ["activity", currentActivity],
+    () => getActivityById(currentActivity),
+    {
+      onSuccess: ({ data }) => {
+        reset(data.activity);
+      },
+    }
+  );
   const [multipleSelect, setMultipleSelect] = useState<string[]>([]);
   const queryClient = useQueryClient();
   const { mutate } = useMutation(
@@ -66,7 +72,9 @@ export function ModalEditActivity({
     getUserByRole("Consultor")
   );
   const { data: projectList } = useQuery(["projects"], getProjects);
-  const { register, reset, handleSubmit } = useForm<Activities>({});
+  const { register, reset, handleSubmit } = useForm<Activities>({
+    defaultValues: singleActivity?.data.activity,
+  });
 
   const onSubmit = handleSubmit(
     ({ title, project, description, gpActivity, users, valueActivity }) => {
@@ -114,6 +122,7 @@ export function ModalEditActivity({
             required
             color="warning"
             label="Nome da atividade"
+            InputLabelProps={{ shrink: true }}
             type="text"
             {...register("title")}
           />
@@ -121,6 +130,7 @@ export function ModalEditActivity({
             color="warning"
             labelId="select-label-helper"
             {...register("project")}
+            required
             label="Projeto relacionado"
             defaultValue=""
           >
@@ -135,7 +145,8 @@ export function ModalEditActivity({
             required
             color="warning"
             label="Valor da atividade"
-            type="text"
+            type="number"
+            InputLabelProps={{ shrink: true }}
             {...register("valueActivity")}
           />
           <TextField
@@ -143,16 +154,18 @@ export function ModalEditActivity({
             color="warning"
             label="Observação"
             type="text"
+            InputLabelProps={{ shrink: true }}
             {...register("description")}
           />
           <div className="c-register-activity--input-container">
             <Select
               color="warning"
+              required
               labelId="select-label-helper"
               {...register("gpActivity")}
               sx={{ width: "100%" }}
-              label="Gerente de projetos relacionado"
               defaultValue=""
+              label="Gerente de projetos relacionado"
             >
               <MenuItem value="">Selecione uma opção</MenuItem>
               {listGps?.data.map(
@@ -171,6 +184,7 @@ export function ModalEditActivity({
               value={multipleSelect}
               onChange={multipleSelectChange}
               multiple
+              required
               label="Consultores relacionado"
             >
               <MenuItem value="">Selecione uma opção</MenuItem>
