@@ -13,7 +13,7 @@ import { getRoles } from "services/roles.service";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Roles } from "interfaces/roles.interface";
-import { updateUser } from "services/auth.service";
+import { getUserById, updateUser } from "services/auth.service";
 
 const style = {
   position: "absolute",
@@ -37,6 +37,9 @@ export function ModalEditUser({
   setIsOpen,
   currentUser,
 }: ModalEditUserProps) {
+  useQuery(["users", currentUser], () => getUserById(currentUser), {
+    onSuccess: ({ data }) => reset(data.user),
+  });
   const queryClient = useQueryClient();
   const { mutate } = useMutation(
     ({ name, surname, email, password, role }: UserRegister) =>
@@ -78,12 +81,14 @@ export function ModalEditUser({
             <TextField
               label="Nome"
               color="warning"
+              InputLabelProps={{ shrink: true }}
               sx={{ width: "100%" }}
               {...register("name")}
             />
             <TextField
               color="warning"
               label="Sobrenome"
+              InputLabelProps={{ shrink: true }}
               sx={{ width: "100%" }}
               {...register("surname")}
             />
@@ -91,12 +96,14 @@ export function ModalEditUser({
               color="warning"
               label="Email"
               sx={{ width: "100%" }}
+              InputLabelProps={{ shrink: true }}
               {...register("email")}
             />
             <TextField
               color="warning"
               {...register("password")}
               label="Senha"
+              InputLabelProps={{ shrink: true }}
               sx={{ width: "100%" }}
             />
 
