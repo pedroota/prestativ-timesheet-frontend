@@ -28,11 +28,9 @@ export function ModalEditClient({
   setIsOpen,
   currentClient,
 }: ModalEditUserProps) {
-  const { data: singleClient } = useQuery(
-    ["clients", currentClient],
-    () => getClientById(currentClient),
-    { onSuccess: ({ data }) => reset(data.client) }
-  );
+  useQuery(["clients", currentClient], () => getClientById(currentClient), {
+    onSuccess: ({ data }) => reset(data.client),
+  });
   const queryClient = useQueryClient();
   const { mutate } = useMutation(
     ({
