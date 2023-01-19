@@ -1,4 +1,4 @@
 export interface Roles {
   _id: string;
-  name: string;
+  name: "Administrador" | "Operacional" | "Gerente de Projetos" | "Consultor";
 }

@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PrivateRoutes } from "./privateRoutes";
+import { Permissions } from "./Permissions";
 
 // Pages imports
 import { LoginPage } from "pages/LoginPage";
@@ -16,7 +17,15 @@ import { ListUsers } from "pages/Dashboard/pages/ListUsers";
 import { ForgotPassword } from "pages/ForgotPassword";
 import { NewPassword } from "pages/NewPassword";
 
+// Context
+import { useContext, useEffect } from "react";
+import { AuthContext } from "context/AuthContext";
+
 export function Router() {
+  const { role } = useContext(AuthContext);
+
+  useEffect(() => console.log(role), [role]);
+
   return (
     <BrowserRouter>
       <Routes>
@@ -25,15 +34,34 @@ export function Router() {
         <Route path="/newpass" element={<NewPassword />} />
         <Route element={<PrivateRoutes />}>
           <Route path="/dashboard" element={<Dashboard />}>
-            <Route path="timesheet" element={<Timesheet />} />
-            <Route path="register-client" element={<RegisterClient />} />
-            <Route path="register-project" element={<RegisterProject />} />
-            <Route path="register-activity" element={<RegisterActivity />} />
-            <Route path="register-user" element={<RegisterUser />} />
-            <Route path="clients" element={<ListClients />} />
-            <Route path="projects" element={<ListProjects />} />
-            <Route path="activities" element={<ListActivities />} />
-            <Route path="users" element={<ListUsers />} />
+            <Route
+              element={
+                <Permissions
+                  isAllowed={role !== "Consultor"}
+                  redirectPath="timesheet"
+                />
+              }
+            >
+              <Route path="register-client" element={<RegisterClient />} />
+              <Route path="register-project" element={<RegisterProject />} />
+              <Route path="register-activity" element={<RegisterActivity />} />
+              <Route path="register-user" element={<RegisterUser />} />
+              <Route path="clients" element={<ListClients />} />
+              <Route path="projects" element={<ListProjects />} />
+              <Route path="activities" element={<ListActivities />} />
+              <Route path="users" element={<ListUsers />} />
+            </Route>
+
+            <Route
+              element={
+                <Permissions
+                  isAllowed={role !== "Operacional"}
+                  redirectPath="register-client"
+                />
+              }
+            >
+              <Route path="timesheet" element={<Timesheet />} />
+            </Route>
           </Route>
         </Route>
       </Routes>
