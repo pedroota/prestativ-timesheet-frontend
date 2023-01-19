@@ -18,13 +18,11 @@ import { ForgotPassword } from "pages/ForgotPassword";
 import { NewPassword } from "pages/NewPassword";
 
 // Context
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { AuthContext } from "context/AuthContext";
 
 export function Router() {
   const { role } = useContext(AuthContext);
-
-  useEffect(() => console.log(role), [role]);
 
   return (
     <BrowserRouter>
