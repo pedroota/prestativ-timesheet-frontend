@@ -23,8 +23,6 @@ function generateTimestampWithDateAndTime(date: string, time: string) {
   const dateFormated = date.split("-");
   const timeFormated = time.split(":");
 
-  console.log(dateFormated, timeFormated);
-
   return new Date(
     Number(dateFormated[0]),
     Number(dateFormated[1]),

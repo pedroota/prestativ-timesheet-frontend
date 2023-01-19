@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { deleteHours, getHours } from "services/hours.service";
 import {
   Table,
@@ -50,8 +50,15 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export function Timesheet() {
+  const queryClient = useQueryClient();
   const [isAddingHours, setIsAddingHours] = useState(false);
   const { data: hours } = useQuery(["hours"], () => getHours());
+
+  const { mutate } = useMutation((_id: string) => deleteHours(_id), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["hours"]);
+    },
+  });
 
   return (
     <div>
@@ -80,7 +87,7 @@ export function Timesheet() {
           </Button>
         </Tooltip>
       </Box>
-      {hours?.data.lenght > 0 ? (
+      {hours?.data.length ? (
         <Paper className="c-timesheet">
           <div className="c-table">
             <div className="c-table--helper">
@@ -228,14 +235,22 @@ export function Timesheet() {
                           {closedScope || billable || released || approved ? (
                             " "
                           ) : (
-                            <div>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                gap: "20px",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                cursor: "pointer",
+                              }}
+                            >
                               <EditIcon />
                               <DeleteIcon
                                 onClick={() => {
-                                  deleteHours(_id);
+                                  mutate(_id);
                                 }}
                               />
-                            </div>
+                            </Box>
                           )}
                         </StyledTableCell>
                       </StyledTableRow>
