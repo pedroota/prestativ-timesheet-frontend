@@ -11,7 +11,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { getUserByRole } from "services/auth.service";
 import { createActivities } from "services/activities.service";
-import { Projects } from "interfaces/projects.interface";
+import { ProjectsInfo } from "interfaces/projects.interface";
 import { UserRegister } from "interfaces/users.interface";
 import { toast } from "react-toastify";
 import { Activities } from "interfaces/activities.interface";
@@ -78,8 +78,8 @@ export function RegisterActivity() {
         <MenuItem selected disabled value="">
           Projeto - Selecione uma opção
         </MenuItem>
-        {projectList?.data.map(({ title }: Projects) => (
-          <MenuItem key={title} value={title}>
+        {projectList?.data.map(({ title, _id }: ProjectsInfo) => (
+          <MenuItem key={_id} value={_id}>
             {title}
           </MenuItem>
         ))}
@@ -110,13 +110,11 @@ export function RegisterActivity() {
           <MenuItem selected disabled value="">
             GP - Selecione uma opção
           </MenuItem>
-          {GPList?.data.map(
-            ({ name, surname }: UserRegister, index: number) => (
-              <MenuItem key={index} value={`${name} ${surname}`}>
-                {`${name} ${surname}`}
-              </MenuItem>
-            )
-          )}
+          {GPList?.data.map(({ name, surname, _id }: UserRegister) => (
+            <MenuItem key={_id} value={_id}>
+              {`${name} ${surname}`}
+            </MenuItem>
+          ))}
         </TextField>
         <Select
           color="warning"
@@ -130,13 +128,11 @@ export function RegisterActivity() {
           <MenuItem value="" disabled>
             Selecione uma opção
           </MenuItem>
-          {consultantList?.data.map(
-            ({ name, surname, _id }: UserRegister, index: number) => (
-              <MenuItem key={index} value={_id}>
-                {`${name} ${surname}`}
-              </MenuItem>
-            )
-          )}
+          {consultantList?.data.map(({ name, surname, _id }: UserRegister) => (
+            <MenuItem key={_id} value={_id}>
+              {`${name} ${surname}`}
+            </MenuItem>
+          ))}
         </Select>
       </div>
       <Button type="submit" id="button-primary" variant="contained">

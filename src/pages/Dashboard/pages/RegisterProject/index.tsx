@@ -6,7 +6,7 @@ import { getClients } from "services/clients.service";
 import { getUserByRole } from "services/auth.service";
 import { createProjects } from "services/project.service";
 import { UserRegister } from "interfaces/users.interface";
-import { Clients } from "interfaces/clients.interface";
+import { ClientsInfo } from "interfaces/clients.interface";
 import { toast } from "react-toastify";
 
 export function RegisterProject() {
@@ -51,8 +51,8 @@ export function RegisterProject() {
         defaultValue=""
       >
         <MenuItem value="">Selecione uma opção</MenuItem>
-        {clientList?.data.map(({ code, name }: Clients) => (
-          <MenuItem key={code} value={name}>
+        {clientList?.data.map(({ code, name, _id }: ClientsInfo) => (
+          <MenuItem key={code} value={_id}>
             {name}
           </MenuItem>
         ))}
@@ -71,8 +71,8 @@ export function RegisterProject() {
         defaultValue=""
       >
         <MenuItem value="">Selecione uma opção</MenuItem>
-        {GPList?.data.map(({ name, surname }: UserRegister, index: number) => (
-          <MenuItem value={`${name} ${surname}`} key={index}>
+        {GPList?.data.map(({ name, surname, _id }: UserRegister) => (
+          <MenuItem value={_id} key={_id}>
             {`${name} ${surname}`}
           </MenuItem>
         ))}

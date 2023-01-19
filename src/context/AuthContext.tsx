@@ -4,6 +4,7 @@ import { signin, signup } from "services/auth.service";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import { Api } from "services/api.service";
+import { decodeJwt } from "utils/decodeJwt";
 
 type AuthContextType = {
   isAuthenticated: boolean;
@@ -17,6 +18,7 @@ type AuthContextType = {
     password,
     role,
   }: UserRegister) => Promise<void>;
+  role: string;
 };
 
 type AuthContextProps = {
@@ -27,6 +29,7 @@ export const AuthContext = createContext({} as AuthContextType);
 
 export function AuthProvider({ children }: AuthContextProps) {
   const [user, setUser] = useState<string | null>(null);
+  const [role, setRole] = useState("");
 
   const isAuthenticated = !!user;
 
@@ -39,6 +42,8 @@ export function AuthProvider({ children }: AuthContextProps) {
         toast.success(data?.message || "Seja bem-vindo.", {
           autoClose: 1500,
         });
+        const { role } = decodeJwt(data?.token);
+        setRole(role);
         setUser(data?.token);
         Cookies.set("token", data?.token, { expires: 1 });
 
@@ -80,7 +85,7 @@ export function AuthProvider({ children }: AuthContextProps) {
 
   return (
     <AuthContext.Provider
-      value={{ user, setUser, isAuthenticated, signIn, signUp }}
+      value={{ user, setUser, isAuthenticated, signIn, signUp, role }}
     >
       {children}
     </AuthContext.Provider>

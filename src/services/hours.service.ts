@@ -1,5 +1,5 @@
 import { Api } from "./api.service";
-import { Hours } from "interfaces/hours.interface";
+import { RegisterHours } from "interfaces/hours.interface";
 
 export const getHours = async () => {
   const result = await Api.get("/hours");
@@ -16,7 +16,7 @@ export const createHours = async ({
   relActivity,
   relUser,
   callNumber,
-}: Hours) => {
+}: RegisterHours) => {
   const result = await Api.post("/hours", {
     initial,
     final,

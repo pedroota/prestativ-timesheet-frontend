@@ -1,5 +1,5 @@
 import { Api } from "./api.service";
-import { ProjectsInfo, Projects } from "interfaces/projects.interface";
+import { Projects } from "interfaces/projects.interface";
 
 export const getProjects = async () => {
   const result = await Api.get("/projects");

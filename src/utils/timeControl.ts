@@ -19,15 +19,19 @@ function generateDayWeekWithTimestamp(timestamp: number) {
     .slice(0, -1);
 }
 
-function generateTimestampWithDateAndTime(date: Date, time: Date) {
-  const day = date.getDay();
-  const month = date.getMonth();
-  const year = date.getFullYear();
-  const hours = time.getHours();
-  const minutes = time.getMinutes();
-  const seconds = time.getSeconds();
-  const timestamp = new Date(year, month, day, hours, minutes, seconds);
-  return timestamp;
+function generateTimestampWithDateAndTime(date: string, time: string) {
+  const dateFormated = date.split("-");
+  const timeFormated = time.split(":");
+
+  console.log(dateFormated, timeFormated);
+
+  return new Date(
+    Number(dateFormated[0]),
+    Number(dateFormated[1]),
+    Number(dateFormated[2]),
+    Number(timeFormated[0]),
+    Number(timeFormated[1])
+  ).getTime();
 }
 
 function generateTotalHours(initial: number, final: number) {

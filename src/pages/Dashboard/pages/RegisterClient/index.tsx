@@ -226,8 +226,8 @@ export function RegisterClient() {
           {...register("gpClient")}
         >
           <MenuItem value="">Selecione uma opção</MenuItem>
-          {data?.data.map(({ name, surname }: UserRegister, index: number) => (
-            <MenuItem value={`${name} ${surname}`} key={index}>
+          {data?.data.map(({ name, surname, _id }: UserRegister) => (
+            <MenuItem value={_id} key={_id}>
               {`${name} ${surname}`}
             </MenuItem>
           ))}

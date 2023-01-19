@@ -15,3 +15,14 @@ export interface Hours {
   createdAt: number;
   updatedAt: number;
 }
+
+export interface RegisterHours {
+  initial: number;
+  final: number;
+  relClient: string;
+  relProject: string;
+  relActivity: string;
+  relUser: string;
+  callNumber: string;
+  adjustment: number;
+}
