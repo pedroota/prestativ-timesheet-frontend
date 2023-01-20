@@ -15,6 +15,7 @@ import { ListActivities } from "pages/Dashboard/pages/ListActivities";
 import { ListUsers } from "pages/Dashboard/pages/ListUsers";
 import { ForgotPassword } from "pages/ForgotPassword";
 import { NewPassword } from "pages/NewPassword";
+import { ListLogs } from "pages/Dashboard/pages/ListLogs";
 
 export function Router() {
   return (
@@ -34,6 +35,7 @@ export function Router() {
             <Route path="projects" element={<ListProjects />} />
             <Route path="activities" element={<ListActivities />} />
             <Route path="users" element={<ListUsers />} />
+            <Route path="logs" element={<ListLogs />} />
           </Route>
         </Route>
       </Routes>

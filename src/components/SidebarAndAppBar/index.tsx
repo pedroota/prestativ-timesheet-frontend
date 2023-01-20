@@ -32,6 +32,7 @@ import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import HailIcon from "@mui/icons-material/Hail";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import WorkIcon from "@mui/icons-material/Work";
+import HistoryIcon from "@mui/icons-material/History";
 import ExitToApp from "@mui/icons-material/ExitToApp";
 import PublicIcon from "@mui/icons-material/Public";
 import { HeaderUser } from "components/HeaderUser";
@@ -187,7 +188,32 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                   <AccessTimeIcon />
                 </ListItemIcon>
                 <ListItemText
-                  primary={"TimeSheet"}
+                  primary={"TimeSheet Admin"}
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+              </ListItemButton>
+            </ListItem>
+          </Link>
+          <Link to="timesheet">
+            <ListItem disablePadding>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  <AccessTimeIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary={"TimeSheet Consultor"}
                   sx={{ opacity: open ? 1 : 0 }}
                 />
               </ListItemButton>
@@ -394,6 +420,31 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                 </ListItemIcon>
                 <ListItemText
                   primary={"Ver Usuários"}
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+              </ListItemButton>
+            </ListItem>
+          </Link>
+          <Link to="logs">
+            <ListItem disablePadding>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  <HistoryIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary={"Ver Logs"}
                   sx={{ opacity: open ? 1 : 0 }}
                 />
               </ListItemButton>
