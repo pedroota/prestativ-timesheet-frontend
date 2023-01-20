@@ -113,7 +113,7 @@ interface SidebarAndAppBarProps {
 }
 
 export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
-  const { setUser } = useContext(AuthContext);
+  const { setUser, role } = useContext(AuthContext);
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
