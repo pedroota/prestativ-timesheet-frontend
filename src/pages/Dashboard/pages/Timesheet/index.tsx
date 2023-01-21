@@ -94,12 +94,14 @@ export function Timesheet() {
               <Table className="c-table" aria-label="customized table">
                 <TableHead>
                   <TableRow className="c-table--reset-head">
+                    <StyledTableCell align="center">Data</StyledTableCell>
                     <StyledTableCell align="center">
-                      Horário Inicial
+                      Dia da Semana
                     </StyledTableCell>
                     <StyledTableCell align="center">
-                      Horário Final
+                      Hora Inicial
                     </StyledTableCell>
+                    <StyledTableCell align="center">Hora Final</StyledTableCell>
                     <StyledTableCell align="center">Total</StyledTableCell>
                     <StyledTableCell align="center">Ajuste</StyledTableCell>
                     <StyledTableCell align="center">
@@ -148,18 +150,16 @@ export function Timesheet() {
                     }: Hours) => (
                       <StyledTableRow key={_id}>
                         <StyledTableCell align="center">
-                          {`${generateDateWithTimestamp(
-                            initial
-                          )} ${generateTimeWithTimestamp(
-                            initial
-                          )} ${generateDayWeekWithTimestamp(initial)}`}
+                          {generateDateWithTimestamp(initial)}
                         </StyledTableCell>
                         <StyledTableCell align="center">
-                          {`${generateDateWithTimestamp(
-                            final
-                          )} ${generateTimeWithTimestamp(
-                            final
-                          )} ${generateDayWeekWithTimestamp(final)}`}
+                          {generateDayWeekWithTimestamp(initial)}
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          {generateTimeWithTimestamp(initial)}
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          {generateTimeWithTimestamp(final)}
                         </StyledTableCell>
                         <StyledTableCell align="center">
                           {generateTotalHours(initial, final)}
@@ -194,7 +194,6 @@ export function Timesheet() {
                           ) : (
                             <Checkbox defaultChecked />
                           )}
-                          {closedScope ? "Sim" : "Não"}
                         </StyledTableCell>
                         <StyledTableCell align="center">
                           {!billable ? (
@@ -202,7 +201,6 @@ export function Timesheet() {
                           ) : (
                             <Checkbox defaultChecked />
                           )}
-                          {billable ? "Sim" : "Não"}
                         </StyledTableCell>
                         <StyledTableCell align="center">
                           {!released ? (
@@ -210,7 +208,6 @@ export function Timesheet() {
                           ) : (
                             <Checkbox defaultChecked />
                           )}
-                          {released ? "Sim" : "Não"}
                         </StyledTableCell>
                         <StyledTableCell align="center">
                           {!approved ? (
@@ -218,7 +215,6 @@ export function Timesheet() {
                           ) : (
                             <Checkbox defaultChecked />
                           )}
-                          {approved ? "Sim" : "Não"}
                         </StyledTableCell>
                         <StyledTableCell align="center">
                           {callNumber}
