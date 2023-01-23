@@ -49,7 +49,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-export function Timesheet() {
+export function TimesheetAdmin() {
   const queryClient = useQueryClient();
   const [isAddingHours, setIsAddingHours] = useState(false);
   const { data: hours } = useQuery(["hours"], () => getHours());

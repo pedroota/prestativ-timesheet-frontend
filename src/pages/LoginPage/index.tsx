@@ -12,9 +12,7 @@ export function LoginPage() {
   const navigate = useNavigate();
 
   const onSubmit = handleSubmit(async ({ email, password }) => {
-    await signIn({ email, password }).then(() =>
-      navigate("/dashboard/timesheet")
-    );
+    await signIn({ email, password }).then(() => navigate("/dashboard"));
   });
 
   return (

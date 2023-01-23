@@ -5,7 +5,10 @@ import { Permissions } from "./Permissions";
 // Pages imports
 import { LoginPage } from "pages/LoginPage";
 import { Dashboard } from "pages/Dashboard";
-import { Timesheet } from "pages/Dashboard/pages/Timesheet";
+import { TimesheetAdmin } from "pages/Dashboard/pages/TimesheetAdmin";
+import { TimesheetConsultant } from "pages/Dashboard/pages/TimesheetConsultant";
+import { TimesheetProjectManager } from "pages/Dashboard/pages/TimesheetProjectManager";
+import { TimesheetOperational } from "pages/Dashboard/pages/TimesheetOperational";
 import { RegisterUser } from "pages/Dashboard/pages/RegisterUser";
 import { RegisterClient } from "pages/Dashboard/pages/RegisterClient";
 import { RegisterProject } from "pages/Dashboard/pages/RegisterProject";
@@ -33,16 +36,28 @@ export function Router() {
         <Route path="/newpass" element={<NewPassword />} />
         <Route element={<PrivateRoutes />}>
           <Route path="/dashboard" element={<Dashboard />}>
-
             <Route
               element={
                 <Permissions
                   isAllowed={role !== "Consultor"}
-                  redirectPath="timesheet"
+                  redirectPath="dashboard"
                 />
               }
             >
               <Route path="register-client" element={<RegisterClient />} />
+              <Route path="timesheetAdmin" element={<TimesheetAdmin />} />
+              <Route
+                path="timesheetConsultant"
+                element={<TimesheetConsultant />}
+              />
+              <Route
+                path="timesheetProjectManager"
+                element={<TimesheetProjectManager />}
+              />
+              <Route
+                path="timesheetOperational"
+                element={<TimesheetOperational />}
+              />
               <Route path="register-project" element={<RegisterProject />} />
               <Route path="register-activity" element={<RegisterActivity />} />
               <Route path="register-user" element={<RegisterUser />} />
@@ -60,9 +75,7 @@ export function Router() {
                   redirectPath="register-client"
                 />
               }
-            >
-              <Route path="timesheet" element={<Timesheet />} />
-            </Route>
+            ></Route>
           </Route>
         </Route>
       </Routes>

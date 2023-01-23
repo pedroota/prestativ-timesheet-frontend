@@ -168,10 +168,10 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
           </IconButton>
         </DrawerHeader>
         <Divider />
-        {role === "Operacional" ? null : (
+        {role === "Operacional" ? (
           <>
             <List>
-              <Link to="timesheet">
+              <Link to="timesheetOperational">
                 <ListItem disablePadding>
                   <ListItemButton
                     sx={{
@@ -190,7 +190,7 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                       <AccessTimeIcon />
                     </ListItemIcon>
                     <ListItemText
-                      primary={"TimeSheet Basico"}
+                      primary={"TimeSheet Operacional"}
                       sx={{ opacity: open ? 1 : 0 }}
                     />
                   </ListItemButton>
@@ -198,13 +198,42 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
               </Link>
             </List>
           </>
-        )}
-
-        <Divider />
-        {role === "Consultor" ? null : (
+        ) : null}
+        {role === "Consultant" ? (
           <>
             <List>
-              <Link to="timesheet">
+              <Link to="timesheetConsultant">
+                <ListItem disablePadding>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <AccessTimeIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={"TimeSheet Consultor"}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            </List>
+          </>
+        ) : null}
+        {role === "Administrador" ? (
+          <>
+            <List>
+              <Link to="timesheetAdmin">
                 <ListItem disablePadding>
                   <ListItemButton
                     sx={{
@@ -229,6 +258,45 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                   </ListItemButton>
                 </ListItem>
               </Link>
+            </List>
+          </>
+        ) : null}
+        {role === "Gerente de Projetos" ? (
+          <>
+            <List>
+              <Link to="timesheetProjectManager">
+                <ListItem disablePadding>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <AccessTimeIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={"TimeSheet GP"}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            </List>
+          </>
+        ) : null}
+
+        <Divider />
+        {role === "Consultor" ? null : (
+          <>
+            <List>
               <Link to="register-client">
                 <ListItem disablePadding>
                   <ListItemButton
