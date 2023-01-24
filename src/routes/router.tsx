@@ -21,6 +21,7 @@ import { ListLogs } from "pages/Dashboard/pages/ListLogs";
 // Context
 import { useContext } from "react";
 import { AuthContext } from "context/AuthContext";
+import { UserProfiles } from "pages/Dashboard/pages/UserProfiles";
 
 export function Router() {
   const { role } = useContext(AuthContext);
@@ -51,6 +52,7 @@ export function Router() {
               <Route path="activities" element={<ListActivities />} />
               <Route path="users" element={<ListUsers />} />
               <Route path="logs" element={<ListLogs />} />
+              <Route path="profiles" element={<UserProfiles />} />
             </Route>
             <Route
               element={

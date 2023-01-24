@@ -110,21 +110,25 @@ export function Timesheet() {
                     <StyledTableCell align="center">Cliente</StyledTableCell>
                     <StyledTableCell align="center">Projeto</StyledTableCell>
                     <StyledTableCell align="center">Atividade</StyledTableCell>
+                    <StyledTableCell align="center">Valor</StyledTableCell>
+                    <StyledTableCell align="center">
+                      Gerente de Projetos
+                    </StyledTableCell>
                     <StyledTableCell align="center">Consultor</StyledTableCell>
                     <StyledTableCell align="center">
                       Escopo Fechado
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      Aprovado GP
                     </StyledTableCell>
                     <StyledTableCell align="center">Faturável</StyledTableCell>
                     <StyledTableCell align="center">Lançado</StyledTableCell>
                     <StyledTableCell align="center">Aprovado</StyledTableCell>
                     <StyledTableCell align="center">
-                      Número do Chamado
+                      Descrição da Atividade
                     </StyledTableCell>
                     <StyledTableCell align="center">
-                      Data Sistema
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      Data Edição
+                      Data Sistema / Data Edição
                     </StyledTableCell>
                     <StyledTableCell align="center">Controles</StyledTableCell>
                   </TableRow>
@@ -185,8 +189,10 @@ export function Timesheet() {
                         <StyledTableCell align="center">
                           {relActivity?.title}
                         </StyledTableCell>
+                        <StyledTableCell align="center">valor</StyledTableCell>
+                        <StyledTableCell align="center">GP</StyledTableCell>
                         <StyledTableCell align="center">
-                          {relUser?.name}
+                          {`${relUser?.name} ${relUser?.surname}`}
                         </StyledTableCell>
                         <StyledTableCell align="center">
                           {!closedScope ? (
@@ -194,6 +200,9 @@ export function Timesheet() {
                           ) : (
                             <Checkbox defaultChecked />
                           )}
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          Aprovado GP
                         </StyledTableCell>
                         <StyledTableCell align="center">
                           {!billable ? (
@@ -218,16 +227,19 @@ export function Timesheet() {
                         </StyledTableCell>
                         <StyledTableCell align="center">
                           {callNumber}
+                          {/* deve ser alterado para DESCRIÇÃO DA ATIVIDADE */}
                         </StyledTableCell>
                         <StyledTableCell align="center">
-                          {generateDateWithTimestamp(createdAt)}
-                          {generateTimeWithTimestamp(createdAt)}
+                          {`${generateDateWithTimestamp(
+                            createdAt
+                          )} ${generateTimeWithTimestamp(
+                            createdAt
+                          )} ${generateDateWithTimestamp(
+                            updatedAt
+                          )} ${generateTimeWithTimestamp(updatedAt)}`}
                         </StyledTableCell>
                         <StyledTableCell align="center">
-                          {generateDateWithTimestamp(updatedAt)}
-                          {generateTimeWithTimestamp(updatedAt)}
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
+                          {/* closed scope abaixo deve ser alterado para APROVADO GP na condicional */}
                           {closedScope || billable || released || approved ? (
                             " "
                           ) : (
