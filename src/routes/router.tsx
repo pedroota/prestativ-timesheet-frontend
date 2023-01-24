@@ -33,7 +33,6 @@ export function Router() {
         <Route path="/newpass" element={<NewPassword />} />
         <Route element={<PrivateRoutes />}>
           <Route path="/dashboard" element={<Dashboard />}>
-
             <Route
               element={
                 <Permissions
@@ -52,7 +51,6 @@ export function Router() {
               <Route path="users" element={<ListUsers />} />
               <Route path="logs" element={<ListLogs />} />
             </Route>
-
             <Route
               element={
                 <Permissions
