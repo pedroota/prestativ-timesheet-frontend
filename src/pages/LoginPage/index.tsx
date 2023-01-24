@@ -1,12 +1,14 @@
-import { Button, TextField } from "@mui/material";
+import { useContext, useState } from "react";
+import { Button, TextField, InputAdornment, IconButton } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
 import { User } from "interfaces/users.interface";
 import Logo from "assets/logo.png";
-import { useContext } from "react";
 import { AuthContext } from "context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 
 export function LoginPage() {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const { signIn } = useContext(AuthContext);
   const { register, handleSubmit } = useForm<User>({});
   const navigate = useNavigate();
@@ -35,8 +37,21 @@ export function LoginPage() {
             id="input-primary"
             color="warning"
             label="Password"
-            type="password"
+            type={isPasswordVisible ? "text" : "password"}
             {...register("password")}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() =>
+                      setIsPasswordVisible((prevState) => !prevState)
+                    }
+                  >
+                    {isPasswordVisible ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
           <div className="c-login--helper-form-submit">
             <Link to="/forgotpass">Esqueceu sua senha?</Link>

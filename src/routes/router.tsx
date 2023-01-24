@@ -67,7 +67,6 @@ export function Router() {
               <Route path="users" element={<ListUsers />} />
               <Route path="logs" element={<ListLogs />} />
             </Route>
-
             <Route
               element={
                 <Permissions
