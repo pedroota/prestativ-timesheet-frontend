@@ -97,13 +97,13 @@ export function ListProjects() {
                             {title}
                           </StyledTableCell>
                           <StyledTableCell align="center">
-                            {idClient}
+                            {idClient?.name}
                           </StyledTableCell>
                           <StyledTableCell align="center">
                             {formatCurrency(valueProject)}
                           </StyledTableCell>
                           <StyledTableCell align="center">
-                            {gpProject}
+                            {`${gpProject?.name} ${gpProject?.surname}`}
                           </StyledTableCell>
                           <StyledTableCell align="center">
                             {description}
