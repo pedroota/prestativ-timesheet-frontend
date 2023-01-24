@@ -3,10 +3,22 @@ export interface Hours {
   initial: number;
   final: number;
   adjustment: number;
-  relClient: string;
-  relProject: string;
-  relActivity: string;
-  relUser: string;
+  relClient: {
+    _id: string;
+    name: string;
+  };
+  relProject: {
+    _id: string;
+    title: string;
+  };
+  relActivity: {
+    _id: string;
+    title: string;
+  };
+  relUser: {
+    _id: string;
+    name: string;
+  };
   closedScope: boolean;
   billable: boolean;
   released: boolean;

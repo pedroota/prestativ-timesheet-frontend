@@ -177,16 +177,16 @@ export function Timesheet() {
                           )}
                         </StyledTableCell>
                         <StyledTableCell align="center">
-                          {relClient}
+                          {relClient?.name}
                         </StyledTableCell>
                         <StyledTableCell align="center">
-                          {relProject}
+                          {relProject?.title}
                         </StyledTableCell>
                         <StyledTableCell align="center">
-                          {relActivity}
+                          {relActivity?.title}
                         </StyledTableCell>
                         <StyledTableCell align="center">
-                          {relUser}
+                          {relUser?.name}
                         </StyledTableCell>
                         <StyledTableCell align="center">
                           {!closedScope ? (
