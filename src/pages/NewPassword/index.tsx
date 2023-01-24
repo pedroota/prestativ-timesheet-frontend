@@ -1,4 +1,6 @@
-import { Button, TextField } from "@mui/material";
+import { useState } from "react";
+import { Button, TextField, InputAdornment, IconButton } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
 import { UserRegister } from "interfaces/users.interface";
 import Logo from "assets/logo.png";
@@ -6,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { newpass } from "services/auth.service";
 
 export function NewPassword() {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const { register, handleSubmit } = useForm<UserRegister>({});
   const navigate = useNavigate();
 
@@ -39,9 +42,22 @@ export function NewPassword() {
           <TextField
             required
             color="warning"
-            type="password"
+            type={isPasswordVisible ? "text" : "password"}
             label="Sua Nova Senha"
             {...register("password")}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() =>
+                      setIsPasswordVisible((prevState) => !prevState)
+                    }
+                  >
+                    {isPasswordVisible ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
 
           <Button id="button-primary" type="submit" variant="contained">
