@@ -1,8 +1,15 @@
 export interface Activities {
   title: string;
-  project: string;
+  project: {
+    _id: string;
+    title: string;
+  };
   valueActivity: number;
-  gpActivity: string;
+  gpActivity: {
+    _id: string;
+    name: string;
+    surname: string;
+  };
   description: string;
   users: [
     {
@@ -15,9 +22,16 @@ export interface Activities {
 export interface ActivitiesInfo {
   _id: string;
   title: string;
-  project: string;
+  project: {
+    _id: string;
+    title: string;
+  };
   valueActivity: number;
-  gpActivity: string;
+  gpActivity: {
+    _id: string;
+    name: string;
+    surname: string;
+  };
   description: string;
   users: [
     {

@@ -18,6 +18,7 @@ export interface Hours {
   relUser: {
     _id: string;
     name: string;
+    surname: string;
   };
   closedScope: boolean;
   billable: boolean;
