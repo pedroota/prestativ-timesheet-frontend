@@ -20,6 +20,7 @@ import { getClients } from "services/clients.service";
 import { ClientsInfo } from "interfaces/clients.interface";
 import { ProjectsInfo } from "interfaces/projects.interface";
 import { ActivitiesInfo } from "interfaces/activities.interface";
+import { toast } from "react-toastify";
 interface ModalRegisterHoursProps {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -43,7 +44,7 @@ export function ModalRegisterHours({
       relProject,
       relActivity,
       relUser,
-      callNumber,
+      activityDesc,
     }: RegisterHours) =>
       createHours({
         initial,
@@ -53,7 +54,7 @@ export function ModalRegisterHours({
         relProject,
         relActivity,
         relUser,
-        callNumber,
+        activityDesc,
       }),
     {
       onSuccess: () => {
@@ -66,21 +67,32 @@ export function ModalRegisterHours({
   const onSubmit = handleSubmit(
     ({
       initialDate,
-      finalDate,
       initialHour,
       finalHour,
       relClient,
       relProject,
       relActivity,
-      callNumber,
+      activityDesc,
     }) => {
       const initial = generateTimestampWithDateAndTime(
         initialDate,
         initialHour
       );
-      const final = generateTimestampWithDateAndTime(finalDate, finalHour);
-      const adjustment = 0; // Presets the adjusment property to 0, just GPs and ADMs can change it
+      const final = generateTimestampWithDateAndTime(initialDate, finalHour);
+      const maxDaysCanRelease = 4; // Periodo máximo para lançar horas - editando essa variável, o sistema irá permitir que datas mais antigas sejam possiveis lançar
+      const daysInMiliseconds = maxDaysCanRelease * 1000 * 60 * 60 * 24;
+      const today = Date.now();
+      const adjustment = 0; // Presets the adjusment property to 0, just ADMs can change it
       const { id } = decodeJwt(`${user}`);
+      if (initial > today + daysInMiliseconds / maxDaysCanRelease) {
+        toast.error("A data informada ainda não está disponível para lançar");
+        return;
+      }
+      if (initial < today - daysInMiliseconds) {
+        toast.error("A data informada é muito antiga");
+        return;
+      }
+
       mutate({
         initial,
         final,
@@ -89,7 +101,7 @@ export function ModalRegisterHours({
         relProject,
         relActivity,
         relUser: id,
-        callNumber,
+        activityDesc,
       });
     }
   );
@@ -116,6 +128,23 @@ export function ModalRegisterHours({
         </Box>
         <form className="c-form-spacing" onSubmit={onSubmit}>
           <Box sx={{ display: "flex", gap: "1rem" }}>
+            <FormLabel
+              sx={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.2rem",
+              }}
+            >
+              Data
+              <TextField
+                type="date"
+                color="warning"
+                variant="outlined"
+                required
+                {...register("initialDate")}
+              />
+            </FormLabel>
             <FormLabel
               sx={{
                 width: "100%",
@@ -153,48 +182,11 @@ export function ModalRegisterHours({
           </Box>
 
           <Box sx={{ display: "flex", gap: "1rem" }}>
-            <FormLabel
-              sx={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.2rem",
-              }}
-            >
-              Data inicial
-              <TextField
-                type="date"
-                color="warning"
-                variant="outlined"
-                required
-                {...register("initialDate")}
-              />
-            </FormLabel>
-            <FormLabel
-              sx={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.2rem",
-              }}
-            >
-              Data final
-              <TextField
-                type="date"
-                color="warning"
-                variant="outlined"
-                required
-                {...register("finalDate")}
-              />
-            </FormLabel>
-          </Box>
-
-          <Box sx={{ display: "flex", gap: "1rem" }}>
             <TextField
               required
               color="warning"
               variant="outlined"
-              label="Cliente relacionado"
+              label="Cliente"
               select
               defaultValue=""
               InputLabelProps={{ shrink: true }}
@@ -215,7 +207,7 @@ export function ModalRegisterHours({
               required
               color="warning"
               variant="outlined"
-              label="Projeto relacionado"
+              label="Projeto"
               InputLabelProps={{ shrink: true }}
               select
               defaultValue=""
@@ -240,7 +232,7 @@ export function ModalRegisterHours({
             required
             color="warning"
             variant="outlined"
-            label="Atividade relacionada"
+            label="Atividade"
             InputLabelProps={{ shrink: true }}
             defaultValue=""
             select
@@ -263,9 +255,11 @@ export function ModalRegisterHours({
           <TextField
             required
             color="warning"
+            multiline
+            rows={4}
             variant="outlined"
-            label="Número do chamado"
-            {...register("callNumber")}
+            label="Descrição da Atividade"
+            {...register("activityDesc")}
           />
           <Button
             variant="contained"

@@ -20,6 +20,7 @@ export const createActivities = async ({
   gpActivity,
   description,
   users,
+  closedScope,
 }: Activities) => {
   const result = await Api.post("/activities", {
     title,
@@ -28,6 +29,7 @@ export const createActivities = async ({
     gpActivity,
     description,
     users,
+    closedScope,
   });
 
   return result;
@@ -41,7 +43,15 @@ export const deleteActivity = async (_id: string) => {
 
 export const updateActivity = async (
   id: string,
-  { title, project, description, gpActivity, users, valueActivity }: Activities
+  {
+    title,
+    project,
+    description,
+    gpActivity,
+    users,
+    closedScope,
+    valueActivity,
+  }: Activities
 ) => {
   const result = await Api.put(`/activities/${id}`, {
     title,
@@ -49,6 +59,7 @@ export const updateActivity = async (
     description,
     gpActivity,
     users,
+    closedScope,
     valueActivity,
   });
 

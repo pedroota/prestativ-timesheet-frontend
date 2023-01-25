@@ -54,7 +54,7 @@ export function RegisterUser() {
         {...register("password")}
       />
       <TextField
-        label="Nível do Usuário"
+        label="Perfil do Usuário"
         select
         color="warning"
         defaultValue="Consultor"
