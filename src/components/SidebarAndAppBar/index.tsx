@@ -36,6 +36,7 @@ import WorkIcon from "@mui/icons-material/Work";
 import ExitToApp from "@mui/icons-material/ExitToApp";
 import PublicIcon from "@mui/icons-material/Public";
 import GroupIcon from "@mui/icons-material/Group";
+import SettingsIcon from "@mui/icons-material/Settings";
 import { HeaderUser } from "components/HeaderUser";
 
 const drawerWidth = 240;
@@ -448,6 +449,31 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                     </ListItemIcon>
                     <ListItemText
                       primary={"Perfis de Usuário"}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+              <Link to="settings">
+                <ListItem disablePadding>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <SettingsIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={"Configurações"}
                       sx={{ opacity: open ? 1 : 0 }}
                     />
                   </ListItemButton>
