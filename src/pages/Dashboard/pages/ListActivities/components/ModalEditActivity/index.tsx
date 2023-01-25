@@ -18,6 +18,8 @@ import { getUserByRole } from "services/auth.service";
 import { getProjects } from "services/project.service";
 import { Projects } from "interfaces/projects.interface";
 import Dialog from "@mui/material/Dialog";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 
 interface ModalEditActivityProps {
   isOpen: boolean;
@@ -48,6 +50,7 @@ export function ModalEditActivity({
       description,
       gpActivity,
       users,
+      closedScope,
       valueActivity,
     }: Activities) =>
       updateActivity(currentActivity, {
@@ -56,6 +59,7 @@ export function ModalEditActivity({
         description,
         gpActivity,
         users,
+        closedScope,
         valueActivity,
       }),
     {
@@ -77,7 +81,15 @@ export function ModalEditActivity({
   });
 
   const onSubmit = handleSubmit(
-    ({ title, project, description, gpActivity, users, valueActivity }) => {
+    ({
+      title,
+      project,
+      description,
+      gpActivity,
+      users,
+      valueActivity,
+      closedScope,
+    }) => {
       mutate({
         title,
         project,
@@ -85,6 +97,7 @@ export function ModalEditActivity({
         gpActivity,
         users,
         valueActivity,
+        closedScope,
       });
       reset();
     }
@@ -196,6 +209,10 @@ export function ModalEditActivity({
                 )
               )}
             </Select>
+            <FormControlLabel
+              control={<Checkbox defaultChecked {...register("closedScope")} />}
+              label="Escopo Fechado"
+            />
           </div>
 
           <Button

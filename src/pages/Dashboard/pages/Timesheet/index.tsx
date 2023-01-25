@@ -144,11 +144,11 @@ export function Timesheet() {
                       relProject,
                       relActivity,
                       relUser,
-                      closedScope,
+                      approvedGP,
                       billable,
                       released,
                       approved,
-                      callNumber,
+                      activityDesc,
                       createdAt,
                       updatedAt,
                     }: Hours) => (
@@ -195,14 +195,19 @@ export function Timesheet() {
                           {`${relUser?.name} ${relUser?.surname}`}
                         </StyledTableCell>
                         <StyledTableCell align="center">
-                          {!closedScope ? (
+                          {!approvedGP ? (
+                            // closedScope from collection activity must go here
                             <Checkbox />
                           ) : (
                             <Checkbox defaultChecked />
                           )}
                         </StyledTableCell>
                         <StyledTableCell align="center">
-                          Aprovado GP
+                          {!approvedGP ? (
+                            <Checkbox />
+                          ) : (
+                            <Checkbox defaultChecked />
+                          )}
                         </StyledTableCell>
                         <StyledTableCell align="center">
                           {!billable ? (
@@ -226,7 +231,7 @@ export function Timesheet() {
                           )}
                         </StyledTableCell>
                         <StyledTableCell align="center">
-                          {callNumber}
+                          {activityDesc}
                           {/* deve ser alterado para DESCRIÇÃO DA ATIVIDADE */}
                         </StyledTableCell>
                         <StyledTableCell align="center">
@@ -240,7 +245,7 @@ export function Timesheet() {
                         </StyledTableCell>
                         <StyledTableCell align="center">
                           {/* closed scope abaixo deve ser alterado para APROVADO GP na condicional */}
-                          {closedScope || billable || released || approved ? (
+                          {approvedGP || billable || released || approved ? (
                             " "
                           ) : (
                             <Box

@@ -20,11 +20,11 @@ export interface Hours {
     name: string;
     surname: string;
   };
-  closedScope: boolean;
+  approvedGP: boolean;
   billable: boolean;
   released: boolean;
   approved: boolean;
-  callNumber: string;
+  activityDesc: string;
   createdAt: number;
   updatedAt: number;
 }
@@ -36,6 +36,6 @@ export interface RegisterHours {
   relProject: string;
   relActivity: string;
   relUser: string;
-  callNumber: string;
+  activityDesc: string;
   adjustment: number;
 }

@@ -46,7 +46,7 @@ export function RegisterProject() {
       <TextField
         color="warning"
         {...register("idClient")}
-        label="Cliente Relacionado"
+        label="Cliente"
         select
         defaultValue=""
       >
@@ -66,7 +66,7 @@ export function RegisterProject() {
       <TextField
         color="warning"
         {...register("gpProject")}
-        label="Gerente de Projetos Relacionado"
+        label="Gerente de Projetos"
         select
         defaultValue=""
       >

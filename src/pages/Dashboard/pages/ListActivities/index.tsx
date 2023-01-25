@@ -17,6 +17,7 @@ import { ActivitiesInfo } from "interfaces/activities.interface";
 import { EmptyList } from "components/EmptyList";
 import { formatCurrency } from "utils/formatCurrency";
 import { ModalEditActivity } from "./components/ModalEditActivity";
+import Checkbox from "@mui/material/Checkbox";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -86,6 +87,9 @@ export function ListActivities() {
                         Usuários Vinculados
                       </StyledTableCell>
                       <StyledTableCell align="center">
+                        Escopo Fechado
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
                         Controles
                       </StyledTableCell>
                     </TableRow>
@@ -100,6 +104,7 @@ export function ListActivities() {
                         gpActivity,
                         description,
                         users,
+                        closedScope,
                       }: ActivitiesInfo) => (
                         <StyledTableRow key={_id}>
                           <StyledTableCell align="center">
@@ -121,6 +126,13 @@ export function ListActivities() {
                             {users.map(
                               ({ name, surname }: ConsultantUsers) =>
                                 `${name} ${surname}`
+                            )}
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            {!closedScope ? (
+                              <Checkbox />
+                            ) : (
+                              <Checkbox defaultChecked />
                             )}
                           </StyledTableCell>
                           <StyledTableCell

@@ -15,6 +15,8 @@ import { ProjectsInfo } from "interfaces/projects.interface";
 import { UserRegister } from "interfaces/users.interface";
 import { toast } from "react-toastify";
 import { Activities } from "interfaces/activities.interface";
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 export function RegisterActivity() {
   const { data: projectList } = useQuery(["client-project"], () =>
@@ -31,7 +33,15 @@ export function RegisterActivity() {
   const [multipleSelect, setMultipleSelect] = useState<string[]>([]);
 
   const onSubmit = handleSubmit(
-    ({ title, project, valueActivity, gpActivity, description, users }) => {
+    ({
+      title,
+      project,
+      valueActivity,
+      gpActivity,
+      description,
+      users,
+      closedScope,
+    }) => {
       createActivities({
         title,
         project,
@@ -39,6 +49,7 @@ export function RegisterActivity() {
         gpActivity,
         description,
         users,
+        closedScope,
       })
         .then(() => {
           reset();
@@ -72,7 +83,7 @@ export function RegisterActivity() {
         color="warning"
         {...register("project")}
         select
-        label="Projeto relacionado"
+        label="Projeto"
         defaultValue=""
       >
         <MenuItem selected disabled value="">
@@ -104,7 +115,7 @@ export function RegisterActivity() {
           {...register("gpActivity")}
           sx={{ width: "100%" }}
           select
-          label="Gerente de projetos relacionado"
+          label="Gerente de projetos"
           defaultValue=""
         >
           <MenuItem selected disabled value="">
@@ -134,6 +145,10 @@ export function RegisterActivity() {
             </MenuItem>
           ))}
         </Select>
+        <FormControlLabel
+          control={<Checkbox {...register("closedScope")} />}
+          label="Escopo Fechado"
+        />
       </div>
       <Button type="submit" id="button-primary" variant="contained">
         Cadastrar atividade

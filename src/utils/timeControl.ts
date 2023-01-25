@@ -25,7 +25,7 @@ function generateTimestampWithDateAndTime(date: string, time: string) {
 
   return new Date(
     Number(dateFormated[0]),
-    Number(dateFormated[1]),
+    Number(dateFormated[1]) - 1,
     Number(dateFormated[2]),
     Number(timeFormated[0]),
     Number(timeFormated[1])

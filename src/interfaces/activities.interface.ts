@@ -17,6 +17,7 @@ export interface Activities {
       surname: string;
     }
   ];
+  closedScope: boolean;
 }
 
 export interface ActivitiesInfo {
@@ -39,4 +40,5 @@ export interface ActivitiesInfo {
       surname: string;
     }
   ];
+  closedScope: boolean;
 }

@@ -15,7 +15,7 @@ export const createHours = async ({
   relProject,
   relActivity,
   relUser,
-  callNumber,
+  activityDesc,
 }: RegisterHours) => {
   const result = await Api.post("/hours", {
     initial,
@@ -25,7 +25,7 @@ export const createHours = async ({
     relProject,
     relActivity,
     relUser,
-    callNumber,
+    activityDesc,
   });
 
   return result;
