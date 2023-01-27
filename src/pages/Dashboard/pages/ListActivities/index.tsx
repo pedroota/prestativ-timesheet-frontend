@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteActivity, getActivities } from "services/activities.service";
 import {
-  styled,
   Table,
   TableBody,
   TableHead,
@@ -10,7 +9,6 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { ActivitiesInfo } from "interfaces/activities.interface";
@@ -18,26 +16,8 @@ import { EmptyList } from "components/EmptyList";
 import { formatCurrency } from "utils/formatCurrency";
 import { ModalEditActivity } from "./components/ModalEditActivity";
 import Checkbox from "@mui/material/Checkbox";
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-  },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  "&:nth-of-type(odd)": {
-    backgroundColor: theme.palette.action.hover,
-  },
-  // hide last border
-  "&:last-child td, &:last-child th": {
-    border: 0,
-  },
-}));
+import { StyledTableCell } from "components/StyledTableCell";
+import { StyledTableRow } from "components/StyledTableRow";
 
 interface ConsultantUsers {
   name: string;

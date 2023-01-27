@@ -5,3 +5,9 @@ export const getRoles = async () => {
 
   return result;
 };
+
+export const deleteRole = async (_id: string) => {
+  const result = await Api.delete(`/roles/${_id}`);
+
+  return result;
+};

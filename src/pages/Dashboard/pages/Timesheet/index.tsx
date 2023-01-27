@@ -3,7 +3,6 @@ import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { deleteHours, getHours } from "services/hours.service";
 import {
   Table,
-  styled,
   TableBody,
   TableHead,
   TableRow,
@@ -14,10 +13,15 @@ import {
   Tooltip,
   Box,
 } from "@mui/material";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { Hours } from "interfaces/hours.interface";
+import { ModalRegisterHours } from "components/ModalRegisterHours";
+import { EmptyList } from "components/EmptyList";
+import { StyledTableRow } from "components/StyledTableRow";
+import { StyledTableCell } from "components/StyledTableCell";
+
+// Utils
 import {
   generateDateWithTimestamp,
   generateTimeWithTimestamp,
@@ -26,28 +30,6 @@ import {
   generateAdjustmentWithNumberInMilliseconds,
   generateTotalHoursWithAdjustment,
 } from "utils/timeControl";
-import { ModalRegisterHours } from "components/ModalRegisterHours";
-import { EmptyList } from "components/EmptyList";
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-  },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  "&:nth-of-type(odd)": {
-    backgroundColor: theme.palette.action.hover,
-  },
-  // hide last border
-  "&:last-child td, &:last-child th": {
-    border: 0,
-  },
-}));
 
 export function Timesheet() {
   const queryClient = useQueryClient();
