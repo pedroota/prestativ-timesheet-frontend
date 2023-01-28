@@ -8,6 +8,8 @@ import {
   TableRow,
   Paper,
   Typography,
+  Box,
+  CircularProgress,
 } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 import { ProjectsInfo } from "interfaces/projects.interface";
@@ -21,7 +23,9 @@ export function ListProjects() {
   const [currentProject, setCurrentProject] = useState("");
   const [isEditingProject, setIsEditingProject] = useState(false);
   const queryClient = useQueryClient();
-  const { data: projects } = useQuery(["projects"], () => getProjects());
+  const { data: projects, isLoading } = useQuery(["projects"], () =>
+    getProjects()
+  );
 
   // Delete project mutation
   const { mutate } = useMutation((id: string) => deleteProject(id), {
@@ -35,92 +39,112 @@ export function ListProjects() {
       <Typography variant="h4" sx={{ marginBlock: "1.3rem" }}>
         Listagem de Projetos
       </Typography>
-      {projects?.data.length ? (
-        <div>
-          <Paper className="c-timesheet">
-            <div className="c-table">
-              <div className="c-table--helper">
-                <Table aria-label="customized table">
-                  <TableHead>
-                    <TableRow className="c-table--reset-head">
-                      <StyledTableCell align="center">Titulo</StyledTableCell>
-                      <StyledTableCell align="center">
-                        Cliente Relacionado
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        Valor Projeto
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        Gerente de Projetos
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        Descrição
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        Controles
-                      </StyledTableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {projects?.data.map(
-                      ({
-                        _id,
-                        title,
-                        idClient,
-                        valueProject,
-                        gpProject,
-                        description,
-                      }: ProjectsInfo) => (
-                        <StyledTableRow key={_id}>
-                          <StyledTableCell align="center">
-                            {title}
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {idClient?.name}
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {formatCurrency(valueProject)}
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {`${gpProject?.name} ${gpProject?.surname}`}
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {description}
-                          </StyledTableCell>
-                          <StyledTableCell
-                            sx={{
-                              display: "flex",
-                              gap: "20px",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              cursor: "pointer",
-                            }}
-                            align="center"
-                          >
-                            <Edit
-                              onClick={() => {
-                                setCurrentProject(_id);
-                                setIsEditingProject((prevState) => !prevState);
-                              }}
-                            />
-                            <Delete onClick={() => mutate(_id)} />
-                          </StyledTableCell>
-                        </StyledTableRow>
-                      )
-                    )}
-                  </TableBody>
-                </Table>
-              </div>
-            </div>
-          </Paper>
-          <ModalEditProject
-            isOpen={isEditingProject}
-            setIsOpen={setIsEditingProject}
-            currentProject={currentProject}
-          />
-        </div>
+      {isLoading ? (
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginBlock: "4rem",
+          }}
+        >
+          <CircularProgress color="warning" />
+        </Box>
       ) : (
-        <EmptyList />
+        <>
+          {projects?.data.length ? (
+            <div>
+              <Paper className="c-timesheet">
+                <div className="c-table">
+                  <div className="c-table--helper">
+                    <Table aria-label="customized table">
+                      <TableHead>
+                        <TableRow className="c-table--reset-head">
+                          <StyledTableCell align="center">
+                            Titulo
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            Cliente Relacionado
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            Valor Projeto
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            Gerente de Projetos
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            Descrição
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            Controles
+                          </StyledTableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {projects?.data.map(
+                          ({
+                            _id,
+                            title,
+                            idClient,
+                            valueProject,
+                            gpProject,
+                            description,
+                          }: ProjectsInfo) => (
+                            <StyledTableRow key={_id}>
+                              <StyledTableCell align="center">
+                                {title}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                {idClient?.name}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                {formatCurrency(valueProject)}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                {`${gpProject?.name} ${gpProject?.surname}`}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                {description}
+                              </StyledTableCell>
+                              <StyledTableCell
+                                sx={{
+                                  display: "flex",
+                                  gap: "20px",
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                  cursor: "pointer",
+                                }}
+                                align="center"
+                              >
+                                <Edit
+                                  onClick={() => {
+                                    setCurrentProject(_id);
+                                    setIsEditingProject(
+                                      (prevState) => !prevState
+                                    );
+                                  }}
+                                />
+                                <Delete onClick={() => mutate(_id)} />
+                              </StyledTableCell>
+                            </StyledTableRow>
+                          )
+                        )}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </div>
+              </Paper>
+              <ModalEditProject
+                isOpen={isEditingProject}
+                setIsOpen={setIsEditingProject}
+                currentProject={currentProject}
+              />
+            </div>
+          ) : (
+            <EmptyList />
+          )}
+        </>
       )}
     </div>
   );

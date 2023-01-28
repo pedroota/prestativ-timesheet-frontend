@@ -8,6 +8,8 @@ import {
   TableRow,
   Paper,
   Typography,
+  Box,
+  CircularProgress,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -21,7 +23,9 @@ import { StyledTableRow } from "components/StyledTableRow";
 export function ListClients() {
   const [currentClient, setCurrentClient] = useState("");
   const [isEditingClient, setIsEditingClient] = useState(false);
-  const { data: clients } = useQuery(["clients"], () => getClients());
+  const { data: clients, isLoading } = useQuery(["clients"], () =>
+    getClients()
+  );
   const queryClient = useQueryClient();
 
   // Delete client Mutation
@@ -36,108 +40,130 @@ export function ListClients() {
       <Typography variant="h4" sx={{ marginBlock: "1.3rem" }}>
         Listagem de Clientes
       </Typography>
-      {clients?.data.length ? (
-        <div>
-          <Paper>
-            <div className="c-table">
-              <div className="c-table--helper">
-                <Table aria-label="customized table">
-                  <TableHead>
-                    <TableRow className="c-table--reset-head">
-                      <StyledTableCell align="center">Nome</StyledTableCell>
-                      <StyledTableCell align="center">CNPJ</StyledTableCell>
-                      <StyledTableCell align="center">Endereço</StyledTableCell>
-                      <StyledTableCell align="center">
-                        Período Faturado
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        Limite de Cobrança + Dia de Pagamento
-                      </StyledTableCell>
-                      <StyledTableCell align="center">Valor</StyledTableCell>
-                      <StyledTableCell align="center">
-                        Gerente de Projetos
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        Controles
-                      </StyledTableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {clients?.data.map(
-                      ({
-                        _id,
-                        name,
-                        cnpj,
-                        cep,
-                        street,
-                        streetNumber,
-                        complement,
-                        district,
-                        city,
-                        state,
-                        periodIn,
-                        periodUntil,
-                        billingLimit,
-                        payDay,
-                        valueClient,
-                        gpClient,
-                      }: ClientsInfo) => (
-                        <StyledTableRow key={_id}>
-                          <StyledTableCell align="center">
-                            {name}
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {cnpj}
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {`${cep} ${street} ${streetNumber} ${complement} Bairro ${district} ${city} ${state}`}
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {`De: ${periodIn} Até: ${periodUntil}`}
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {`${billingLimit} / ${payDay}`}
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {formatCurrency(valueClient)}
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {gpClient}
-                          </StyledTableCell>
-                          <StyledTableCell
-                            sx={{
-                              display: "grid",
-                              gap: "20px",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              cursor: "pointer",
-                            }}
-                            align="center"
-                          >
-                            <EditIcon
-                              onClick={() => {
-                                setCurrentClient(_id);
-                                setIsEditingClient((prevState) => !prevState);
-                              }}
-                            />
-                            <DeleteIcon onClick={() => mutate(_id)} />
-                          </StyledTableCell>
-                        </StyledTableRow>
-                      )
-                    )}
-                  </TableBody>
-                </Table>
-              </div>
-            </div>
-          </Paper>
-          <ModalEditClient
-            isOpen={isEditingClient}
-            setIsOpen={setIsEditingClient}
-            currentClient={currentClient}
-          />
-        </div>
+      {isLoading ? (
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginBlock: "4rem",
+          }}
+        >
+          <CircularProgress color="warning" />
+        </Box>
       ) : (
-        <EmptyList />
+        <>
+          {clients?.data.length ? (
+            <div>
+              <Paper>
+                <div className="c-table">
+                  <div className="c-table--helper">
+                    <Table aria-label="customized table">
+                      <TableHead>
+                        <TableRow className="c-table--reset-head">
+                          <StyledTableCell align="center">Nome</StyledTableCell>
+                          <StyledTableCell align="center">CNPJ</StyledTableCell>
+                          <StyledTableCell align="center">
+                            Endereço
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            Período Faturado
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            Limite de Cobrança + Dia de Pagamento
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            Valor
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            Gerente de Projetos
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            Controles
+                          </StyledTableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {clients?.data.map(
+                          ({
+                            _id,
+                            name,
+                            cnpj,
+                            cep,
+                            street,
+                            streetNumber,
+                            complement,
+                            district,
+                            city,
+                            state,
+                            periodIn,
+                            periodUntil,
+                            billingLimit,
+                            payDay,
+                            valueClient,
+                            gpClient,
+                          }: ClientsInfo) => (
+                            <StyledTableRow key={_id}>
+                              <StyledTableCell align="center">
+                                {name}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                {cnpj}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                {`${cep} ${street} ${streetNumber} ${complement} Bairro ${district} ${city} ${state}`}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                {`De: ${periodIn} Até: ${periodUntil}`}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                {`${billingLimit} / ${payDay}`}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                {formatCurrency(valueClient)}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                {gpClient}
+                              </StyledTableCell>
+                              <StyledTableCell
+                                sx={{
+                                  display: "grid",
+                                  gap: "20px",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  cursor: "pointer",
+                                }}
+                                align="center"
+                              >
+                                <EditIcon
+                                  onClick={() => {
+                                    setCurrentClient(_id);
+                                    setIsEditingClient(
+                                      (prevState) => !prevState
+                                    );
+                                  }}
+                                />
+                                <DeleteIcon onClick={() => mutate(_id)} />
+                              </StyledTableCell>
+                            </StyledTableRow>
+                          )
+                        )}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </div>
+              </Paper>
+              <ModalEditClient
+                isOpen={isEditingClient}
+                setIsOpen={setIsEditingClient}
+                currentClient={currentClient}
+              />
+            </div>
+          ) : (
+            <EmptyList />
+          )}
+        </>
       )}
     </div>
   );

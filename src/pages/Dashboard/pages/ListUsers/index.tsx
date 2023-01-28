@@ -8,6 +8,8 @@ import {
   TableRow,
   Paper,
   Typography,
+  Box,
+  CircularProgress,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -20,7 +22,7 @@ import { StyledTableRow } from "components/StyledTableRow";
 export function ListUsers() {
   const [isEditingUser, setIsEditingUser] = useState(false);
   const [currentUser, setCurrentUser] = useState("");
-  const { data: users } = useQuery(["users"], () => getAllUsers());
+  const { data: users, isLoading } = useQuery(["users"], () => getAllUsers());
   const queryClient = useQueryClient();
 
   // Delete user Mutation
@@ -35,71 +37,89 @@ export function ListUsers() {
       <Typography variant="h4" sx={{ marginBlock: "1.3rem" }}>
         Listagem de Usuários
       </Typography>
-      {users?.data.length ? (
-        <div>
-          <Paper className="c-timesheet">
-            <div className="c-table">
-              <div className="c-table--helper">
-                <Table aria-label="customized table">
-                  <TableHead>
-                    <TableRow>
-                      <StyledTableCell align="center">Nome</StyledTableCell>
-                      <StyledTableCell align="center">Email</StyledTableCell>
-                      <StyledTableCell align="center">
-                        Permissão
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        Controles
-                      </StyledTableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {users?.data.map(
-                      ({ name, surname, email, role, _id }: UserInfo) => (
-                        <StyledTableRow key={_id}>
-                          <StyledTableCell align="center">
-                            {`${name} ${surname}`}
-                          </StyledTableCell>
-
-                          <StyledTableCell align="center">
-                            {email}
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {role}
-                          </StyledTableCell>
-                          <StyledTableCell
-                            sx={{
-                              display: "flex",
-                              gap: "20px",
-                              justifyContent: "center",
-                              cursor: "pointer",
-                            }}
-                            align="center"
-                          >
-                            <EditIcon
-                              onClick={() => {
-                                setCurrentUser(_id);
-                                setIsEditingUser((prevState) => !prevState);
-                              }}
-                            />
-                            <DeleteIcon onClick={() => mutate(_id)} />
-                          </StyledTableCell>
-                        </StyledTableRow>
-                      )
-                    )}
-                  </TableBody>
-                </Table>
-              </div>
-            </div>
-          </Paper>
-          <ModalEditUser
-            isOpen={isEditingUser}
-            setIsOpen={setIsEditingUser}
-            currentUser={currentUser}
-          />
-        </div>
+      {isLoading ? (
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginBlock: "4rem",
+          }}
+        >
+          <CircularProgress color="warning" />
+        </Box>
       ) : (
-        <EmptyList />
+        <>
+          {users?.data.length ? (
+            <div>
+              <Paper className="c-timesheet">
+                <div className="c-table">
+                  <div className="c-table--helper">
+                    <Table aria-label="customized table">
+                      <TableHead>
+                        <TableRow>
+                          <StyledTableCell align="center">Nome</StyledTableCell>
+                          <StyledTableCell align="center">
+                            Email
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            Permissão
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            Controles
+                          </StyledTableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {users?.data.map(
+                          ({ name, surname, email, role, _id }: UserInfo) => (
+                            <StyledTableRow key={_id}>
+                              <StyledTableCell align="center">
+                                {`${name} ${surname}`}
+                              </StyledTableCell>
+
+                              <StyledTableCell align="center">
+                                {email}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                {role}
+                              </StyledTableCell>
+                              <StyledTableCell
+                                sx={{
+                                  display: "flex",
+                                  gap: "20px",
+                                  justifyContent: "center",
+                                  cursor: "pointer",
+                                }}
+                                align="center"
+                              >
+                                <EditIcon
+                                  onClick={() => {
+                                    setCurrentUser(_id);
+                                    setIsEditingUser((prevState) => !prevState);
+                                  }}
+                                />
+                                <DeleteIcon onClick={() => mutate(_id)} />
+                              </StyledTableCell>
+                            </StyledTableRow>
+                          )
+                        )}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </div>
+              </Paper>
+              <ModalEditUser
+                isOpen={isEditingUser}
+                setIsOpen={setIsEditingUser}
+                currentUser={currentUser}
+              />
+            </div>
+          ) : (
+            <EmptyList />
+          )}
+        </>
       )}
     </div>
   );

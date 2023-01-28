@@ -8,6 +8,8 @@ import {
   TableRow,
   Paper,
   Typography,
+  CircularProgress,
+  Box,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -28,7 +30,9 @@ export function ListActivities() {
   const [currentActivity, setCurrentActivity] = useState("");
   const [isEditingActivity, setIsEditingActivity] = useState(false);
   const queryClient = useQueryClient();
-  const { data: activities } = useQuery(["activities"], () => getActivities());
+  const { data: activities, isLoading } = useQuery(["activities"], () =>
+    getActivities()
+  );
 
   // Delete Activity Mutation
   const { mutate } = useMutation((id: string) => deleteActivity(id), {
@@ -42,114 +46,134 @@ export function ListActivities() {
       <Typography variant="h4" sx={{ marginBlock: "1.3rem" }}>
         Listagem de Atividades
       </Typography>
-      {activities?.data.length ? (
-        <div>
-          <Paper className="c-timesheet">
-            <div className="c-table">
-              <div className="c-table--helper">
-                <Table aria-label="customized table">
-                  <TableHead>
-                    <TableRow className="c-table--reset-head">
-                      <StyledTableCell align="center">Titulo</StyledTableCell>
-                      <StyledTableCell align="center">
-                        Projeto Relacionado
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        Valor Atividade
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        Gerente de Projetos
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        Descrição
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        Usuários Vinculados
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        Escopo Fechado
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        Controles
-                      </StyledTableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {activities?.data.map(
-                      ({
-                        _id,
-                        title,
-                        project,
-                        valueActivity,
-                        gpActivity,
-                        description,
-                        users,
-                        closedScope,
-                      }: ActivitiesInfo) => (
-                        <StyledTableRow key={_id}>
-                          <StyledTableCell align="center">
-                            {title}
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {project?.title}
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {formatCurrency(valueActivity)}
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {`${gpActivity?.name} ${gpActivity?.surname}`}
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {description}
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {users.map(
-                              ({ name, surname }: ConsultantUsers) =>
-                                `${name} ${surname}`
-                            )}
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            {!closedScope ? (
-                              <Checkbox />
-                            ) : (
-                              <Checkbox defaultChecked />
-                            )}
-                          </StyledTableCell>
-                          <StyledTableCell
-                            sx={{
-                              display: "flex",
-                              gap: "20px",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              cursor: "pointer",
-                            }}
-                            align="center"
-                          >
-                            <EditIcon
-                              onClick={() => {
-                                setCurrentActivity(_id);
-                                setIsEditingActivity((prevState) => !prevState);
-                              }}
-                            />
-                            <DeleteIcon onClick={() => mutate(_id)} />
-                          </StyledTableCell>
-                        </StyledTableRow>
-                      )
-                    )}
-                  </TableBody>
-                </Table>
-              </div>
-            </div>
-          </Paper>
-
-          <ModalEditActivity
-            isOpen={isEditingActivity}
-            setIsOpen={setIsEditingActivity}
-            currentActivity={currentActivity}
-          />
-        </div>
+      {isLoading ? (
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginBlock: "4rem",
+          }}
+        >
+          <CircularProgress color="warning" />
+        </Box>
       ) : (
-        <EmptyList />
+        <>
+          {activities?.data.length ? (
+            <div>
+              <Paper className="c-timesheet">
+                <div className="c-table">
+                  <div className="c-table--helper">
+                    <Table aria-label="customized table">
+                      <TableHead>
+                        <TableRow className="c-table--reset-head">
+                          <StyledTableCell align="center">
+                            Titulo
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            Projeto Relacionado
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            Valor Atividade
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            Gerente de Projetos
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            Descrição
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            Usuários Vinculados
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            Escopo Fechado
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            Controles
+                          </StyledTableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {activities?.data.map(
+                          ({
+                            _id,
+                            title,
+                            project,
+                            valueActivity,
+                            gpActivity,
+                            description,
+                            users,
+                            closedScope,
+                          }: ActivitiesInfo) => (
+                            <StyledTableRow key={_id}>
+                              <StyledTableCell align="center">
+                                {title}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                {project?.title}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                {formatCurrency(valueActivity)}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                {`${gpActivity?.name} ${gpActivity?.surname}`}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                {description}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                {users.map(
+                                  ({ name, surname }: ConsultantUsers) =>
+                                    `${name} ${surname}`
+                                )}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                {!closedScope ? (
+                                  <Checkbox />
+                                ) : (
+                                  <Checkbox defaultChecked />
+                                )}
+                              </StyledTableCell>
+                              <StyledTableCell
+                                sx={{
+                                  display: "flex",
+                                  gap: "20px",
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                  cursor: "pointer",
+                                }}
+                                align="center"
+                              >
+                                <EditIcon
+                                  onClick={() => {
+                                    setCurrentActivity(_id);
+                                    setIsEditingActivity(
+                                      (prevState) => !prevState
+                                    );
+                                  }}
+                                />
+                                <DeleteIcon onClick={() => mutate(_id)} />
+                              </StyledTableCell>
+                            </StyledTableRow>
+                          )
+                        )}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </div>
+              </Paper>
+
+              <ModalEditActivity
+                isOpen={isEditingActivity}
+                setIsOpen={setIsEditingActivity}
+                currentActivity={currentActivity}
+              />
+            </div>
+          ) : (
+            <EmptyList />
+          )}
+        </>
       )}
     </div>
   );
