@@ -1,7 +1,17 @@
+import { Roles } from "interfaces/roles.interface";
 import { Api } from "./api.service";
 
 export const getRoles = async () => {
   const result = await Api.get("/roles");
+
+  return result;
+};
+
+export const createRoles = async ({
+  name,
+  permissions,
+}: Pick<Roles, "name" | "permissions">) => {
+  const result = await Api.post("/roles", { name, permissions });
 
   return result;
 };
