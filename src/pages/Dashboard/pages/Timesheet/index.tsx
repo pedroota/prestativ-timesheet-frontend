@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { deleteHours, getHoursLatest } from "services/hours.service";
-// removido "getHours" na linha acima
 import {
   Table,
   TableBody,
