@@ -3,13 +3,16 @@ import { RegisterHours, Hours } from "interfaces/hours.interface";
 
 export const getHours = async () => {
   const result = await Api.get("/hours");
+  return result;
+};
 
+export const getHoursLatest = async () => {
+  const result = await Api.get("/hours/latest");
   return result;
 };
 
 export const getHoursById = async (_id: string) => {
   const result = await Api.get(`/hours/${_id}`);
-
   return result;
 };
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { deleteHours, getHours } from "services/hours.service";
+import { deleteHours, getHoursLatest } from "services/hours.service";
 import {
   Table,
   TableBody,
@@ -35,7 +35,9 @@ import {
 export function Timesheet() {
   const queryClient = useQueryClient();
   const [isAddingHours, setIsAddingHours] = useState(false);
-  const { data: hours, isLoading } = useQuery(["hours"], () => getHours());
+  const { data: hours, isLoading } = useQuery(["hours"], () =>
+    getHoursLatest()
+  );
 
   const { mutate } = useMutation((_id: string) => deleteHours(_id), {
     onSuccess: () => {
