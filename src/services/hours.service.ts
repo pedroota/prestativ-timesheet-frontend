@@ -7,6 +7,12 @@ export const getHours = async () => {
   return result;
 };
 
+export const getHoursLatest = async () => {
+  const result = await Api.get("/hours/latest");
+
+  return result;
+};
+
 export const createHours = async ({
   initial,
   final,
