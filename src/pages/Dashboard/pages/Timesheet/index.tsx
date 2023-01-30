@@ -14,6 +14,7 @@ import {
   Box,
   CircularProgress,
 } from "@mui/material";
+import { Filters } from "components/Filters";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { Hours } from "interfaces/hours.interface";
@@ -88,6 +89,7 @@ export function Timesheet() {
         <>
           {hours?.data.length ? (
             <Paper className="c-timesheet">
+              <Filters />
               <div className="c-table">
                 <div className="c-table--helper">
                   <Table className="c-table" aria-label="customized table">
