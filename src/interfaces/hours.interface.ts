@@ -24,6 +24,7 @@ export interface Hours {
   billable: boolean;
   released: boolean;
   approved: boolean;
+  releasedCall: string;
   activityDesc: string;
   createdAt: number;
   updatedAt: number;
