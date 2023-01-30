@@ -265,7 +265,6 @@ export function Timesheet() {
                               )} ${generateTimeWithTimestamp(updatedAt)}`}
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              {/* closed scope abaixo deve ser alterado para APROVADO GP na condicional */}
                               {approvedGP ||
                               billable ||
                               released ||

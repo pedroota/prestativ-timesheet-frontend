@@ -80,3 +80,13 @@ export const deleteHours = async (_id: string) => {
 
   return result;
 };
+
+// sobre a função abaixo, é só passar p.e.     checkHours(id, billable, true)    checkHours(id, approvedGP, false)
+export const checkHours = async (id: string, field: string, value: boolean) => {
+  const result = await Api.patch(`/hours/check/${id}`, {
+    field,
+    value,
+  });
+
+  return result;
+};
