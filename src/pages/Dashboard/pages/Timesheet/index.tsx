@@ -8,7 +8,6 @@ import {
   TableRow,
   Paper,
   Button,
-  Checkbox,
   Typography,
   Tooltip,
   Box,
@@ -32,6 +31,8 @@ import {
   generateAdjustmentWithNumberInMilliseconds,
   generateTotalHoursWithAdjustment,
 } from "utils/timeControl";
+import IOSSwitch from "components/SwitchIOS";
+import Switch from "@mui/material/Switch";
 
 export function Timesheet() {
   const queryClient = useQueryClient();
@@ -216,40 +217,44 @@ export function Timesheet() {
                               {`${relUser?.name} ${relUser?.surname}`}
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              {!approvedGP ? (
-                                // closedScope from collection activity must go here
-                                <Checkbox />
-                              ) : (
-                                <Checkbox defaultChecked />
-                              )}
+                              <Switch
+                                color="warning"
+                                checked={approvedGP}
+                                // onChange={}
+                                inputProps={{ "aria-label": "controlled" }}
+                              />
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              {!approvedGP ? (
-                                <Checkbox />
-                              ) : (
-                                <Checkbox defaultChecked />
-                              )}
+                              <Switch
+                                color="warning"
+                                checked={approvedGP}
+                                // onChange={}
+                                inputProps={{ "aria-label": "controlled" }}
+                              />
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              {!billable ? (
-                                <Checkbox />
-                              ) : (
-                                <Checkbox defaultChecked />
-                              )}
+                              <Switch
+                                color="warning"
+                                checked={billable}
+                                // onChange={}
+                                inputProps={{ "aria-label": "controlled" }}
+                              />
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              {!released ? (
-                                <Checkbox />
-                              ) : (
-                                <Checkbox defaultChecked />
-                              )}
+                              <Switch
+                                color="warning"
+                                checked={released}
+                                // onChange={}
+                                inputProps={{ "aria-label": "controlled" }}
+                              />
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              {!approved ? (
-                                <Checkbox />
-                              ) : (
-                                <Checkbox defaultChecked />
-                              )}
+                              <Switch
+                                color="warning"
+                                checked={approved}
+                                // onChange={}
+                                inputProps={{ "aria-label": "controlled" }}
+                              />
                             </StyledTableCell>
                             <StyledTableCell align="center">
                               {activityDesc}
@@ -265,7 +270,6 @@ export function Timesheet() {
                               )} ${generateTimeWithTimestamp(updatedAt)}`}
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              {/* closed scope abaixo deve ser alterado para APROVADO GP na condicional */}
                               {approvedGP ||
                               billable ||
                               released ||
