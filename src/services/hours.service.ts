@@ -15,7 +15,7 @@ export const getHoursLatest = async () => {
 
 export const getHoursById = async (_id: string) => {
   const result = await Api.get(`/hours/${_id}`);
-
+  
   return result;
 };
 
