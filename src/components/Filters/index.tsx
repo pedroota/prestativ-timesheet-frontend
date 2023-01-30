@@ -84,8 +84,12 @@ export function Filters() {
           </MenuItem>
         ))}
       </TextField>
-      <Button variant="contained">FILTRAR</Button>
-      <Button variant="contained">LIMPAR FILTROS</Button>
+      <Button color="warning" variant="contained">
+        FILTRAR
+      </Button>
+      <Button color="warning" variant="contained">
+        LIMPAR FILTROS
+      </Button>
     </div>
   );
 }
