@@ -26,6 +26,8 @@ function generateTimestampWithDateAndTime(date: string, time: string) {
   return new Date(
     Number(dateFormated[0]),
     Number(dateFormated[1]) - 1,
+    // no JS os meses são contados a partir do ZERO - portanto o mês 11 é DEZEMBRO
+    // os meses aqui chegam com o número equivalente, e então é subtraido 1 para ficar no formato que o JS aceita
     Number(dateFormated[2]),
     Number(timeFormated[0]),
     Number(timeFormated[1])
@@ -59,6 +61,13 @@ function generateAdjustmentWithNumberInMilliseconds(number: number) {
   }`;
 }
 
+function generateMilisecondsWithTime(dateString: string) {
+  const time = dateString.split(":");
+  const minutes = Number(time[1]) * 60 * 1000;
+  const hours = Number(time[0]) * 60 * 60 * 1000;
+  return minutes + hours;
+}
+
 function generateTotalHoursWithAdjustment(
   initial: number,
   final: number,
@@ -78,5 +87,6 @@ export {
   generateTimestampWithDateAndTime,
   generateTotalHours,
   generateAdjustmentWithNumberInMilliseconds,
+  generateMilisecondsWithTime,
   generateTotalHoursWithAdjustment,
 };

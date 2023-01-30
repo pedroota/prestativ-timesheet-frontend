@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { deleteHours, getHours } from "services/hours.service";
+import { deleteHours, getHoursLatest } from "services/hours.service";
 import {
   Table,
   TableBody,
@@ -8,12 +8,12 @@ import {
   TableRow,
   Paper,
   Button,
-  Checkbox,
   Typography,
   Tooltip,
   Box,
   CircularProgress,
 } from "@mui/material";
+import { Filters } from "components/Filters";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { Hours } from "interfaces/hours.interface";
@@ -31,11 +31,15 @@ import {
   generateAdjustmentWithNumberInMilliseconds,
   generateTotalHoursWithAdjustment,
 } from "utils/timeControl";
+import IOSSwitch from "components/SwitchIOS";
+import Switch from "@mui/material/Switch";
 
 export function Timesheet() {
   const queryClient = useQueryClient();
   const [isAddingHours, setIsAddingHours] = useState(false);
-  const { data: hours, isLoading } = useQuery(["hours"], () => getHours());
+  const { data: hours, isLoading } = useQuery(["hours"], () =>
+    getHoursLatest()
+  );
 
   const { mutate } = useMutation((_id: string) => deleteHours(_id), {
     onSuccess: () => {
@@ -86,6 +90,7 @@ export function Timesheet() {
         <>
           {hours?.data.length ? (
             <Paper className="c-timesheet">
+              <Filters />
               <div className="c-table">
                 <div className="c-table--helper">
                   <Table className="c-table" aria-label="customized table">
@@ -212,40 +217,44 @@ export function Timesheet() {
                               {`${relUser?.name} ${relUser?.surname}`}
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              {!approvedGP ? (
-                                // closedScope from collection activity must go here
-                                <Checkbox />
-                              ) : (
-                                <Checkbox defaultChecked />
-                              )}
+                              <Switch
+                                color="warning"
+                                checked={approvedGP}
+                                // onChange={}
+                                inputProps={{ "aria-label": "controlled" }}
+                              />
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              {!approvedGP ? (
-                                <Checkbox />
-                              ) : (
-                                <Checkbox defaultChecked />
-                              )}
+                              <Switch
+                                color="warning"
+                                checked={approvedGP}
+                                // onChange={}
+                                inputProps={{ "aria-label": "controlled" }}
+                              />
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              {!billable ? (
-                                <Checkbox />
-                              ) : (
-                                <Checkbox defaultChecked />
-                              )}
+                              <Switch
+                                color="warning"
+                                checked={billable}
+                                // onChange={}
+                                inputProps={{ "aria-label": "controlled" }}
+                              />
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              {!released ? (
-                                <Checkbox />
-                              ) : (
-                                <Checkbox defaultChecked />
-                              )}
+                              <Switch
+                                color="warning"
+                                checked={released}
+                                // onChange={}
+                                inputProps={{ "aria-label": "controlled" }}
+                              />
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              {!approved ? (
-                                <Checkbox />
-                              ) : (
-                                <Checkbox defaultChecked />
-                              )}
+                              <Switch
+                                color="warning"
+                                checked={approved}
+                                // onChange={}
+                                inputProps={{ "aria-label": "controlled" }}
+                              />
                             </StyledTableCell>
                             <StyledTableCell align="center">
                               {activityDesc}
@@ -261,7 +270,6 @@ export function Timesheet() {
                               )} ${generateTimeWithTimestamp(updatedAt)}`}
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              {/* closed scope abaixo deve ser alterado para APROVADO GP na condicional */}
                               {approvedGP ||
                               billable ||
                               released ||
