@@ -1,9 +1,7 @@
 import { styled } from "@mui/material/styles";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch, { SwitchProps } from "@mui/material/Switch";
 
-const SwitchIOS = styled((props: SwitchProps) => (
+export const SwitchIOS = styled((props: SwitchProps) => (
   <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
 ))(({ theme }) => ({
   width: 42,
@@ -53,11 +51,3 @@ const SwitchIOS = styled((props: SwitchProps) => (
     }),
   },
 }));
-
-export default function IOSSwitch() {
-  return (
-    <FormGroup>
-      <FormControlLabel control={<SwitchIOS sx={{ m: 1 }} />} label="" />
-    </FormGroup>
-  );
-}

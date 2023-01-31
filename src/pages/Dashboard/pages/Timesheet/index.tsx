@@ -13,7 +13,6 @@ import {
   Box,
   CircularProgress,
 } from "@mui/material";
-import { Filters } from "components/Filters";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { Hours } from "interfaces/hours.interface";
@@ -31,8 +30,7 @@ import {
   generateAdjustmentWithNumberInMilliseconds,
   generateTotalHoursWithAdjustment,
 } from "utils/timeControl";
-import IOSSwitch from "components/SwitchIOS";
-import Switch from "@mui/material/Switch";
+import { SwitchIOS } from "components/SwitchIOS";
 
 export function Timesheet() {
   const queryClient = useQueryClient();
@@ -90,7 +88,6 @@ export function Timesheet() {
         <>
           {hours?.data.length ? (
             <Paper className="c-timesheet">
-              <Filters />
               <div className="c-table">
                 <div className="c-table--helper">
                   <Table className="c-table" aria-label="customized table">
@@ -217,7 +214,7 @@ export function Timesheet() {
                               {`${relUser?.name} ${relUser?.surname}`}
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              <Switch
+                              <SwitchIOS
                                 color="warning"
                                 checked={approvedGP}
                                 // onChange={}
@@ -225,7 +222,7 @@ export function Timesheet() {
                               />
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              <Switch
+                              <SwitchIOS
                                 color="warning"
                                 checked={approvedGP}
                                 // onChange={}
@@ -233,7 +230,7 @@ export function Timesheet() {
                               />
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              <Switch
+                              <SwitchIOS
                                 color="warning"
                                 checked={billable}
                                 // onChange={}
@@ -241,7 +238,7 @@ export function Timesheet() {
                               />
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              <Switch
+                              <SwitchIOS
                                 color="warning"
                                 checked={released}
                                 // onChange={}
@@ -249,7 +246,7 @@ export function Timesheet() {
                               />
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              <Switch
+                              <SwitchIOS
                                 color="warning"
                                 checked={approved}
                                 // onChange={}
@@ -258,7 +255,6 @@ export function Timesheet() {
                             </StyledTableCell>
                             <StyledTableCell align="center">
                               {activityDesc}
-                              {/* deve ser alterado para DESCRIÇÃO DA ATIVIDADE */}
                             </StyledTableCell>
                             <StyledTableCell align="center">
                               {`${generateDateWithTimestamp(
