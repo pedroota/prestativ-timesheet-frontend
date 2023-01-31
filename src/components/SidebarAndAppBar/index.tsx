@@ -38,6 +38,7 @@ import PublicIcon from "@mui/icons-material/Public";
 import GroupIcon from "@mui/icons-material/Group";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { HeaderUser } from "components/HeaderUser";
+import { SwitchDarkLightTheme } from "components/SwitchDarkLightTheme";
 
 const drawerWidth = 240;
 
@@ -152,6 +153,11 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
             }}
           >
             <img src={Logo} alt="Prestativ SAP Logo" width="200px" />
+            <p> </p>
+            <p> </p>
+            <p> </p>
+            <p> </p>
+            <SwitchDarkLightTheme />
             <HeaderUser />
           </Box>
         </Toolbar>
