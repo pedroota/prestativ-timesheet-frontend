@@ -19,8 +19,11 @@ import { StyledTableRow } from "components/StyledTableRow";
 import { Delete, Edit } from "@mui/icons-material";
 import { Roles } from "interfaces/roles.interface";
 import { ModalCreateRole } from "./components/ModalCreateRole";
+import { ModalEditRole } from "./components/ModalEditRole";
 export function UserProfiles() {
   const queryClient = useQueryClient();
+  const [isEditingRole, setIsEditingRole] = useState(false);
+  const [currentRole, setCurrentRole] = useState("");
   const [isAddingRole, setIsAddingRole] = useState(false);
   const { data: roles } = useQuery(["roles"], () => getRoles());
 
@@ -104,7 +107,12 @@ export function UserProfiles() {
                           }}
                           align="center"
                         >
-                          <Edit />
+                          <Edit
+                            onClick={() => {
+                              setIsEditingRole((prevState) => !prevState);
+                              setCurrentRole(_id);
+                            }}
+                          />
                           <Delete onClick={() => mutate(_id)} />
                         </StyledTableCell>
                       </StyledTableRow>
@@ -115,6 +123,11 @@ export function UserProfiles() {
             </div>
           </Paper>
           <ModalCreateRole isOpen={isAddingRole} setIsOpen={setIsAddingRole} />
+          <ModalEditRole
+            isOpen={isEditingRole}
+            setIsOpen={setIsEditingRole}
+            currentRole={currentRole}
+          />
         </div>
       ) : (
         <EmptyList />

@@ -127,24 +127,24 @@ export function ModalRegisterHours({
           />
         </Box>
         <form className="c-form-spacing" onSubmit={onSubmit}>
+          <FormLabel
+            sx={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              gap: "0.2rem",
+            }}
+          >
+            Data
+            <TextField
+              type="date"
+              color="warning"
+              variant="outlined"
+              required
+              {...register("initialDate")}
+            />
+          </FormLabel>
           <Box sx={{ display: "flex", gap: "1rem" }}>
-            <FormLabel
-              sx={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.2rem",
-              }}
-            >
-              Data
-              <TextField
-                type="date"
-                color="warning"
-                variant="outlined"
-                required
-                {...register("initialDate")}
-              />
-            </FormLabel>
             <FormLabel
               sx={{
                 width: "100%",

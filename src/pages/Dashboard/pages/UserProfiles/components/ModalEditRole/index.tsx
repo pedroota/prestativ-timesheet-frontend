@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import {
   Dialog,
   Box,
@@ -7,45 +7,51 @@ import {
   Select,
   MenuItem,
   Button,
+  SelectChangeEvent,
 } from "@mui/material";
 import { Close } from "@mui/icons-material";
-import { SetStateAction } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getRoleById, updateRoles } from "services/roles.service";
 import { useForm } from "react-hook-form";
 import { Permission } from "enums/Permissions";
-import { SelectChangeEvent } from "@mui/material/Select";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createRoles } from "services/roles.service";
 import { Roles } from "interfaces/roles.interface";
 
-interface ModalCreateRoleProps {
+interface ModalEditRoleProps {
   isOpen: boolean;
-  setIsOpen: React.Dispatch<SetStateAction<boolean>>;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  currentRole: string;
 }
 
-interface FormCreateRoles {
-  name: string;
-  permissions: string;
-}
-
-export function ModalCreateRole({ isOpen, setIsOpen }: ModalCreateRoleProps) {
+export function ModalEditRole({
+  isOpen,
+  setIsOpen,
+  currentRole,
+}: ModalEditRoleProps) {
   const queryClient = useQueryClient();
+  const [multipleSelectValue, setMultipleSelectValue] = useState<string[]>([]);
+  const { register, handleSubmit, reset } = useForm();
+  useQuery(["roles", currentRole], () => getRoleById(currentRole), {
+    onSuccess({ data }) {
+      reset(data);
+      setMultipleSelectValue(data?.permissions);
+    },
+    enabled: !!currentRole,
+  });
+
   const { mutate } = useMutation(
     ({ name, permissions }: Pick<Roles, "name" | "permissions">) =>
-      createRoles({ name, permissions }),
+      updateRoles(currentRole, { name, permissions }),
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["roles"]);
-        reset();
-        setMultipleSelectValue([]);
         setIsOpen((prevState) => !prevState);
       },
     }
   );
-  const [multipleSelectValue, setMultipleSelectValue] = useState<string[]>([]);
-  const { register, handleSubmit, reset } = useForm<FormCreateRoles>();
 
-  const onSubmit = handleSubmit(({ name }) => {
-    mutate({ name, permissions: multipleSelectValue });
+  const onSubmit = handleSubmit((data) => {
+    mutate({ name: data?.name, permissions: multipleSelectValue });
+    reset();
   });
 
   const handleMultipleSelectChange = (
@@ -61,7 +67,7 @@ export function ModalCreateRole({ isOpen, setIsOpen }: ModalCreateRoleProps) {
 
   return (
     <Dialog open={isOpen} onClose={() => setIsOpen((prevState) => !prevState)}>
-      <Box sx={{ padding: 4, minWidth: 420 }}>
+      <Box sx={{ padding: 4, minWidth: "26.25rem" }}>
         <Box
           sx={{
             display: "flex",
@@ -69,7 +75,7 @@ export function ModalCreateRole({ isOpen, setIsOpen }: ModalCreateRoleProps) {
             alignItems: "center",
           }}
         >
-          <Typography fontSize="1.3rem">Criar cargo</Typography>
+          <Typography fontSize="1.3rem">Editar cliente</Typography>
           <Close
             fontSize="large"
             sx={{ cursor: "pointer" }}
@@ -78,18 +84,16 @@ export function ModalCreateRole({ isOpen, setIsOpen }: ModalCreateRoleProps) {
         </Box>
         <form className="c-form-spacing" onSubmit={onSubmit}>
           <TextField
-            required
             color="warning"
-            label="Nome do cargo"
-            type="text"
-            InputLabelProps={{ shrink: true }}
             {...register("name")}
+            label="Nome do cargo"
+            InputLabelProps={{ shrink: true }}
           />
           <Select
-            value={multipleSelectValue}
-            {...register("permissions")}
-            onChange={handleMultipleSelectChange}
             multiple
+            value={multipleSelectValue}
+            color="warning"
+            onChange={handleMultipleSelectChange}
           >
             {Object.values(Permission).map((permission, index) => (
               <MenuItem value={permission} key={index}>
@@ -98,12 +102,12 @@ export function ModalCreateRole({ isOpen, setIsOpen }: ModalCreateRoleProps) {
             ))}
           </Select>
           <Button
-            type="submit"
             variant="contained"
+            type="submit"
             color="warning"
             sx={{ paddingBlock: "1rem" }}
           >
-            Criar cargo
+            Conluído
           </Button>
         </form>
       </Box>
