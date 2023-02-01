@@ -11,6 +11,11 @@ export const getHoursLatest = async () => {
   return result;
 };
 
+export const getHoursFilters = async (filters: string) => {
+  const result = await Api.get(`/hours/filter?${filters}`);
+  return result;
+};
+
 export const getHoursById = async (_id: string) => {
   const result = await Api.get(`/hours/${_id}`);
   return result;
