@@ -218,7 +218,7 @@ export function Timesheet() {
                             <StyledTableCell align="center">
                               <SwitchIOS
                                 color="warning"
-                                checked={approvedGP}
+                                checked={relActivity?.closedScope}
                                 // onChange={}
                                 inputProps={{ "aria-label": "controlled" }}
                               />

@@ -14,6 +14,7 @@ export interface Hours {
   relActivity: {
     _id: string;
     title: string;
+    closedScope: boolean;
   };
   relUser: {
     _id: string;
