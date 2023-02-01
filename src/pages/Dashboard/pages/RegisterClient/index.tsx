@@ -10,7 +10,7 @@ import { getUserByRole } from "services/auth.service";
 import { createClients } from "services/clients.service";
 import { cepMask } from "utils/cepMask";
 import { cnpjMask } from "utils/cnpjMask";
-import { validateCNPJ } from "utils/validateCnpj";
+import { validateCNPJ } from "utils/validator";
 
 export function RegisterClient() {
   const {

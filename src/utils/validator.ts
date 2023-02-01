@@ -46,3 +46,8 @@ export function validateCNPJ(cnpj: string) {
 
   return true;
 }
+
+export function validateEmail(email: string) {
+  const emailRegex = /^[a-z0-9.]+@prestativ.com.br?$/i;
+  return emailRegex.test(email);
+}

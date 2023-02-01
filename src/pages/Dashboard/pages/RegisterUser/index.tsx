@@ -6,6 +6,8 @@ import { UserRegister } from "interfaces/users.interface";
 import { useQuery } from "@tanstack/react-query";
 import { getRoles } from "services/roles.service";
 import { Roles } from "interfaces/roles.interface";
+import { validateEmail } from "utils/validator";
+import { toast } from "react-toastify";
 
 export function RegisterUser() {
   const { data } = useQuery(["roles"], getRoles);
@@ -13,9 +15,13 @@ export function RegisterUser() {
   const { register, handleSubmit, reset } = useForm<UserRegister>({});
 
   const onSubmit = handleSubmit(({ name, surname, email, password, role }) => {
-    signUp({ name, surname, email, password, role }).then(() => {
-      reset();
-    });
+    if (validateEmail(email)) {
+      signUp({ name, surname, email, password, role }).then(() => {
+        reset();
+      });
+    } else {
+      toast.error("O Email digitado é inválido.");
+    }
   });
 
   return (
