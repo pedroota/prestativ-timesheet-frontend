@@ -3,11 +3,13 @@ import { useQuery } from "@tanstack/react-query";
 import { useCep } from "cep-hook";
 import { Clients } from "interfaces/clients.interface";
 import { UserRegister } from "interfaces/users.interface";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { getUserByRole } from "services/auth.service";
 import { createClients } from "services/clients.service";
+import { cepMask } from "utils/cepMask";
+import { cnpjMask } from "utils/cnpjMask";
 
 export function RegisterClient() {
   const {
@@ -29,6 +31,16 @@ export function RegisterClient() {
       setValueForm("district", `${res.bairro}`);
     });
   }, [value]);
+
+  const [values, setValues] = useState({ cnpj: "" });
+
+  const inputChange = (e: { target: { name: string; value: string } }) => {
+    const { name, value } = e.target;
+    setValues({
+      ...values,
+      [name]: value,
+    });
+  };
 
   const onSubmit = handleSubmit(
     ({
@@ -98,7 +110,9 @@ export function RegisterClient() {
         color="warning"
         label="CNPJ"
         type="text"
+        value={cnpjMask(values.cnpj)}
         {...register("cnpj")}
+        onChange={inputChange}
       />
       <p>Endereço do cliente</p>
       <div className="c-register-client--input-container">
@@ -110,7 +124,7 @@ export function RegisterClient() {
           label="CEP"
           type="text"
           {...register("cep")}
-          value={value}
+          value={cepMask(value)}
           onChange={(event) => setValue(event.target.value)}
         />
         <TextField
