@@ -31,6 +31,7 @@ import {
   generateTotalHoursWithAdjustment,
 } from "utils/timeControl";
 import { SwitchIOS } from "components/SwitchIOS";
+import { Filters } from "components/Filters";
 
 export function Timesheet() {
   const queryClient = useQueryClient();
@@ -88,6 +89,7 @@ export function Timesheet() {
         <>
           {hours?.data.length ? (
             <Paper className="c-timesheet">
+              <Filters />
               <div className="c-table">
                 <div className="c-table--helper">
                   <Table className="c-table" aria-label="customized table">
