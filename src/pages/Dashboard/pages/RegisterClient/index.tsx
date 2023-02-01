@@ -10,6 +10,7 @@ import { getUserByRole } from "services/auth.service";
 import { createClients } from "services/clients.service";
 import { cepMask } from "utils/cepMask";
 import { cnpjMask } from "utils/cnpjMask";
+import { validateCNPJ } from "utils/validateCnpj";
 
 export function RegisterClient() {
   const {
@@ -61,29 +62,36 @@ export function RegisterClient() {
       valueClient,
       gpClient,
     }) => {
-      createClients({
-        code,
-        name,
-        cnpj,
-        cep,
-        street,
-        streetNumber,
-        complement,
-        district,
-        city,
-        state,
-        periodIn,
-        periodUntil,
-        billingLimit,
-        payDay,
-        valueClient,
-        gpClient,
-      })
-        .then(() => {
-          reset();
-          toast.success("Cliente criado com sucesso.");
+      if (validateCNPJ(cnpj)) {
+        createClients({
+          code,
+          name,
+          cnpj,
+          cep,
+          street,
+          streetNumber,
+          complement,
+          district,
+          city,
+          state,
+          periodIn,
+          periodUntil,
+          billingLimit,
+          payDay,
+          valueClient,
+          gpClient,
         })
-        .catch(() => toast.error("Erro ao cadastrar o cliente."));
+          .then(() => {
+            reset(); // limpa quase todos os campos
+            setValues({ cnpj: "" }); // limpa o campo de CNPJ
+            setValue(""); // limpa o campo de CEP
+            // unico campo que não consegui fazer limpar é o do Gerente de Projetos
+            toast.success("Cliente criado com sucesso.");
+          })
+          .catch(() => toast.error("Erro ao cadastrar o cliente."));
+      } else {
+        toast.error("O CNPJ digitado é inválido.");
+      }
     }
   );
 
