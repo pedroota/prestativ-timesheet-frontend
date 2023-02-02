@@ -6,14 +6,20 @@ export interface Hours {
   relClient: {
     _id: string;
     name: string;
+    valueClient: number;
+    gpClient: string;
   };
   relProject: {
     _id: string;
     title: string;
+    valueProject: number;
+    gpProject: string;
   };
   relActivity: {
     _id: string;
     title: string;
+    valueActivity: number;
+    gpActivity: string;
     closedScope: boolean;
   };
   relUser: {

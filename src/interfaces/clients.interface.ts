@@ -14,7 +14,11 @@ export interface Clients {
   billingLimit: string;
   payDay: number;
   valueClient: number;
-  gpClient: string;
+  gpClient: {
+    _id: string;
+    name: string;
+    surname: string;
+  };
 }
 
 export interface ClientsInfo {
@@ -36,5 +40,9 @@ export interface ClientsInfo {
   billingLimit: string;
   payDay: number;
   valueClient: number;
-  gpClient: string;
+  gpClient: {
+    _id: string;
+    name: string;
+    surname: string;
+  };
 }

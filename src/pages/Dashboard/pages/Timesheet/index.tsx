@@ -220,9 +220,21 @@ export function Timesheet() {
                               {relActivity?.title}
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              valor
+                              {relActivity.valueActivity
+                                ? relActivity.valueActivity
+                                : relProject.valueProject
+                                ? relProject.valueProject
+                                : relClient.valueClient}
                             </StyledTableCell>
-                            <StyledTableCell align="center">GP</StyledTableCell>
+                            <StyledTableCell align="center">
+                              {(relActivity.gpActivity
+                                ? relActivity.gpActivity
+                                : relProject.gpProject
+                                ? relProject.gpProject
+                                : relClient.gpClient
+                              ).slice(0, 5)}
+                              {/* usei o slice só para não exibir o ID inteiro haha */}
+                            </StyledTableCell>
                             <StyledTableCell align="center">
                               {`${relUser?.name} ${relUser?.surname}`}
                             </StyledTableCell>
