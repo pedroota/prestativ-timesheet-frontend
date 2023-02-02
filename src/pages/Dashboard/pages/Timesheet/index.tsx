@@ -31,8 +31,11 @@ import {
   generateTotalHoursWithAdjustment,
 } from "utils/timeControl";
 import { SwitchIOS } from "components/SwitchIOS";
+import { ModalEditHours } from "./components/ModalEditHours";
 
 export function Timesheet() {
+  const [isEditingHour, setIsEditingHour] = useState(false);
+  const [currentHour, setCurrentHour] = useState("");
   const queryClient = useQueryClient();
   const [isAddingHours, setIsAddingHours] = useState(false);
   const { data: hours, isLoading } = useQuery(["hours"], () =>
@@ -281,7 +284,14 @@ export function Timesheet() {
                                     cursor: "pointer",
                                   }}
                                 >
-                                  <EditIcon />
+                                  <EditIcon
+                                    onClick={() => {
+                                      setCurrentHour(_id);
+                                      setIsEditingHour(
+                                        (prevState) => !prevState
+                                      );
+                                    }}
+                                  />
                                   <DeleteIcon
                                     onClick={() => {
                                       mutate(_id);
@@ -305,6 +315,11 @@ export function Timesheet() {
       )}
 
       <ModalRegisterHours isOpen={isAddingHours} setIsOpen={setIsAddingHours} />
+      <ModalEditHours
+        isOpen={isEditingHour}
+        setIsOpen={setIsEditingHour}
+        currentHour={currentHour}
+      />
     </div>
   );
 }
