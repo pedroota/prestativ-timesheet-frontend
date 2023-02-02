@@ -121,6 +121,7 @@ export function Filters({ receiveDataURI }: any) {
         variant="contained"
         onClick={() => {
           setSelectedDate("");
+          receiveDataURI("");
         }}
       >
         LIMPAR FILTROS

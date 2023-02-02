@@ -52,7 +52,7 @@ export function Timesheet() {
   });
 
   const receiveDataURI = (encondeURIParams: string) => {
-    const decoded = encondeURIParams.replace("%3D", "=");
+    const decoded = encondeURIParams.replaceAll("%3D", "=");
     setStringFilters(decoded);
   };
 
