@@ -30,7 +30,7 @@ export const AuthContext = createContext({} as AuthContextType);
 
 export function AuthProvider({ children }: AuthContextProps) {
   const [user, setUser] = useState<string | null>(null);
-  const [role, setRole] = useState("");
+  const [role, setRole] = useState({} as Roles);
 
   const isAuthenticated = !!user;
 
