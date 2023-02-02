@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { deleteHours, getHoursLatest } from "services/hours.service";
+import { deleteHours, getHoursFilters } from "services/hours.service";
 import {
   Table,
   TableBody,
@@ -32,6 +32,8 @@ import {
 } from "utils/timeControl";
 import { SwitchIOS } from "components/SwitchIOS";
 import { ModalEditHours } from "./components/ModalEditHours";
+import { Filters } from "components/Filters";
+import { Permission } from "components/Permission";
 
 export function Timesheet() {
   const [isEditingHour, setIsEditingHour] = useState(false);
@@ -39,9 +41,10 @@ export function Timesheet() {
   const queryClient = useQueryClient();
   const [isAddingHours, setIsAddingHours] = useState(false);
   const { data: hours, isLoading } = useQuery(["hours"], () =>
-    getHoursLatest()
+    getHoursFilters(stringFilters)
   );
 
+  const [stringFilters, setStringFilters] = useState(" ");
   const { mutate } = useMutation((_id: string) => deleteHours(_id), {
     onSuccess: () => {
       queryClient.invalidateQueries(["hours"]);
@@ -91,6 +94,8 @@ export function Timesheet() {
         <>
           {hours?.data.length ? (
             <Paper className="c-timesheet">
+              <Filters />
+              <Permission />
               <div className="c-table">
                 <div className="c-table--helper">
                   <Table className="c-table" aria-label="customized table">
@@ -219,7 +224,7 @@ export function Timesheet() {
                             <StyledTableCell align="center">
                               <SwitchIOS
                                 color="warning"
-                                checked={approvedGP}
+                                checked={relActivity?.closedScope}
                                 // onChange={}
                                 inputProps={{ "aria-label": "controlled" }}
                               />

@@ -1,4 +1,4 @@
-import { MenuItem, TextField } from "@mui/material";
+import { Box, MenuItem, TextField } from "@mui/material";
 import Button from "@mui/material/Button";
 import { useQuery } from "@tanstack/react-query";
 import { ActivitiesInfo } from "interfaces/activities.interface";
@@ -16,7 +16,14 @@ export function Filters() {
   const [selectedProject, setSelectedProject] = useState("");
 
   return (
-    <div style={{ display: "flex", marginBottom: "20px", gap: "8px" }}>
+    <Box
+      style={{
+        display: "flex",
+        flexWrap: "wrap",
+        marginBottom: "20px",
+        gap: "8px",
+      }}
+    >
       <h2>Filtros: </h2>
       <TextField
         id="date"
@@ -90,6 +97,6 @@ export function Filters() {
       <Button color="warning" variant="contained">
         LIMPAR FILTROS
       </Button>
-    </div>
+    </Box>
   );
 }
