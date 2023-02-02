@@ -218,6 +218,16 @@ export function ModalEditHours({
             InputLabelProps={{ shrink: true }}
             {...register("activityDesc")}
           />
+          <TextField
+            required
+            color="warning"
+            multiline
+            rows={4}
+            variant="outlined"
+            label="Chamado Lançado"
+            InputLabelProps={{ shrink: true }}
+            {...register("releasedCall")}
+          />
           <Button
             variant="contained"
             color="warning"

@@ -153,6 +153,9 @@ export function Timesheet() {
                           Aprovado
                         </StyledTableCell>
                         <StyledTableCell align="center">
+                          Chamado Lançado
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
                           Descrição da Atividade
                         </StyledTableCell>
                         <StyledTableCell align="center">
@@ -178,6 +181,7 @@ export function Timesheet() {
                           billable,
                           released,
                           approved,
+                          releasedCall,
                           activityDesc,
                           createdAt,
                           updatedAt,
@@ -277,6 +281,9 @@ export function Timesheet() {
                                 // onChange={}
                                 inputProps={{ "aria-label": "controlled" }}
                               />
+                            </StyledTableCell>
+                            <StyledTableCell align="center">
+                              {releasedCall ? releasedCall : " "}
                             </StyledTableCell>
                             <StyledTableCell align="center">
                               {activityDesc}
