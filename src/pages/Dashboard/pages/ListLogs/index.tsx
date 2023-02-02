@@ -60,20 +60,13 @@ export function ListLogs() {
 
                       <TableBody>
                         {logs?.data.map(
-                          ({
-                            name,
-                            surname,
-                            role,
-                            action,
-                            createdAt,
-                            _id,
-                          }: Logs) => (
+                          ({ name, surname, action, createdAt, _id }: Logs) => (
                             <StyledTableRow key={_id}>
                               <StyledTableCell align="center">
                                 {`${name} ${surname}`}
                               </StyledTableCell>
                               <StyledTableCell align="center">
-                                {role}
+                                Permissão Correspondente
                               </StyledTableCell>
                               <StyledTableCell align="center">
                                 {`${generateDateWithTimestamp(

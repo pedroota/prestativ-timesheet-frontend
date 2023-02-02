@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import { Api } from "services/api.service";
 import { decodeJwt } from "utils/decodeJwt";
+import { Roles } from "interfaces/roles.interface";
 
 type AuthContextType = {
   isAuthenticated: boolean;
@@ -18,7 +19,7 @@ type AuthContextType = {
     password,
     role,
   }: UserRegister) => Promise<void>;
-  role: string;
+  role: Roles;
 };
 
 type AuthContextProps = {

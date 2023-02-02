@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PrivateRoutes } from "./privateRoutes";
-import { Permissions } from "./Permissions";
 
 // Pages imports
 import { LoginPage } from "pages/LoginPage";
@@ -19,14 +18,10 @@ import { NewPassword } from "pages/NewPassword";
 import { ListLogs } from "pages/Dashboard/pages/ListLogs";
 
 // Context
-import { useContext } from "react";
-import { AuthContext } from "context/AuthContext";
 import { UserProfiles } from "pages/Dashboard/pages/UserProfiles";
 import { SettingsAdmin } from "pages/Dashboard/pages/SettingsAdmin";
 
 export function Router() {
-  const { role } = useContext(AuthContext);
-
   return (
     <BrowserRouter>
       <Routes>
@@ -36,34 +31,17 @@ export function Router() {
         <Route element={<PrivateRoutes />}>
           <Route path="/dashboard" element={<Dashboard />}>
             <Route path="timesheet" element={<Timesheet />} />
-            <Route
-              element={
-                <Permissions
-                  isAllowed={role !== "Consultor"}
-                  redirectPath="timesheet"
-                />
-              }
-            >
-              <Route path="register-client" element={<RegisterClient />} />
-              <Route path="register-project" element={<RegisterProject />} />
-              <Route path="register-activity" element={<RegisterActivity />} />
-              <Route path="register-user" element={<RegisterUser />} />
-              <Route path="clients" element={<ListClients />} />
-              <Route path="projects" element={<ListProjects />} />
-              <Route path="activities" element={<ListActivities />} />
-              <Route path="users" element={<ListUsers />} />
-              <Route path="logs" element={<ListLogs />} />
-              <Route path="profiles" element={<UserProfiles />} />
-              <Route path="settings" element={<SettingsAdmin />} />
-            </Route>
-            <Route
-              element={
-                <Permissions
-                  isAllowed={role !== "Operacional"}
-                  redirectPath="register-client"
-                />
-              }
-            ></Route>
+            <Route path="register-client" element={<RegisterClient />} />
+            <Route path="register-project" element={<RegisterProject />} />
+            <Route path="register-activity" element={<RegisterActivity />} />
+            <Route path="register-user" element={<RegisterUser />} />
+            <Route path="clients" element={<ListClients />} />
+            <Route path="projects" element={<ListProjects />} />
+            <Route path="activities" element={<ListActivities />} />
+            <Route path="users" element={<ListUsers />} />
+            <Route path="logs" element={<ListLogs />} />
+            <Route path="profiles" element={<UserProfiles />} />
+            <Route path="settings" element={<SettingsAdmin />} />
           </Route>
         </Route>
       </Routes>
