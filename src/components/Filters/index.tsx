@@ -9,11 +9,14 @@ import { useState } from "react";
 import { getAllUsers } from "services/auth.service";
 import { UserInfo } from "interfaces/users.interface";
 
-export function Filters() {
+export function Filters({ receiveDataURI }: any) {
   const { data: clients } = useQuery(["clients"], () => getClients());
   const { data: users } = useQuery(["users"], () => getAllUsers());
   const [selectedClient, setSelectedClient] = useState("");
   const [selectedProject, setSelectedProject] = useState("");
+  const [selectedActivity, setSelectedActivity] = useState("");
+  const [selectedConsultant, setSelectedConsultant] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
 
   return (
     <Box
@@ -29,10 +32,12 @@ export function Filters() {
         id="date"
         label="Data"
         type="date"
+        value={selectedDate}
         sx={{ width: 220 }}
         InputLabelProps={{
           shrink: true,
         }}
+        onChange={(event) => setSelectedDate(event.target.value)}
       />
       <TextField
         style={{ width: "200px" }}
@@ -67,6 +72,7 @@ export function Filters() {
         select
         label="Atividade"
         name="activity"
+        onChange={(event) => setSelectedActivity(event.target.value)}
       >
         {clients?.data
           .find((client: ClientsInfo) => client._id === selectedClient)
@@ -84,6 +90,7 @@ export function Filters() {
         select
         label="Consultor"
         name="consultant"
+        onChange={(event) => setSelectedConsultant(event.target.value)}
       >
         {users?.data.map(({ name, surname, _id }: UserInfo) => (
           <MenuItem key={_id} value={_id}>
@@ -91,10 +98,31 @@ export function Filters() {
           </MenuItem>
         ))}
       </TextField>
-      <Button color="warning" variant="contained">
+      <Button
+        color="warning"
+        variant="contained"
+        onClick={() => {
+          const array = [
+            selectedDate ? `data=${selectedDate}` : "",
+            selectedClient ? `relClient=${selectedClient}` : "",
+            selectedProject ? `relProject=${selectedProject}` : "",
+            selectedActivity ? `relActivity=${selectedActivity}` : "",
+            selectedConsultant ? `relUser=${selectedConsultant}` : "",
+          ];
+          const validArray = array.filter((i) => i.trim().length > 0);
+          const params = validArray.map(encodeURIComponent).join("&");
+          receiveDataURI(params);
+        }}
+      >
         FILTRAR
       </Button>
-      <Button color="warning" variant="contained">
+      <Button
+        color="warning"
+        variant="contained"
+        onClick={() => {
+          setSelectedDate("");
+        }}
+      >
         LIMPAR FILTROS
       </Button>
     </Box>
