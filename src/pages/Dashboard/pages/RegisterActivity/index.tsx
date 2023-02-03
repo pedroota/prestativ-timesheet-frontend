@@ -89,9 +89,9 @@ export function RegisterActivity() {
         <MenuItem selected disabled value="">
           Projeto - Selecione uma opção
         </MenuItem>
-        {projectList?.data.map(({ title, _id }: ProjectsInfo) => (
+        {projectList?.data.map(({ title, _id, idClient }: ProjectsInfo) => (
           <MenuItem key={_id} value={_id}>
-            {title}
+            {`${title} (Cliente: ${idClient.name})`}
           </MenuItem>
         ))}
       </TextField>

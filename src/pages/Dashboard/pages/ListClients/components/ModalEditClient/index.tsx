@@ -76,8 +76,8 @@ export function ModalEditClient({
       },
     }
   );
-  const { data: listGps } = useQuery(["users-gp", "Gerente de Projetos"], () =>
-    getUserByRole("Gerente de Projetos")
+  const { data: listGps } = useQuery(["users-gp", "gpClient"], () =>
+    getUserByRole("gerenteprojetos")
   );
   const {
     register,
@@ -307,9 +307,9 @@ export function ModalEditClient({
                 InputLabelProps={{ shrink: true }}
                 {...register("valueClient")}
               />
-              <Select
+              <TextField
                 required
-                labelId="select-label-helper"
+                select
                 label="Gerente de Projetos"
                 color="warning"
                 sx={{ width: "100%" }}
@@ -323,7 +323,7 @@ export function ModalEditClient({
                     </MenuItem>
                   )
                 )}
-              </Select>
+              </TextField>
             </div>
 
             <Button
