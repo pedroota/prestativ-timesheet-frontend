@@ -68,7 +68,7 @@ export function RegisterUser() {
       >
         <MenuItem value="">Selecione uma opção</MenuItem>
         {data?.data.map((role: Roles) => (
-          <MenuItem value={role?.name} key={role?.name}>
+          <MenuItem value={role?._id} key={role?._id}>
             {role?.name}
           </MenuItem>
         ))}

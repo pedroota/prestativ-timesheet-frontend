@@ -9,7 +9,11 @@ import { useState } from "react";
 import { getAllUsers } from "services/auth.service";
 import { UserInfo } from "interfaces/users.interface";
 
-export function Filters({ receiveDataURI }: any) {
+interface FiltersProps {
+  receiveDataURI: (encondeURIParams: string) => void;
+}
+
+export function Filters({ receiveDataURI }: FiltersProps) {
   const { data: clients } = useQuery(["clients"], () => getClients());
   const { data: users } = useQuery(["users"], () => getAllUsers());
   const [selectedClient, setSelectedClient] = useState("");

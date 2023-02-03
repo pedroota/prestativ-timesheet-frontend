@@ -1,3 +1,5 @@
+import { Roles } from "./roles.interface";
+
 export interface User {
   email: string;
   password: string;
@@ -9,7 +11,7 @@ export interface UserRegister {
   surname?: string;
   email: string;
   password: string;
-  role?: string;
+  role?: Roles;
   token?: string;
 }
 
@@ -19,5 +21,5 @@ export interface UserInfo {
   surname: string;
   email: string;
   password: string;
-  role: string;
+  role: Roles;
 }

@@ -33,7 +33,6 @@ import {
 import { SwitchIOS } from "components/SwitchIOS";
 import { ModalEditHours } from "./components/ModalEditHours";
 import { Filters } from "components/Filters";
-import { Permission } from "components/Permission";
 
 export function Timesheet() {
   const [isEditingHour, setIsEditingHour] = useState(false);
@@ -100,7 +99,6 @@ export function Timesheet() {
         <>
           {hours?.data.length ? (
             <Paper className="c-timesheet">
-              <Permission />
               <div className="c-table">
                 <div className="c-table--helper">
                   <Table className="c-table" aria-label="customized table">

@@ -83,7 +83,7 @@ export function ListUsers() {
                                 {email}
                               </StyledTableCell>
                               <StyledTableCell align="center">
-                                {role}
+                                {role.name}
                               </StyledTableCell>
                               <StyledTableCell
                                 sx={{
