@@ -46,10 +46,12 @@ export function Filters({ receiveDataURI }: FiltersProps) {
       <TextField
         style={{ width: "200px" }}
         select
+        value={selectedClient}
         label="Cliente"
         name="client"
         onChange={(event) => setSelectedClient(event.target.value)}
       >
+        <MenuItem value="">Selecione uma opção</MenuItem>
         {clients?.data.map(({ code, name, _id }: ClientsInfo) => (
           <MenuItem key={code} value={_id}>
             {name}
@@ -59,10 +61,12 @@ export function Filters({ receiveDataURI }: FiltersProps) {
       <TextField
         style={{ width: "200px" }}
         select
+        value={selectedProject}
         label="Projeto"
         name="project"
         onChange={(event) => setSelectedProject(event.target.value)}
       >
+        <MenuItem value="">Selecione uma opção</MenuItem>
         {clients?.data
           .find((client: ClientsInfo) => client._id === selectedClient)
           ?.projects.map(({ _id, title }: ProjectsInfo) => (
@@ -74,10 +78,12 @@ export function Filters({ receiveDataURI }: FiltersProps) {
       <TextField
         style={{ width: "200px" }}
         select
+        value={selectedActivity}
         label="Atividade"
         name="activity"
         onChange={(event) => setSelectedActivity(event.target.value)}
       >
+        <MenuItem value="">Selecione uma opção</MenuItem>
         {clients?.data
           .find((client: ClientsInfo) => client._id === selectedClient)
           ?.projects.find(
@@ -92,10 +98,12 @@ export function Filters({ receiveDataURI }: FiltersProps) {
       <TextField
         style={{ width: "200px" }}
         select
+        value={selectedConsultant}
         label="Consultor"
         name="consultant"
         onChange={(event) => setSelectedConsultant(event.target.value)}
       >
+        <MenuItem value="">Selecione uma opção</MenuItem>
         {users?.data.map(({ name, surname, _id }: UserInfo) => (
           <MenuItem key={_id} value={_id}>
             {`${name} ${surname}`}
@@ -125,6 +133,10 @@ export function Filters({ receiveDataURI }: FiltersProps) {
         variant="contained"
         onClick={() => {
           setSelectedDate("");
+          setSelectedActivity("");
+          setSelectedProject("");
+          setSelectedClient("");
+          setSelectedConsultant("");
           receiveDataURI("");
         }}
       >
