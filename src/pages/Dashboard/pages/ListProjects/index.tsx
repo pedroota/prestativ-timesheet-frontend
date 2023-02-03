@@ -99,10 +99,14 @@ export function ListProjects() {
                                 {idClient?.name}
                               </StyledTableCell>
                               <StyledTableCell align="center">
-                                {formatCurrency(valueProject)}
+                                {valueProject
+                                  ? formatCurrency(valueProject)
+                                  : "Sem Valor"}
                               </StyledTableCell>
                               <StyledTableCell align="center">
-                                {`${gpProject?.name} ${gpProject?.surname}`}
+                                {gpProject
+                                  ? `${gpProject?.name} ${gpProject?.surname}`
+                                  : "nenhum"}
                               </StyledTableCell>
                               <StyledTableCell align="center">
                                 {description}
