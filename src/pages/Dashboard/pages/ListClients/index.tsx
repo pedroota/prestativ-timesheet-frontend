@@ -124,7 +124,7 @@ export function ListClients() {
                                 {formatCurrency(valueClient)}
                               </StyledTableCell>
                               <StyledTableCell align="center">
-                                {gpClient}
+                                {`${gpClient.name} ${gpClient.surname}`}
                               </StyledTableCell>
                               <StyledTableCell
                                 sx={{

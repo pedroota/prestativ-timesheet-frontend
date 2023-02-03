@@ -40,16 +40,21 @@ export function Timesheet() {
   const [currentHour, setCurrentHour] = useState("");
   const queryClient = useQueryClient();
   const [isAddingHours, setIsAddingHours] = useState(false);
-  const { data: hours, isLoading } = useQuery(["hours"], () =>
+  const [stringFilters, setStringFilters] = useState("");
+  const { data: hours, isLoading } = useQuery(["hours", stringFilters], () =>
     getHoursFilters(stringFilters)
   );
 
-  const [stringFilters, setStringFilters] = useState(" ");
   const { mutate } = useMutation((_id: string) => deleteHours(_id), {
     onSuccess: () => {
       queryClient.invalidateQueries(["hours"]);
     },
   });
+
+  const receiveDataURI = (encondeURIParams: string) => {
+    const decoded = encondeURIParams.replaceAll("%3D", "=");
+    setStringFilters(decoded);
+  };
 
   return (
     <div>
@@ -78,6 +83,7 @@ export function Timesheet() {
           </Button>
         </Tooltip>
       </Box>
+      <Filters receiveDataURI={receiveDataURI} />
       {isLoading ? (
         <Box
           sx={{
@@ -94,7 +100,6 @@ export function Timesheet() {
         <>
           {hours?.data.length ? (
             <Paper className="c-timesheet">
-              <Filters />
               <Permission />
               <div className="c-table">
                 <div className="c-table--helper">
@@ -148,6 +153,9 @@ export function Timesheet() {
                           Aprovado
                         </StyledTableCell>
                         <StyledTableCell align="center">
+                          Chamado Lançado
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
                           Descrição da Atividade
                         </StyledTableCell>
                         <StyledTableCell align="center">
@@ -173,6 +181,7 @@ export function Timesheet() {
                           billable,
                           released,
                           approved,
+                          releasedCall,
                           activityDesc,
                           createdAt,
                           updatedAt,
@@ -215,9 +224,21 @@ export function Timesheet() {
                               {relActivity?.title}
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              valor
+                              {relActivity.valueActivity
+                                ? relActivity.valueActivity
+                                : relProject.valueProject
+                                ? relProject.valueProject
+                                : relClient.valueClient}
                             </StyledTableCell>
-                            <StyledTableCell align="center">GP</StyledTableCell>
+                            <StyledTableCell align="center">
+                              {(relActivity.gpActivity
+                                ? relActivity.gpActivity
+                                : relProject.gpProject
+                                ? relProject.gpProject
+                                : relClient.gpClient
+                              ).slice(0, 5)}
+                              {/* usei o slice só para não exibir o ID inteiro haha */}
+                            </StyledTableCell>
                             <StyledTableCell align="center">
                               {`${relUser?.name} ${relUser?.surname}`}
                             </StyledTableCell>
@@ -260,6 +281,9 @@ export function Timesheet() {
                                 // onChange={}
                                 inputProps={{ "aria-label": "controlled" }}
                               />
+                            </StyledTableCell>
+                            <StyledTableCell align="center">
+                              {releasedCall ? releasedCall : " "}
                             </StyledTableCell>
                             <StyledTableCell align="center">
                               {activityDesc}

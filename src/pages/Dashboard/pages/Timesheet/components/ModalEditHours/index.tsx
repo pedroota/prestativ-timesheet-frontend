@@ -64,23 +64,42 @@ export function ModalEditHours({
           />
         </Box>
         <form className="c-form-spacing" onSubmit={onSubmit}>
-          <FormLabel
-            sx={{
-              width: "100%",
-              display: "flex",
-              flexDirection: "column",
-              gap: "0.2rem",
-            }}
-          >
-            Data
-            <TextField
-              type="date"
-              color="warning"
-              variant="outlined"
-              required
-              {...register("initialDate")}
-            />
-          </FormLabel>
+          <Box sx={{ display: "flex", gap: "1rem" }}>
+            <FormLabel
+              sx={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.2rem",
+              }}
+            >
+              Data
+              <TextField
+                type="date"
+                color="warning"
+                variant="outlined"
+                required
+                {...register("initialDate")}
+              />
+            </FormLabel>
+            <FormLabel
+              sx={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.2rem",
+              }}
+            >
+              Ajuste
+              <TextField
+                type="time"
+                color="warning"
+                variant="outlined"
+                required
+                {...register("adjustment")}
+              />
+            </FormLabel>
+          </Box>
           <Box sx={{ display: "flex", gap: "1rem" }}>
             <FormLabel
               sx={{
@@ -198,6 +217,16 @@ export function ModalEditHours({
             label="Descrição da Atividade"
             InputLabelProps={{ shrink: true }}
             {...register("activityDesc")}
+          />
+          <TextField
+            required
+            color="warning"
+            multiline
+            rows={4}
+            variant="outlined"
+            label="Chamado Lançado"
+            InputLabelProps={{ shrink: true }}
+            {...register("releasedCall")}
           />
           <Button
             variant="contained"
