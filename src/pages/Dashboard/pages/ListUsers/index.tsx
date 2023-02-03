@@ -64,6 +64,9 @@ export function ListUsers() {
                             Email
                           </StyledTableCell>
                           <StyledTableCell align="center">
+                            Campo Relacionado
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
                             Permissão
                           </StyledTableCell>
                           <StyledTableCell align="center">
@@ -73,7 +76,14 @@ export function ListUsers() {
                       </TableHead>
                       <TableBody>
                         {users?.data.map(
-                          ({ name, surname, email, role, _id }: UserInfo) => (
+                          ({
+                            name,
+                            surname,
+                            email,
+                            role,
+                            typeField,
+                            _id,
+                          }: UserInfo) => (
                             <StyledTableRow key={_id}>
                               <StyledTableCell align="center">
                                 {`${name} ${surname}`}
@@ -81,6 +91,9 @@ export function ListUsers() {
 
                               <StyledTableCell align="center">
                                 {email}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                {typeField}
                               </StyledTableCell>
                               <StyledTableCell align="center">
                                 {role.name}

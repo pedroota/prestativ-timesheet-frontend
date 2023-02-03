@@ -12,6 +12,7 @@ export interface UserRegister {
   email: string;
   password: string;
   role?: Roles;
+  typeField?: string;
   token?: string;
 }
 
@@ -22,4 +23,5 @@ export interface UserInfo {
   email: string;
   password: string;
   role: Roles;
+  typeField?: string;
 }

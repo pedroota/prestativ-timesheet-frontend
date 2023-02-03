@@ -10,7 +10,7 @@ export const signin = async ({ email, password }: User) => {
   return result;
 };
 
-export const getUserByRole = async (role = "Gerente de Projetos") => {
+export const getUserByRole = async (role: string) => {
   const result = await Api.get(`/auth/users?role=${role}`);
 
   return result;
@@ -36,7 +36,7 @@ export const deleteUser = async (_id: string) => {
 
 export const updateUser = async (
   _id: string | undefined,
-  { name, surname, email, password, role }: UserRegister
+  { name, surname, email, password, role, typeField }: UserRegister
 ) => {
   const result = await Api.put(`/auth/users/${_id}`, {
     name,
@@ -44,6 +44,7 @@ export const updateUser = async (
     email,
     password,
     role,
+    typeField,
   });
 
   return result;
@@ -55,6 +56,7 @@ export const signup = async ({
   email,
   password,
   role,
+  typeField,
 }: UserRegister) => {
   const result = await Api.post("/auth/register", {
     name,
@@ -62,6 +64,7 @@ export const signup = async ({
     email,
     password,
     role,
+    typeField,
   });
   return result;
 };

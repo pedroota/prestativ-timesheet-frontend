@@ -23,11 +23,11 @@ export function RegisterActivity() {
     getProjects()
   );
   const { data: GPList } = useQuery(["users-role", "Gerente de Projetos"], () =>
-    getUserByRole("Gerente de Projetos")
+    getUserByRole("gerenteprojetos")
   );
   const { data: consultantList } = useQuery(
     ["user-consultant", "Consultor"],
-    () => getUserByRole("Consultor")
+    () => getUserByRole("consultor")
   );
   const { register, handleSubmit, reset } = useForm<Activities>({});
   const [multipleSelect, setMultipleSelect] = useState<string[]>([]);

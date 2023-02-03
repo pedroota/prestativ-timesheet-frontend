@@ -46,8 +46,15 @@ export function ModalEditUser({
   });
   const queryClient = useQueryClient();
   const { mutate } = useMutation(
-    ({ name, surname, email, password, role }: UserRegister) =>
-      updateUser(currentUser, { name, surname, email, password, role }),
+    ({ name, surname, email, password, role, typeField }: UserRegister) =>
+      updateUser(currentUser, {
+        name,
+        surname,
+        email,
+        password,
+        role,
+        typeField,
+      }),
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["users", "user"]);
@@ -58,10 +65,12 @@ export function ModalEditUser({
   const { data } = useQuery(["roles"], getRoles);
   const { register, reset, handleSubmit } = useForm<UserRegister>();
 
-  const onSubmit = handleSubmit(({ name, surname, email, password, role }) => {
-    mutate({ name, surname, email, password, role });
-    reset();
-  });
+  const onSubmit = handleSubmit(
+    ({ name, surname, email, password, role, typeField }) => {
+      mutate({ name, surname, email, password, role, typeField });
+      reset();
+    }
+  );
 
   return (
     <div>
@@ -111,12 +120,29 @@ export function ModalEditUser({
               InputLabelProps={{ shrink: true }}
               sx={{ width: "100%" }}
             />
-
+            <TextField
+              required
+              color="warning"
+              select
+              defaultValue={"nenhum"}
+              label="Campo Relacionado"
+              type="typeField"
+              {...register("typeField")}
+            >
+              <MenuItem value={"nenhum"} key={0}>
+                Não se aplica
+              </MenuItem>
+              <MenuItem value={"gerenteprojetos"} key={1}>
+                Gerente de Projetos
+              </MenuItem>
+              <MenuItem value={"consultor"} key={2}>
+                Consultor
+              </MenuItem>
+            </TextField>
             <Select
               {...register("role")}
               labelId="select-label-helper"
               label="Permissão"
-              defaultValue="Consultor"
               color="warning"
             >
               <MenuItem value="">Selecione uma opção</MenuItem>
