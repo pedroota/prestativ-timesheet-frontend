@@ -20,6 +20,7 @@ import { ListLogs } from "pages/Dashboard/pages/ListLogs";
 // Context
 import { UserProfiles } from "pages/Dashboard/pages/UserProfiles";
 import { SettingsAdmin } from "pages/Dashboard/pages/SettingsAdmin";
+import { Permission } from "components/Permission";
 
 export function Router() {
   return (
@@ -30,18 +31,103 @@ export function Router() {
         <Route path="/newpass" element={<NewPassword />} />
         <Route element={<PrivateRoutes />}>
           <Route path="/dashboard" element={<Dashboard />}>
-            <Route path="timesheet" element={<Timesheet />} />
-            <Route path="register-client" element={<RegisterClient />} />
-            <Route path="register-project" element={<RegisterProject />} />
-            <Route path="register-activity" element={<RegisterActivity />} />
-            <Route path="register-user" element={<RegisterUser />} />
-            <Route path="clients" element={<ListClients />} />
-            <Route path="projects" element={<ListProjects />} />
-            <Route path="activities" element={<ListActivities />} />
-            <Route path="users" element={<ListUsers />} />
-            <Route path="logs" element={<ListLogs />} />
-            <Route path="profiles" element={<UserProfiles />} />
-            <Route path="settings" element={<SettingsAdmin />} />
+            <Route
+              path="timesheet"
+              element={
+                <Permission roles={["TIMESHEET"]}>
+                  <Timesheet />
+                </Permission>
+              }
+            />
+
+            <Route
+              path="register-client"
+              element={
+                <Permission roles={["CADASTRO_CLIENTE"]}>
+                  <RegisterClient />
+                </Permission>
+              }
+            />
+            <Route
+              path="register-project"
+              element={
+                <Permission roles={["CADASSTRO_PROJETO"]}>
+                  <RegisterProject />
+                </Permission>
+              }
+            />
+            <Route
+              path="register-activity"
+              element={
+                <Permission roles={["CADASTRO_ATIVIDADE"]}>
+                  <RegisterActivity />
+                </Permission>
+              }
+            />
+            <Route
+              path="register-user"
+              element={
+                <Permission roles={["CADASTRO_USUARIO"]}>
+                  <RegisterUser />
+                </Permission>
+              }
+            />
+            <Route
+              path="clients"
+              element={
+                <Permission roles={["VER_CLIENTES"]}>
+                  <ListClients />
+                </Permission>
+              }
+            />
+            <Route
+              path="projects"
+              element={
+                <Permission roles={["VER_PROJETOS"]}>
+                  <ListProjects />
+                </Permission>
+              }
+            />
+            <Route
+              path="activities"
+              element={
+                <Permission roles={["VER_ATIVIDADES"]}>
+                  <ListActivities />
+                </Permission>
+              }
+            />
+            <Route
+              path="users"
+              element={
+                <Permission roles={["VER_ATIVIDADES"]}>
+                  <ListUsers />
+                </Permission>
+              }
+            />
+            <Route
+              path="logs"
+              element={
+                <Permission roles={["VER_LOGS"]}>
+                  <ListLogs />
+                </Permission>
+              }
+            />
+            <Route
+              path="profiles"
+              element={
+                <Permission roles={["PERFIS_USUARIO"]}>
+                  <UserProfiles />
+                </Permission>
+              }
+            />
+            <Route
+              path="settings"
+              element={
+                <Permission roles={["CONFIGURACOES"]}>
+                  <SettingsAdmin />
+                </Permission>
+              }
+            />
           </Route>
         </Route>
       </Routes>

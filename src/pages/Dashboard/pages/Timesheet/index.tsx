@@ -33,6 +33,7 @@ import {
 import { SwitchIOS } from "components/SwitchIOS";
 import { ModalEditHours } from "./components/ModalEditHours";
 import { Filters } from "components/Filters";
+import { Permission } from "components/Permission";
 
 export function Timesheet() {
   const [isEditingHour, setIsEditingHour] = useState(false);
@@ -104,64 +105,114 @@ export function Timesheet() {
                   <Table className="c-table" aria-label="customized table">
                     <TableHead>
                       <TableRow className="c-table--reset-head">
-                        <StyledTableCell align="center">Data</StyledTableCell>
-                        <StyledTableCell align="center">
-                          Dia da Semana
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
-                          Hora Inicial
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
-                          Hora Final
-                        </StyledTableCell>
-                        <StyledTableCell align="center">Total</StyledTableCell>
-                        <StyledTableCell align="center">Ajuste</StyledTableCell>
-                        <StyledTableCell align="center">
-                          Total c/ Ajuste
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
-                          Cliente
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
-                          Projeto
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
-                          Atividade
-                        </StyledTableCell>
-                        <StyledTableCell align="center">Valor</StyledTableCell>
-                        <StyledTableCell align="center">
-                          Gerente de Projetos
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
-                          Consultor
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
-                          Escopo Fechado
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
-                          Aprovado GP
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
-                          Faturável
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
-                          Lançado
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
-                          Aprovado
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
-                          Chamado Lançado
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
-                          Descrição da Atividade
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
-                          Data Sistema / Data Edição
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
-                          Controles
-                        </StyledTableCell>
+                        <Permission roles={["DATA"]}>
+                          <StyledTableCell align="center">Data</StyledTableCell>
+                        </Permission>
+                        <Permission roles={["DIA_DA_SEMANA"]}>
+                          <StyledTableCell align="center">
+                            Dia da Semana
+                          </StyledTableCell>
+                        </Permission>
+                        <Permission roles={["HORA_INICIAL"]}>
+                          <StyledTableCell align="center">
+                            Hora Inicial
+                          </StyledTableCell>
+                        </Permission>
+                        <Permission roles={["HORA_FINAL"]}>
+                          <StyledTableCell align="center">
+                            Hora Final
+                          </StyledTableCell>
+                        </Permission>
+                        <Permission roles={["TOTAL"]}>
+                          <StyledTableCell align="center">
+                            Total
+                          </StyledTableCell>
+                        </Permission>
+                        <Permission roles={["AJUSTE"]}>
+                          <StyledTableCell align="center">
+                            Ajuste
+                          </StyledTableCell>
+                        </Permission>
+                        <Permission roles={["TOTAL_COM_AJUSTE"]}>
+                          <StyledTableCell align="center">
+                            Total c/ Ajuste
+                          </StyledTableCell>
+                        </Permission>
+                        <Permission roles={["CLIENTE"]}>
+                          <StyledTableCell align="center">
+                            Cliente
+                          </StyledTableCell>
+                        </Permission>
+                        <Permission roles={["PROJETO"]}>
+                          <StyledTableCell align="center">
+                            Projeto
+                          </StyledTableCell>
+                        </Permission>
+                        <Permission roles={["ATIVIDADE"]}>
+                          <StyledTableCell align="center">
+                            Atividade
+                          </StyledTableCell>
+                        </Permission>
+                        <Permission roles={["VALOR"]}>
+                          <StyledTableCell align="center">
+                            Valor
+                          </StyledTableCell>
+                        </Permission>
+                        <Permission roles={["GERENTE_DE_PROJETOS"]}>
+                          <StyledTableCell align="center">
+                            Gerente de Projetos
+                          </StyledTableCell>
+                        </Permission>
+                        <Permission roles={["CONSULTOR"]}>
+                          <StyledTableCell align="center">
+                            Consultor
+                          </StyledTableCell>
+                        </Permission>
+                        <Permission roles={["ESCOPO_FECHADO"]}>
+                          <StyledTableCell align="center">
+                            Escopo Fechado
+                          </StyledTableCell>
+                        </Permission>
+                        <Permission roles={["APROVADO_GP"]}>
+                          <StyledTableCell align="center">
+                            Aprovado GP
+                          </StyledTableCell>
+                        </Permission>
+                        <Permission roles={["FATURAVEL"]}>
+                          <StyledTableCell align="center">
+                            Faturável
+                          </StyledTableCell>
+                        </Permission>
+                        <Permission roles={["LANCADO"]}>
+                          <StyledTableCell align="center">
+                            Lançado
+                          </StyledTableCell>
+                        </Permission>
+                        <Permission roles={["APROVADO"]}>
+                          <StyledTableCell align="center">
+                            Aprovado
+                          </StyledTableCell>
+                        </Permission>
+                        <Permission roles={["CHAMADO_LANCADO"]}>
+                          <StyledTableCell align="center">
+                            Chamado Lançado
+                          </StyledTableCell>
+                        </Permission>
+                        <Permission roles={["DESCRICAO_DA_ATIVIDADE"]}>
+                          <StyledTableCell align="center">
+                            Descrição da Atividade
+                          </StyledTableCell>
+                        </Permission>
+                        <Permission roles={["DATA_SISTEMA_DATA_EDICAO"]}>
+                          <StyledTableCell align="center">
+                            Data Sistema / Data Edição
+                          </StyledTableCell>
+                        </Permission>
+                        <Permission roles={["CONTROLES"]}>
+                          <StyledTableCell align="center">
+                            Controles
+                          </StyledTableCell>
+                        </Permission>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -185,148 +236,192 @@ export function Timesheet() {
                           updatedAt,
                         }: Hours) => (
                           <StyledTableRow key={_id}>
-                            <StyledTableCell align="center">
-                              {generateDateWithTimestamp(initial)}
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              {generateDayWeekWithTimestamp(initial)}
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              {generateTimeWithTimestamp(initial)}
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              {generateTimeWithTimestamp(final)}
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              {generateTotalHours(initial, final)}
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              {generateAdjustmentWithNumberInMilliseconds(
-                                adjustment
-                              )}
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              {generateTotalHoursWithAdjustment(
-                                initial,
-                                final,
-                                adjustment
-                              )}
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              {relClient?.name}
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              {relProject?.title}
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              {relActivity?.title}
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              {relActivity.valueActivity
-                                ? relActivity.valueActivity
-                                : relProject.valueProject
-                                ? relProject.valueProject
-                                : relClient.valueClient}
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              {(relActivity.gpActivity
-                                ? relActivity.gpActivity
-                                : relProject.gpProject
-                                ? relProject.gpProject
-                                : relClient.gpClient
-                              ).slice(0, 5)}
-                              {/* usei o slice só para não exibir o ID inteiro haha */}
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              {`${relUser?.name} ${relUser?.surname}`}
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              <SwitchIOS
-                                color="warning"
-                                checked={relActivity?.closedScope}
-                                // onChange={}
-                                inputProps={{ "aria-label": "controlled" }}
-                              />
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              <SwitchIOS
-                                color="warning"
-                                checked={approvedGP}
-                                // onChange={}
-                                inputProps={{ "aria-label": "controlled" }}
-                              />
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              <SwitchIOS
-                                color="warning"
-                                checked={billable}
-                                // onChange={}
-                                inputProps={{ "aria-label": "controlled" }}
-                              />
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              <SwitchIOS
-                                color="warning"
-                                checked={released}
-                                // onChange={}
-                                inputProps={{ "aria-label": "controlled" }}
-                              />
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              <SwitchIOS
-                                color="warning"
-                                checked={approved}
-                                // onChange={}
-                                inputProps={{ "aria-label": "controlled" }}
-                              />
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              {releasedCall ? releasedCall : " "}
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              {activityDesc}
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              {`${generateDateWithTimestamp(
-                                createdAt
-                              )} ${generateTimeWithTimestamp(
-                                createdAt
-                              )} ${generateDateWithTimestamp(
-                                updatedAt
-                              )} ${generateTimeWithTimestamp(updatedAt)}`}
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              {approvedGP ||
-                              billable ||
-                              released ||
-                              approved ? (
-                                " "
-                              ) : (
-                                <Box
-                                  sx={{
-                                    display: "flex",
-                                    gap: "20px",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    cursor: "pointer",
-                                  }}
-                                >
-                                  <EditIcon
-                                    onClick={() => {
-                                      setCurrentHour(_id);
-                                      setIsEditingHour(
-                                        (prevState) => !prevState
-                                      );
+                            <Permission roles={["DATA"]}>
+                              <StyledTableCell align="center">
+                                {generateDateWithTimestamp(initial)}
+                              </StyledTableCell>
+                            </Permission>
+                            <Permission roles={["DIA_DA_SEMANA"]}>
+                              <StyledTableCell align="center">
+                                {generateDayWeekWithTimestamp(initial)}
+                              </StyledTableCell>
+                            </Permission>
+                            <Permission roles={["HORA_INICIAL"]}>
+                              <StyledTableCell align="center">
+                                {generateTimeWithTimestamp(initial)}
+                              </StyledTableCell>
+                            </Permission>
+                            <Permission roles={["HORA_FINAL"]}>
+                              <StyledTableCell align="center">
+                                {generateTimeWithTimestamp(final)}
+                              </StyledTableCell>
+                            </Permission>
+                            <Permission roles={["TOTAL"]}>
+                              <StyledTableCell align="center">
+                                {generateTotalHours(initial, final)}
+                              </StyledTableCell>
+                            </Permission>
+                            <Permission roles={["AJUSTE"]}>
+                              <StyledTableCell align="center">
+                                {generateAdjustmentWithNumberInMilliseconds(
+                                  adjustment
+                                )}
+                              </StyledTableCell>
+                            </Permission>
+                            <Permission roles={["TOTAL_COM_AJUSTE"]}>
+                              <StyledTableCell align="center">
+                                {generateTotalHoursWithAdjustment(
+                                  initial,
+                                  final,
+                                  adjustment
+                                )}
+                              </StyledTableCell>
+                            </Permission>
+                            <Permission roles={["CLIENTE"]}>
+                              <StyledTableCell align="center">
+                                {relClient?.name}
+                              </StyledTableCell>
+                            </Permission>
+                            <Permission roles={["PROJETO"]}>
+                              <StyledTableCell align="center">
+                                {relProject?.title}
+                              </StyledTableCell>
+                            </Permission>
+                            <Permission roles={["ATIVIDADE"]}>
+                              <StyledTableCell align="center">
+                                {relActivity?.title}
+                              </StyledTableCell>
+                            </Permission>
+                            <Permission roles={["VALOR"]}>
+                              <StyledTableCell align="center">
+                                {relActivity.valueActivity
+                                  ? relActivity.valueActivity
+                                  : relProject.valueProject
+                                  ? relProject.valueProject
+                                  : relClient.valueClient}
+                              </StyledTableCell>
+                            </Permission>
+                            <Permission roles={["GERENTE_DE_PROJETOS"]}>
+                              <StyledTableCell align="center">
+                                {(relActivity.gpActivity
+                                  ? relActivity.gpActivity
+                                  : relProject.gpProject
+                                  ? relProject.gpProject
+                                  : relClient.gpClient
+                                ).slice(0, 5)}
+                                {/* usei o slice só para não exibir o ID inteiro haha */}
+                              </StyledTableCell>
+                            </Permission>
+                            <Permission roles={["CONSULTOR"]}>
+                              <StyledTableCell align="center">
+                                {`${relUser?.name} ${relUser?.surname}`}
+                              </StyledTableCell>
+                            </Permission>
+                            <Permission roles={["ESCOPO_FECHADO"]}>
+                              <StyledTableCell align="center">
+                                <SwitchIOS
+                                  color="warning"
+                                  checked={relActivity?.closedScope}
+                                  // onChange={}
+                                  inputProps={{ "aria-label": "controlled" }}
+                                />
+                              </StyledTableCell>
+                            </Permission>
+                            <Permission roles={["APROVADO_GP"]}>
+                              <StyledTableCell align="center">
+                                <SwitchIOS
+                                  color="warning"
+                                  checked={approvedGP}
+                                  // onChange={}
+                                  inputProps={{ "aria-label": "controlled" }}
+                                />
+                              </StyledTableCell>
+                            </Permission>
+                            <Permission roles={["FATURAVEL"]}>
+                              <StyledTableCell align="center">
+                                <SwitchIOS
+                                  color="warning"
+                                  checked={billable}
+                                  // onChange={}
+                                  inputProps={{ "aria-label": "controlled" }}
+                                />
+                              </StyledTableCell>
+                            </Permission>
+                            <Permission roles={["LANCADO"]}>
+                              <StyledTableCell align="center">
+                                <SwitchIOS
+                                  color="warning"
+                                  checked={released}
+                                  // onChange={}
+                                  inputProps={{ "aria-label": "controlled" }}
+                                />
+                              </StyledTableCell>
+                            </Permission>
+                            <Permission roles={["APROVADO"]}>
+                              <StyledTableCell align="center">
+                                <SwitchIOS
+                                  color="warning"
+                                  checked={approved}
+                                  // onChange={}
+                                  inputProps={{ "aria-label": "controlled" }}
+                                />
+                              </StyledTableCell>
+                            </Permission>
+                            <Permission roles={["CHAMADO_LANCADO"]}>
+                              <StyledTableCell align="center">
+                                {releasedCall ? releasedCall : " "}
+                              </StyledTableCell>
+                            </Permission>
+                            <Permission roles={["DESCRICAO_DA_ATIVIDADE"]}>
+                              <StyledTableCell align="center">
+                                {activityDesc}
+                              </StyledTableCell>
+                            </Permission>
+                            <Permission roles={["DATA_SISTEMA_DATA_EDICAO"]}>
+                              <StyledTableCell align="center">
+                                {`${generateDateWithTimestamp(
+                                  createdAt
+                                )} ${generateTimeWithTimestamp(
+                                  createdAt
+                                )} ${generateDateWithTimestamp(
+                                  updatedAt
+                                )} ${generateTimeWithTimestamp(updatedAt)}`}
+                              </StyledTableCell>
+                            </Permission>
+                            <Permission roles={["CONTROLES"]}>
+                              <StyledTableCell align="center">
+                                {approvedGP ||
+                                billable ||
+                                released ||
+                                approved ? (
+                                  " "
+                                ) : (
+                                  <Box
+                                    sx={{
+                                      display: "flex",
+                                      gap: "20px",
+                                      justifyContent: "center",
+                                      alignItems: "center",
+                                      cursor: "pointer",
                                     }}
-                                  />
-                                  <DeleteIcon
-                                    onClick={() => {
-                                      mutate(_id);
-                                    }}
-                                  />
-                                </Box>
-                              )}
-                            </StyledTableCell>
+                                  >
+                                    <EditIcon
+                                      onClick={() => {
+                                        setCurrentHour(_id);
+                                        setIsEditingHour(
+                                          (prevState) => !prevState
+                                        );
+                                      }}
+                                    />
+                                    <DeleteIcon
+                                      onClick={() => {
+                                        mutate(_id);
+                                      }}
+                                    />
+                                  </Box>
+                                )}
+                              </StyledTableCell>
+                            </Permission>
                           </StyledTableRow>
                         )
                       )}

@@ -8,6 +8,7 @@ export interface User {
   name: string;
   surname: string;
   role: Roles;
+  typeField?: string;
 }
 
 export interface UserStore {
@@ -21,9 +22,9 @@ export const useAuthStore = create<UserStore>()(
     (set) => ({
       user: {} as User,
 
-      handleAddUser: ({ _id, name, surname, email, role }: User) => {
+      handleAddUser: ({ _id, name, surname, email, role, typeField }: User) => {
         set({
-          user: { _id, name, surname, email, role },
+          user: { _id, name, surname, email, role, typeField },
         });
       },
 
