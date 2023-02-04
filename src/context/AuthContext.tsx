@@ -14,6 +14,7 @@ type AuthContextType = {
     email,
     password,
     role,
+    typeField,
   }: UserRegister) => Promise<void>;
 };
 
@@ -48,6 +49,7 @@ export function AuthProvider({ children }: AuthContextProps) {
     email,
     password,
     role,
+    typeField,
   }: UserRegister) {
     await signup({
       name,
@@ -55,6 +57,7 @@ export function AuthProvider({ children }: AuthContextProps) {
       email,
       password,
       role,
+      typeField,
     })
       .then(({ data }) =>
         toast.success(data?.message || "Usuário criado com sucesso", {
