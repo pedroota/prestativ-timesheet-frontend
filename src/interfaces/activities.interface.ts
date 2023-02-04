@@ -42,3 +42,8 @@ export interface ActivitiesInfo {
   ];
   closedScope: boolean;
 }
+
+export interface PatchActivities {
+  _id: string;
+  value: boolean;
+}

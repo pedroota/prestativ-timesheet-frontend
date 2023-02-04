@@ -47,3 +47,9 @@ export interface RegisterHours {
   activityDesc: string;
   adjustment: number;
 }
+
+export interface PatchHour {
+  _id: string;
+  field: string;
+  value: boolean;
+}
