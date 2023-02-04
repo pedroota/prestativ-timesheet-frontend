@@ -7,8 +7,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { getUserByRole } from "services/auth.service";
 import { createClients } from "services/clients.service";
-import { cepMask } from "utils/cepMask";
-import { cnpjMask } from "utils/cnpjMask";
+import { cepMask, cnpjMask } from "utils/masks";
 import { validateCNPJ } from "utils/validator";
 import cep from "cep-promise";
 

@@ -3,7 +3,6 @@ import { createContext } from "react";
 import { signin, signup } from "services/auth.service";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
-import { Api } from "services/api.service";
 import { useAuthStore } from "stores/userStore";
 
 type AuthContextType = {
