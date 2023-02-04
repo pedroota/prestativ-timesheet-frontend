@@ -66,22 +66,24 @@ export function Timesheet() {
         }}
       >
         <Typography variant="h4" sx={{ marginBlock: "1.3rem" }}>
-          Listagem de Timesheet
+          Timesheet
         </Typography>
-        <Tooltip title="Cadastre novas horas" arrow placement="top">
-          <Button
-            onClick={() => setIsAddingHours((prevState) => !prevState)}
-            variant="contained"
-            color="warning"
-            sx={{
-              marginBottom: "0.8rem",
-              paddingInline: "1rem",
-              paddingBlock: "0.8rem",
-            }}
-          >
-            Lançar horas
-          </Button>
-        </Tooltip>
+        <Permission roles={["LANCAR_HORAS"]}>
+          <Tooltip title="Cadastre novas horas" arrow placement="top">
+            <Button
+              onClick={() => setIsAddingHours((prevState) => !prevState)}
+              variant="contained"
+              color="warning"
+              sx={{
+                marginBottom: "0.8rem",
+                paddingInline: "1rem",
+                paddingBlock: "0.8rem",
+              }}
+            >
+              Lançar horas
+            </Button>
+          </Tooltip>
+        </Permission>
       </Box>
       <Filters receiveDataURI={receiveDataURI} />
       {isLoading ? (
@@ -208,7 +210,7 @@ export function Timesheet() {
                             Data Sistema / Data Edição
                           </StyledTableCell>
                         </Permission>
-                        <Permission roles={["CONTROLES"]}>
+                        <Permission roles={["EDITAR_HORAS" || "DELETAR_HORAS"]}>
                           <StyledTableCell align="center">
                             Controles
                           </StyledTableCell>
@@ -388,7 +390,9 @@ export function Timesheet() {
                                 )} ${generateTimeWithTimestamp(updatedAt)}`}
                               </StyledTableCell>
                             </Permission>
-                            <Permission roles={["CONTROLES"]}>
+                            <Permission
+                              roles={["EDITAR_HORAS" || "DELETAR_HORAS"]}
+                            >
                               <StyledTableCell align="center">
                                 {approvedGP ||
                                 billable ||
@@ -405,19 +409,23 @@ export function Timesheet() {
                                       cursor: "pointer",
                                     }}
                                   >
-                                    <EditIcon
-                                      onClick={() => {
-                                        setCurrentHour(_id);
-                                        setIsEditingHour(
-                                          (prevState) => !prevState
-                                        );
-                                      }}
-                                    />
-                                    <DeleteIcon
-                                      onClick={() => {
-                                        mutate(_id);
-                                      }}
-                                    />
+                                    <Permission roles={["EDITAR_HORAS"]}>
+                                      <EditIcon
+                                        onClick={() => {
+                                          setCurrentHour(_id);
+                                          setIsEditingHour(
+                                            (prevState) => !prevState
+                                          );
+                                        }}
+                                      />
+                                    </Permission>
+                                    <Permission roles={["DELETAR_HORAS"]}>
+                                      <DeleteIcon
+                                        onClick={() => {
+                                          mutate(_id);
+                                        }}
+                                      />
+                                    </Permission>
                                   </Box>
                                 )}
                               </StyledTableCell>

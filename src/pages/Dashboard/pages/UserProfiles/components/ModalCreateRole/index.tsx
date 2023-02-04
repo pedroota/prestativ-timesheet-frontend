@@ -69,7 +69,7 @@ export function ModalCreateRole({ isOpen, setIsOpen }: ModalCreateRoleProps) {
             alignItems: "center",
           }}
         >
-          <Typography fontSize="1.3rem">Criar cargo</Typography>
+          <Typography fontSize="1.3rem">Criar perfil</Typography>
           <Close
             fontSize="large"
             sx={{ cursor: "pointer" }}
@@ -103,7 +103,7 @@ export function ModalCreateRole({ isOpen, setIsOpen }: ModalCreateRoleProps) {
             color="warning"
             sx={{ paddingBlock: "1rem" }}
           >
-            Criar cargo
+            Criar perfil
           </Button>
         </form>
       </Box>

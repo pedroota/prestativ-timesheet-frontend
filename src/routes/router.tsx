@@ -51,7 +51,7 @@ export function Router() {
             <Route
               path="register-project"
               element={
-                <Permission roles={["CADASSTRO_PROJETO"]}>
+                <Permission roles={["CADASTRO_PROJETO"]}>
                   <RegisterProject />
                 </Permission>
               }
