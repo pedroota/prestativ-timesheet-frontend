@@ -34,9 +34,6 @@ export function AuthProvider({ children }: AuthContextProps) {
       .then(({ data }) => {
         Cookies.set("token", data?.token, { expires: 1 });
         handleAddUser(data.user);
-
-        // Already sets the Authorization as the user token
-        Api.defaults.headers["Authorization"] = `Bearer ${data?.token}`;
       })
       .catch(({ data }) => {
         toast.error(data?.message || "Ocorreu um erro na autenticação.", {

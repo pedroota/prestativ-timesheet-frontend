@@ -18,6 +18,7 @@ import {
   generateDateWithTimestamp,
   generateTimeWithTimestamp,
 } from "utils/timeControl";
+import { formatLogs } from "utils/formatLogs";
 
 export function ListLogs() {
   const { data: logs, isLoading } = useQuery(["logs"], getLogs);
@@ -60,13 +61,20 @@ export function ListLogs() {
 
                       <TableBody>
                         {logs?.data.map(
-                          ({ name, surname, action, createdAt, _id }: Logs) => (
+                          ({
+                            name,
+                            surname,
+                            action,
+                            role,
+                            createdAt,
+                            _id,
+                          }: Logs) => (
                             <StyledTableRow key={_id}>
                               <StyledTableCell align="center">
                                 {`${name} ${surname}`}
                               </StyledTableCell>
                               <StyledTableCell align="center">
-                                Permissão Correspondente
+                                {role.name}
                               </StyledTableCell>
                               <StyledTableCell align="center">
                                 {`${generateDateWithTimestamp(
@@ -74,7 +82,7 @@ export function ListLogs() {
                                 )} ${generateTimeWithTimestamp(createdAt)}`}
                               </StyledTableCell>
                               <StyledTableCell align="center">
-                                {action}
+                                {formatLogs(action)}
                               </StyledTableCell>
                             </StyledTableRow>
                           )
