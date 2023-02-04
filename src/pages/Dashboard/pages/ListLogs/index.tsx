@@ -19,12 +19,13 @@ import {
   generateTimeWithTimestamp,
 } from "utils/timeControl";
 import { formatLogs } from "utils/formatLogs";
+import { Permission } from "components/Permission";
 
 export function ListLogs() {
   const { data: logs, isLoading } = useQuery(["logs"], getLogs);
 
   return (
-    <div>
+    <Permission roles={["VER_LOGS"]}>
       <Typography variant="h4" sx={{ marginBlock: "1.3rem" }}>
         Listagem de Logs
       </Typography>
@@ -98,6 +99,6 @@ export function ListLogs() {
           )}
         </>
       )}
-    </div>
+    </Permission>
   );
 }

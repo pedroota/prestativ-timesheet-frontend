@@ -8,6 +8,7 @@ import { createProjects } from "services/project.service";
 import { UserRegister } from "interfaces/users.interface";
 import { ClientsInfo } from "interfaces/clients.interface";
 import { toast } from "react-toastify";
+import { Permission } from "components/Permission";
 
 export function RegisterProject() {
   const { data: clientList } = useQuery([], () => getClients());
@@ -34,58 +35,60 @@ export function RegisterProject() {
   );
 
   return (
-    <form className="c-register-project" onSubmit={onSubmit}>
-      <h1 className="c-register-project--title">Cadastrar novo projeto</h1>
-      <p>Informações do projeto</p>
-      <TextField
-        label="Nome do Projeto"
-        {...register("title")}
-        color="warning"
-        variant="outlined"
-      />
-      <TextField
-        color="warning"
-        {...register("idClient")}
-        label="Cliente"
-        select
-        defaultValue=""
-      >
-        <MenuItem value="">Selecione uma opção</MenuItem>
-        {clientList?.data.map(({ code, name, _id }: ClientsInfo) => (
-          <MenuItem key={code} value={_id}>
-            {name}
-          </MenuItem>
-        ))}
-      </TextField>
-      <TextField
-        label="Valor"
-        {...register("valueProject")}
-        color="warning"
-        variant="outlined"
-      />
-      <TextField
-        color="warning"
-        {...register("gpProject")}
-        label="Gerente de Projetos"
-        select
-        defaultValue=""
-      >
-        <MenuItem value="">Selecione uma opção</MenuItem>
-        {GPList?.data.map(({ name, surname, _id }: UserRegister) => (
-          <MenuItem value={_id} key={_id}>
-            {`${name} ${surname}`}
-          </MenuItem>
-        ))}
-      </TextField>
-      <TextField
-        label="Descrição do Projeto"
-        {...register("description")}
-        color="warning"
-        variant="outlined"
-      />
-      <Button type="submit" id="button-primary" variant="contained">
-        Cadastrar
-      </Button>
-    </form>
+    <Permission roles={["CADASTRO_PROJETO"]}>
+      <form className="c-register-project" onSubmit={onSubmit}>
+        <h1 className="c-register-project--title">Cadastrar novo projeto</h1>
+        <p>Informações do projeto</p>
+        <TextField
+          label="Nome do Projeto"
+          {...register("title")}
+          color="warning"
+          variant="outlined"
+        />
+        <TextField
+          color="warning"
+          {...register("idClient")}
+          label="Cliente"
+          select
+          defaultValue=""
+        >
+          <MenuItem value="">Selecione uma opção</MenuItem>
+          {clientList?.data.map(({ code, name, _id }: ClientsInfo) => (
+            <MenuItem key={code} value={_id}>
+              {name}
+            </MenuItem>
+          ))}
+        </TextField>
+        <TextField
+          label="Valor"
+          {...register("valueProject")}
+          color="warning"
+          variant="outlined"
+        />
+        <TextField
+          color="warning"
+          {...register("gpProject")}
+          label="Gerente de Projetos"
+          select
+          defaultValue=""
+        >
+          <MenuItem value="">Selecione uma opção</MenuItem>
+          {GPList?.data.map(({ name, surname, _id }: UserRegister) => (
+            <MenuItem value={_id} key={_id}>
+              {`${name} ${surname}`}
+            </MenuItem>
+          ))}
+        </TextField>
+        <TextField
+          label="Descrição do Projeto"
+          {...register("description")}
+          color="warning"
+          variant="outlined"
+        />
+        <Button type="submit" id="button-primary" variant="contained">
+          Cadastrar
+        </Button>
+      </form>
+    </Permission>
   );
 }

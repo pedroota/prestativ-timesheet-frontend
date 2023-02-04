@@ -15,6 +15,7 @@ import { Clients } from "interfaces/clients.interface";
 import { UserRegister } from "interfaces/users.interface";
 import { getClientById, updateClient } from "services/clients.service";
 import cep from "cep-promise";
+import { Permission } from "components/Permission";
 
 interface ModalEditUserProps {
   isOpen: boolean;
@@ -134,7 +135,7 @@ export function ModalEditClient({
   }, [valueCep]);
 
   return (
-    <div>
+    <Permission roles={["EDITAR_CLIENTE"]}>
       <Dialog
         open={isOpen}
         onClose={() => setIsOpen((prevState) => !prevState)}
@@ -332,6 +333,6 @@ export function ModalEditClient({
           </form>
         </Box>
       </Dialog>
-    </div>
+    </Permission>
   );
 }

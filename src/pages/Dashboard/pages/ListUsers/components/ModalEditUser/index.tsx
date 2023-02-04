@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Roles } from "interfaces/roles.interface";
 import { getUserById, updateUser } from "services/auth.service";
+import { Permission } from "components/Permission";
 
 const style = {
   position: "absolute",
@@ -73,7 +74,7 @@ export function ModalEditUser({
   );
 
   return (
-    <div>
+    <Permission roles={["EDITAR_USUARIO"]}>
       <Modal open={isOpen} onClose={() => setIsOpen((prevState) => !prevState)}>
         <Box sx={style}>
           <Box
@@ -164,6 +165,6 @@ export function ModalEditUser({
           </form>
         </Box>
       </Modal>
-    </div>
+    </Permission>
   );
 }

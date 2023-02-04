@@ -18,6 +18,7 @@ import { EmptyList } from "components/EmptyList";
 import { ModalEditUser } from "./components/ModalEditUser";
 import { StyledTableCell } from "components/StyledTableCell";
 import { StyledTableRow } from "components/StyledTableRow";
+import { Permission } from "components/Permission";
 
 export function ListUsers() {
   const [isEditingUser, setIsEditingUser] = useState(false);
@@ -69,9 +70,13 @@ export function ListUsers() {
                           <StyledTableCell align="center">
                             Permissão
                           </StyledTableCell>
-                          <StyledTableCell align="center">
-                            Controles
-                          </StyledTableCell>
+                          <Permission
+                            roles={["EDITAR_USUARIO" || "DELETAR_USUARIO"]}
+                          >
+                            <StyledTableCell align="center">
+                              Controles
+                            </StyledTableCell>
+                          </Permission>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -98,23 +103,33 @@ export function ListUsers() {
                               <StyledTableCell align="center">
                                 {role.name}
                               </StyledTableCell>
-                              <StyledTableCell
-                                sx={{
-                                  display: "flex",
-                                  gap: "20px",
-                                  justifyContent: "center",
-                                  cursor: "pointer",
-                                }}
-                                align="center"
+                              <Permission
+                                roles={["EDITAR_USUARIO" || "DELETAR_USUARIO"]}
                               >
-                                <EditIcon
-                                  onClick={() => {
-                                    setCurrentUser(_id);
-                                    setIsEditingUser((prevState) => !prevState);
+                                <StyledTableCell
+                                  sx={{
+                                    display: "flex",
+                                    gap: "20px",
+                                    justifyContent: "center",
+                                    cursor: "pointer",
                                   }}
-                                />
-                                <DeleteIcon onClick={() => mutate(_id)} />
-                              </StyledTableCell>
+                                  align="center"
+                                >
+                                  <Permission roles={["EDITAR_USUARIO"]}>
+                                    <EditIcon
+                                      onClick={() => {
+                                        setCurrentUser(_id);
+                                        setIsEditingUser(
+                                          (prevState) => !prevState
+                                        );
+                                      }}
+                                    />
+                                  </Permission>
+                                  <Permission roles={["DELETAR_USUARIO"]}>
+                                    <DeleteIcon onClick={() => mutate(_id)} />
+                                  </Permission>
+                                </StyledTableCell>
+                              </Permission>
                             </StyledTableRow>
                           )
                         )}
@@ -123,11 +138,13 @@ export function ListUsers() {
                   </div>
                 </div>
               </Paper>
-              <ModalEditUser
-                isOpen={isEditingUser}
-                setIsOpen={setIsEditingUser}
-                currentUser={currentUser}
-              />
+              <Permission roles={["EDITAR_USUARIO"]}>
+                <ModalEditUser
+                  isOpen={isEditingUser}
+                  setIsOpen={setIsEditingUser}
+                  currentUser={currentUser}
+                />
+              </Permission>
             </div>
           ) : (
             <EmptyList />

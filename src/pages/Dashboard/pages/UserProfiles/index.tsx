@@ -20,6 +20,7 @@ import { Delete, Edit } from "@mui/icons-material";
 import { Roles } from "interfaces/roles.interface";
 import { ModalCreateRole } from "./components/ModalCreateRole";
 import { ModalEditRole } from "./components/ModalEditRole";
+import { Permission } from "components/Permission";
 export function UserProfiles() {
   const queryClient = useQueryClient();
   const [isEditingRole, setIsEditingRole] = useState(false);
@@ -35,7 +36,7 @@ export function UserProfiles() {
   });
 
   return (
-    <section>
+    <Permission roles={["PERFIS_USUARIO"]}>
       <Box
         sx={{
           display: "flex",
@@ -46,20 +47,22 @@ export function UserProfiles() {
         <Typography variant="h4" sx={{ marginBlock: "1.3rem" }}>
           Perfis de Usuário
         </Typography>
-        <Tooltip title="Criar novo perfil" arrow placement="top">
-          <Button
-            onClick={() => setIsAddingRole((prevState) => !prevState)}
-            variant="contained"
-            color="warning"
-            sx={{
-              marginBottom: "0.8rem",
-              paddingInline: "1rem",
-              paddingBlock: "0.8rem",
-            }}
-          >
-            Criar perfil
-          </Button>
-        </Tooltip>
+        <Permission roles={["CRIAR_PERFIL"]}>
+          <Tooltip title="Criar novo perfil" arrow placement="top">
+            <Button
+              onClick={() => setIsAddingRole((prevState) => !prevState)}
+              variant="contained"
+              color="warning"
+              sx={{
+                marginBottom: "0.8rem",
+                paddingInline: "1rem",
+                paddingBlock: "0.8rem",
+              }}
+            >
+              Criar perfil
+            </Button>
+          </Tooltip>
+        </Permission>
       </Box>
       {roles?.data.length ? (
         <div>
@@ -73,9 +76,11 @@ export function UserProfiles() {
                       <StyledTableCell align="center">
                         Permissões
                       </StyledTableCell>
-                      <StyledTableCell align="center">
-                        Controles
-                      </StyledTableCell>
+                      <Permission roles={["EDITAR_PERFIL" || "DELETAR_PERFIL"]}>
+                        <StyledTableCell align="center">
+                          Controles
+                        </StyledTableCell>
+                      </Permission>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -97,24 +102,32 @@ export function UserProfiles() {
                             </p>
                           )}
                         </StyledTableCell>
-                        <StyledTableCell
-                          sx={{
-                            display: "flex",
-                            gap: "20px",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            cursor: "pointer",
-                          }}
-                          align="center"
+                        <Permission
+                          roles={["EDITAR_PERFIL" || "DELETAR_PERFIL"]}
                         >
-                          <Edit
-                            onClick={() => {
-                              setIsEditingRole((prevState) => !prevState);
-                              setCurrentRole(_id);
+                          <StyledTableCell
+                            sx={{
+                              display: "flex",
+                              gap: "20px",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              cursor: "pointer",
                             }}
-                          />
-                          <Delete onClick={() => mutate(_id)} />
-                        </StyledTableCell>
+                            align="center"
+                          >
+                            <Permission roles={["EDITAR_PERFIL"]}>
+                              <Edit
+                                onClick={() => {
+                                  setIsEditingRole((prevState) => !prevState);
+                                  setCurrentRole(_id);
+                                }}
+                              />
+                            </Permission>
+                            <Permission roles={["DELETAR_PERFIL"]}>
+                              <Delete onClick={() => mutate(_id)} />
+                            </Permission>
+                          </StyledTableCell>
+                        </Permission>
                       </StyledTableRow>
                     ))}
                   </TableBody>
@@ -122,16 +135,23 @@ export function UserProfiles() {
               </div>
             </div>
           </Paper>
-          <ModalCreateRole isOpen={isAddingRole} setIsOpen={setIsAddingRole} />
-          <ModalEditRole
-            isOpen={isEditingRole}
-            setIsOpen={setIsEditingRole}
-            currentRole={currentRole}
-          />
+          <Permission roles={["CRIAR_PERFIL"]}>
+            <ModalCreateRole
+              isOpen={isAddingRole}
+              setIsOpen={setIsAddingRole}
+            />
+          </Permission>
+          <Permission roles={["EDITAR_PERFIL"]}>
+            <ModalEditRole
+              isOpen={isEditingRole}
+              setIsOpen={setIsEditingRole}
+              currentRole={currentRole}
+            />
+          </Permission>
         </div>
       ) : (
         <EmptyList />
       )}
-    </section>
+    </Permission>
   );
 }

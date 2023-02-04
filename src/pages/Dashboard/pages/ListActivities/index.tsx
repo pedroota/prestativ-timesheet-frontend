@@ -20,6 +20,7 @@ import { ModalEditActivity } from "./components/ModalEditActivity";
 import Checkbox from "@mui/material/Checkbox";
 import { StyledTableCell } from "components/StyledTableCell";
 import { StyledTableRow } from "components/StyledTableRow";
+import { Permission } from "components/Permission";
 
 interface ConsultantUsers {
   name: string;
@@ -89,9 +90,13 @@ export function ListActivities() {
                           <StyledTableCell align="center">
                             Escopo Fechado
                           </StyledTableCell>
-                          <StyledTableCell align="center">
-                            Controles
-                          </StyledTableCell>
+                          <Permission
+                            roles={["EDITAR_ATIVIDADE" || "DELETAR_ATIVIDADE"]}
+                          >
+                            <StyledTableCell align="center">
+                              Controles
+                            </StyledTableCell>
+                          </Permission>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -139,26 +144,36 @@ export function ListActivities() {
                                   <Checkbox defaultChecked />
                                 )}
                               </StyledTableCell>
-                              <StyledTableCell
-                                sx={{
-                                  display: "flex",
-                                  gap: "20px",
-                                  justifyContent: "center",
-                                  alignItems: "center",
-                                  cursor: "pointer",
-                                }}
-                                align="center"
+                              <Permission
+                                roles={[
+                                  "EDITAR_ATIVIDADE" || "DELETAR_ATIVIDADE",
+                                ]}
                               >
-                                <EditIcon
-                                  onClick={() => {
-                                    setCurrentActivity(_id);
-                                    setIsEditingActivity(
-                                      (prevState) => !prevState
-                                    );
+                                <StyledTableCell
+                                  sx={{
+                                    display: "flex",
+                                    gap: "20px",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    cursor: "pointer",
                                   }}
-                                />
-                                <DeleteIcon onClick={() => mutate(_id)} />
-                              </StyledTableCell>
+                                  align="center"
+                                >
+                                  <Permission roles={["EDITAR_ATIVIDADE"]}>
+                                    <EditIcon
+                                      onClick={() => {
+                                        setCurrentActivity(_id);
+                                        setIsEditingActivity(
+                                          (prevState) => !prevState
+                                        );
+                                      }}
+                                    />
+                                  </Permission>
+                                  <Permission roles={["DELETAR_ATIVIDADE"]}>
+                                    <DeleteIcon onClick={() => mutate(_id)} />
+                                  </Permission>
+                                </StyledTableCell>
+                              </Permission>
                             </StyledTableRow>
                           )
                         )}
@@ -167,12 +182,13 @@ export function ListActivities() {
                   </div>
                 </div>
               </Paper>
-
-              <ModalEditActivity
-                isOpen={isEditingActivity}
-                setIsOpen={setIsEditingActivity}
-                currentActivity={currentActivity}
-              />
+              <Permission roles={["EDITAR_ATIVIDADE"]}>
+                <ModalEditActivity
+                  isOpen={isEditingActivity}
+                  setIsOpen={setIsEditingActivity}
+                  currentActivity={currentActivity}
+                />
+              </Permission>
             </div>
           ) : (
             <EmptyList />

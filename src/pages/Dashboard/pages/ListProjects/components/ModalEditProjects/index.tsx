@@ -16,6 +16,7 @@ import { Projects } from "interfaces/projects.interface";
 import { getClients } from "services/clients.service";
 import { Clients } from "interfaces/clients.interface";
 import { updateProjects, getProjectById } from "services/project.service";
+import { Permission } from "components/Permission";
 
 interface ModalEditUserProps {
   isOpen: boolean;
@@ -62,7 +63,7 @@ export function ModalEditProject({
   );
 
   return (
-    <div>
+    <Permission roles={["EDITAR_PROJETO"]}>
       <Dialog
         open={isOpen}
         onClose={() => setIsOpen((prevState) => !prevState)}
@@ -143,6 +144,6 @@ export function ModalEditProject({
           </form>
         </Box>
       </Dialog>
-    </div>
+    </Permission>
   );
 }

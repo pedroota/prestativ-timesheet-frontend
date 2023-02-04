@@ -13,7 +13,8 @@ import { Close } from "@mui/icons-material";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getRoleById, updateRoles } from "services/roles.service";
 import { useForm } from "react-hook-form";
-import { Permission } from "enums/Permissions";
+import { Permission as Permissions } from "enums/Permissions";
+import { Permission } from "components/Permission";
 import { Roles } from "interfaces/roles.interface";
 
 interface ModalEditRoleProps {
@@ -66,51 +67,56 @@ export function ModalEditRole({
   };
 
   return (
-    <Dialog open={isOpen} onClose={() => setIsOpen((prevState) => !prevState)}>
-      <Box sx={{ padding: 4, minWidth: "26.25rem" }}>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Typography fontSize="1.3rem">Editar perfil</Typography>
-          <Close
-            fontSize="large"
-            sx={{ cursor: "pointer" }}
-            onClick={() => setIsOpen((prevState) => !prevState)}
-          />
+    <Permission roles={["EDITAR_PERFIL"]}>
+      <Dialog
+        open={isOpen}
+        onClose={() => setIsOpen((prevState) => !prevState)}
+      >
+        <Box sx={{ padding: 4, minWidth: "26.25rem" }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Typography fontSize="1.3rem">Editar perfil</Typography>
+            <Close
+              fontSize="large"
+              sx={{ cursor: "pointer" }}
+              onClick={() => setIsOpen((prevState) => !prevState)}
+            />
+          </Box>
+          <form className="c-form-spacing" onSubmit={onSubmit}>
+            <TextField
+              color="warning"
+              {...register("name")}
+              label="Nome do cargo"
+              InputLabelProps={{ shrink: true }}
+            />
+            <Select
+              multiple
+              value={multipleSelectValue}
+              color="warning"
+              onChange={handleMultipleSelectChange}
+            >
+              {Object.values(Permissions).map((permission, index) => (
+                <MenuItem value={permission} key={index}>
+                  {permission}
+                </MenuItem>
+              ))}
+            </Select>
+            <Button
+              variant="contained"
+              type="submit"
+              color="warning"
+              sx={{ paddingBlock: "1rem" }}
+            >
+              Conluído
+            </Button>
+          </form>
         </Box>
-        <form className="c-form-spacing" onSubmit={onSubmit}>
-          <TextField
-            color="warning"
-            {...register("name")}
-            label="Nome do cargo"
-            InputLabelProps={{ shrink: true }}
-          />
-          <Select
-            multiple
-            value={multipleSelectValue}
-            color="warning"
-            onChange={handleMultipleSelectChange}
-          >
-            {Object.values(Permission).map((permission, index) => (
-              <MenuItem value={permission} key={index}>
-                {permission}
-              </MenuItem>
-            ))}
-          </Select>
-          <Button
-            variant="contained"
-            type="submit"
-            color="warning"
-            sx={{ paddingBlock: "1rem" }}
-          >
-            Conluído
-          </Button>
-        </form>
-      </Box>
-    </Dialog>
+      </Dialog>
+    </Permission>
   );
 }

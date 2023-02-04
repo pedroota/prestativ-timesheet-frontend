@@ -444,12 +444,19 @@ export function Timesheet() {
         </>
       )}
 
-      <ModalRegisterHours isOpen={isAddingHours} setIsOpen={setIsAddingHours} />
-      <ModalEditHours
-        isOpen={isEditingHour}
-        setIsOpen={setIsEditingHour}
-        currentHour={currentHour}
-      />
+      <Permission roles={["LANCAR_HORAS"]}>
+        <ModalRegisterHours
+          isOpen={isAddingHours}
+          setIsOpen={setIsAddingHours}
+        />
+      </Permission>
+      <Permission roles={["EDITAR_HORAS"]}>
+        <ModalEditHours
+          isOpen={isEditingHour}
+          setIsOpen={setIsEditingHour}
+          currentHour={currentHour}
+        />
+      </Permission>
     </div>
   );
 }
