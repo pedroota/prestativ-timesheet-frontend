@@ -65,3 +65,9 @@ export const updateActivity = async (
 
   return result;
 };
+
+export const updateClosedEscope = async (_id: string, value: boolean) => {
+  const result = await Api.patch(`/activities/closedscope/${_id}`, { value });
+
+  return result;
+};

@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { deleteHours, getHoursFilters } from "services/hours.service";
+import {
+  checkHours,
+  deleteHours,
+  getHoursFilters,
+} from "services/hours.service";
 import {
   Table,
   TableBody,
@@ -15,11 +19,12 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { Hours } from "interfaces/hours.interface";
+import { Hours, PatchHour } from "interfaces/hours.interface";
 import { ModalRegisterHours } from "components/ModalRegisterHours";
 import { EmptyList } from "components/EmptyList";
 import { StyledTableRow } from "components/StyledTableRow";
 import { StyledTableCell } from "components/StyledTableCell";
+import { updateClosedEscope } from "services/activities.service";
 
 // Utils
 import {
@@ -34,22 +39,44 @@ import { SwitchIOS } from "components/SwitchIOS";
 import { ModalEditHours } from "./components/ModalEditHours";
 import { Filters } from "components/Filters";
 import { Permission } from "components/Permission";
+import { PatchActivities } from "interfaces/activities.interface";
 
 export function Timesheet() {
+  const queryClient = useQueryClient();
   const [isEditingHour, setIsEditingHour] = useState(false);
   const [currentHour, setCurrentHour] = useState("");
-  const queryClient = useQueryClient();
   const [isAddingHours, setIsAddingHours] = useState(false);
   const [stringFilters, setStringFilters] = useState("");
   const { data: hours, isLoading } = useQuery(["hours", stringFilters], () =>
     getHoursFilters(stringFilters)
   );
 
-  const { mutate } = useMutation((_id: string) => deleteHours(_id), {
-    onSuccess: () => {
-      queryClient.invalidateQueries(["hours"]);
-    },
-  });
+  const { mutate: deleteHour } = useMutation(
+    (_id: string) => deleteHours(_id),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["hours"]);
+      },
+    }
+  );
+
+  const { mutate: updateCheck } = useMutation(
+    ({ _id, field, value }: PatchHour) => checkHours(_id, field, value),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["hours"]);
+      },
+    }
+  );
+
+  const { mutate: updateEscope } = useMutation(
+    ({ _id, value }: PatchActivities) => updateClosedEscope(_id, value),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["hours"]);
+      },
+    }
+  );
 
   const receiveDataURI = (encondeURIParams: string) => {
     const decoded = encondeURIParams.replaceAll("%3D", "=");
@@ -311,7 +338,6 @@ export function Timesheet() {
                                   ? relProject.gpProject
                                   : relClient.gpClient
                                 ).slice(0, 5)}
-                                {/* usei o slice só para não exibir o ID inteiro haha */}
                               </StyledTableCell>
                             </Permission>
                             <Permission roles={["CONSULTOR"]}>
@@ -324,7 +350,12 @@ export function Timesheet() {
                                 <SwitchIOS
                                   color="warning"
                                   checked={relActivity?.closedScope}
-                                  // onChange={}
+                                  onChange={() =>
+                                    updateEscope({
+                                      _id: relActivity._id,
+                                      value: !relActivity?.closedScope,
+                                    })
+                                  }
                                   inputProps={{ "aria-label": "controlled" }}
                                 />
                               </StyledTableCell>
@@ -334,7 +365,13 @@ export function Timesheet() {
                                 <SwitchIOS
                                   color="warning"
                                   checked={approvedGP}
-                                  // onChange={}
+                                  onChange={() =>
+                                    updateCheck({
+                                      _id,
+                                      field: "approvedGP",
+                                      value: !approvedGP,
+                                    })
+                                  }
                                   inputProps={{ "aria-label": "controlled" }}
                                 />
                               </StyledTableCell>
@@ -344,7 +381,13 @@ export function Timesheet() {
                                 <SwitchIOS
                                   color="warning"
                                   checked={billable}
-                                  // onChange={}
+                                  onChange={() =>
+                                    updateCheck({
+                                      _id,
+                                      field: "billable",
+                                      value: !billable,
+                                    })
+                                  }
                                   inputProps={{ "aria-label": "controlled" }}
                                 />
                               </StyledTableCell>
@@ -354,7 +397,13 @@ export function Timesheet() {
                                 <SwitchIOS
                                   color="warning"
                                   checked={released}
-                                  // onChange={}
+                                  onChange={() =>
+                                    updateCheck({
+                                      _id,
+                                      field: "released",
+                                      value: !released,
+                                    })
+                                  }
                                   inputProps={{ "aria-label": "controlled" }}
                                 />
                               </StyledTableCell>
@@ -363,8 +412,14 @@ export function Timesheet() {
                               <StyledTableCell align="center">
                                 <SwitchIOS
                                   color="warning"
-                                  checked={approved}
-                                  // onChange={}
+                                  defaultChecked={approved}
+                                  onChange={() =>
+                                    updateCheck({
+                                      _id,
+                                      field: "approved",
+                                      value: !approved,
+                                    })
+                                  }
                                   inputProps={{ "aria-label": "controlled" }}
                                 />
                               </StyledTableCell>
@@ -397,9 +452,7 @@ export function Timesheet() {
                                 {approvedGP ||
                                 billable ||
                                 released ||
-                                approved ? (
-                                  " "
-                                ) : (
+                                approved ? null : (
                                   <Box
                                     sx={{
                                       display: "flex",
@@ -422,7 +475,7 @@ export function Timesheet() {
                                     <Permission roles={["DELETAR_HORAS"]}>
                                       <DeleteIcon
                                         onClick={() => {
-                                          mutate(_id);
+                                          deleteHour(_id);
                                         }}
                                       />
                                     </Permission>
