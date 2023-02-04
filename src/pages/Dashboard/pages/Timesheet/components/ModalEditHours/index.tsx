@@ -35,7 +35,6 @@ export function ModalEditHours({
   useQuery(["hours", currentHour], () => getHoursById(currentHour), {
     onSuccess(data) {
       reset(data.data?.hours);
-      console.log(data.data?.hours);
     },
   });
 

@@ -13,14 +13,13 @@ import { useForm } from "react-hook-form";
 import { generateTimestampWithDateAndTime } from "utils/timeControl";
 import { RegisterHours } from "interfaces/hours.interface";
 import { createHours } from "services/hours.service";
-import { useContext, useState } from "react";
-import { AuthContext } from "context/AuthContext";
-import { decodeJwt } from "utils/decodeJwt";
+import { useState } from "react";
 import { getClients } from "services/clients.service";
 import { ClientsInfo } from "interfaces/clients.interface";
 import { ProjectsInfo } from "interfaces/projects.interface";
 import { ActivitiesInfo } from "interfaces/activities.interface";
 import { toast } from "react-toastify";
+import { useAuthStore } from "stores/userStore";
 interface ModalRegisterHoursProps {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -30,9 +29,9 @@ export function ModalRegisterHours({
   isOpen,
   setIsOpen,
 }: ModalRegisterHoursProps) {
+  const user = useAuthStore((state) => state.user);
   const [selectedClient, setSelectedClient] = useState("");
   const [selectedProject, setSelectedProject] = useState("");
-  const { user } = useContext(AuthContext);
   const queryClient = useQueryClient();
   const { register, handleSubmit } = useForm();
   const { mutate } = useMutation(
@@ -87,7 +86,6 @@ export function ModalRegisterHours({
       const daysInMiliseconds = maxDaysCanRelease * 1000 * 60 * 60 * 24;
       const today = Date.now();
       const adjustment = 0; // Presets the adjusment property to 0, just ADMs can change it
-      const { id } = decodeJwt(`${user}`);
       if (initial > today + daysInMiliseconds / maxDaysCanRelease) {
         toast.error("A data informada ainda não está disponível para lançar");
         return;
@@ -104,7 +102,7 @@ export function ModalRegisterHours({
         relClient,
         relProject,
         relActivity,
-        relUser: id,
+        relUser: user._id,
         activityDesc,
       });
     }

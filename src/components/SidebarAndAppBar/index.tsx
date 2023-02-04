@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
 import {
   Box,
@@ -20,7 +20,6 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Logo from "assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "context/AuthContext";
 import Cookies from "js-cookie";
 
 // Icons
@@ -38,6 +37,7 @@ import PublicIcon from "@mui/icons-material/Public";
 import GroupIcon from "@mui/icons-material/Group";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { HeaderUser } from "components/HeaderUser";
+import { useAuthStore } from "stores/userStore";
 
 const drawerWidth = 240;
 
@@ -115,14 +115,14 @@ interface SidebarAndAppBarProps {
 }
 
 export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
-  const { setUser } = useContext(AuthContext);
+  const handleRemoveUser = useAuthStore((state) => state.handleRemoveUser);
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
   const logOut = () => {
-    Cookies.remove("token");
-    setUser(null);
+    Cookies.remove("token", { path: "" });
+    handleRemoveUser();
     navigate("/");
   };
 

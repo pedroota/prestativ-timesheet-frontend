@@ -1,9 +1,8 @@
-import { AuthContext } from "context/AuthContext";
-import { useContext } from "react";
+import Cookies from "js-cookie";
 import { Navigate, Outlet } from "react-router-dom";
 
 export function PrivateRoutes() {
-  const { isAuthenticated } = useContext(AuthContext);
+  const isAuthenticated = !!Cookies.get("token");
 
   return isAuthenticated ? <Outlet /> : <Navigate to="/" />;
 }

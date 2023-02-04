@@ -1,21 +1,8 @@
 import { Box, Avatar, Typography } from "@mui/material";
-import { useContext } from "react";
-import { AuthContext } from "context/AuthContext";
-import { decodeJwt } from "utils/decodeJwt";
-import { useQuery } from "@tanstack/react-query";
-import { getUserById } from "services/auth.service";
-
-interface JWTDecodified {
-  id: string;
-  role: string;
-}
+import { useAuthStore } from "stores/userStore";
 
 export function HeaderUser() {
-  const { user } = useContext(AuthContext);
-  const currentUser: JWTDecodified = decodeJwt(`${user}`);
-  const { data: singleUser } = useQuery(["user", currentUser.id], () =>
-    getUserById(currentUser.id)
-  );
+  const user = useAuthStore((state) => state.user);
 
   function stringToColor(string: string) {
     let hash = 0;
@@ -48,13 +35,8 @@ export function HeaderUser() {
 
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: "16px" }}>
-      <Typography>{`${singleUser?.data.user.name} ${singleUser?.data.user.surname}`}</Typography>
-      <Avatar
-        alt="avatar"
-        {...stringAvatar(
-          `${singleUser?.data.user.name} ${singleUser?.data.user.surname}`
-        )}
-      />
+      <Typography>{`${user.name} ${user.surname}`}</Typography>
+      <Avatar alt="avatar" {...stringAvatar(`${user.name} ${user.surname}`)} />
     </Box>
   );
 }

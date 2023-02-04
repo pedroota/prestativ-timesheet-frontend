@@ -25,3 +25,15 @@ export interface UserInfo {
   role: Roles;
   typeField?: string;
 }
+
+export interface UserDataLogIn {
+  message: string;
+  token: string;
+  user: {
+    _id: string;
+    email: string;
+    name: string;
+    surname: string;
+    role: Roles;
+  };
+}

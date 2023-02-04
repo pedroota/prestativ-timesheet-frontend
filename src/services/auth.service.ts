@@ -1,7 +1,11 @@
-import { User, UserRegister } from "interfaces/users.interface";
+import { AxiosResponse } from "axios";
+import { User, UserDataLogIn, UserRegister } from "interfaces/users.interface";
 import { Api } from "./api.service";
 
-export const signin = async ({ email, password }: User) => {
+export const signin = async ({
+  email,
+  password,
+}: User): Promise<AxiosResponse<UserDataLogIn>> => {
   const result = await Api.post("/auth/login", {
     email,
     password,

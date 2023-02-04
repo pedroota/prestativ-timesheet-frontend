@@ -1,16 +1,12 @@
 import { User, UserRegister } from "interfaces/users.interface";
-import { createContext, useState } from "react";
+import { createContext } from "react";
 import { signin, signup } from "services/auth.service";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import { Api } from "services/api.service";
-import { decodeJwt } from "utils/decodeJwt";
-import { Roles } from "interfaces/roles.interface";
+import { useAuthStore } from "stores/userStore";
 
 type AuthContextType = {
-  isAuthenticated: boolean;
-  user: string | null;
-  setUser: React.Dispatch<React.SetStateAction<string | null>>;
   signIn: ({ email, password }: User) => Promise<void>;
   signUp: ({
     name,
@@ -19,7 +15,6 @@ type AuthContextType = {
     password,
     role,
   }: UserRegister) => Promise<void>;
-  role: Roles;
 };
 
 type AuthContextProps = {
@@ -29,10 +24,7 @@ type AuthContextProps = {
 export const AuthContext = createContext({} as AuthContextType);
 
 export function AuthProvider({ children }: AuthContextProps) {
-  const [user, setUser] = useState<string | null>(null);
-  const [role, setRole] = useState({} as Roles);
-
-  const isAuthenticated = !!user;
+  const handleAddUser = useAuthStore((state) => state.handleAddUser);
 
   async function signIn({ email, password }: User) {
     await signin({
@@ -40,13 +32,9 @@ export function AuthProvider({ children }: AuthContextProps) {
       password,
     })
       .then(({ data }) => {
-        toast.success(data?.message || "Seja bem-vindo.", {
-          autoClose: 1500,
-        });
-        const { role } = decodeJwt(data?.token);
-        setRole(role);
-        setUser(data?.token);
+        console.log(data, "<<< data");
         Cookies.set("token", data?.token, { expires: 1 });
+        handleAddUser(data.user);
 
         // Already sets the Authorization as the user token
         Api.defaults.headers["Authorization"] = `Bearer ${data?.token}`;
@@ -85,9 +73,7 @@ export function AuthProvider({ children }: AuthContextProps) {
   }
 
   return (
-    <AuthContext.Provider
-      value={{ user, setUser, isAuthenticated, signIn, signUp, role }}
-    >
+    <AuthContext.Provider value={{ signIn, signUp }}>
       {children}
     </AuthContext.Provider>
   );

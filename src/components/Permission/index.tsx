@@ -1,5 +1,5 @@
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "context/AuthContext";
+import { useEffect, useState } from "react";
+import { useAuthStore } from "stores/userStore";
 
 interface PermissionsProps {
   children: React.ReactNode;
@@ -13,17 +13,17 @@ export function Permission({
   roles,
 }: PermissionsProps) {
   const [isAllowed, setIsAllowed] = useState(false);
-  const { role } = useContext(AuthContext);
+  const user = useAuthStore((state) => state.user);
 
   useEffect(() => {
     // Verify if the user haves the needed roles (permissions) to access data
-    if (role) {
+    if (user.role) {
       const isPermissionsMatch = roles.every((needRole) =>
-        role.permissions.includes(needRole)
+        user.role.permissions.includes(needRole)
       );
       setIsAllowed(isPermissionsMatch);
     }
-  }, [role, roles]);
+  }, [user.role, roles]);
 
   return (
     <>
