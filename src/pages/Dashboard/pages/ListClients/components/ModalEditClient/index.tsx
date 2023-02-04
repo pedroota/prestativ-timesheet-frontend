@@ -1,9 +1,7 @@
-import { useEffect } from "react";
-import { useCep } from "cep-hook";
+import { useState, useEffect } from "react";
 import {
   Button,
   MenuItem,
-  Select,
   TextField,
   Box,
   Typography,
@@ -16,6 +14,7 @@ import { getUserByRole } from "services/auth.service";
 import { Clients } from "interfaces/clients.interface";
 import { UserRegister } from "interfaces/users.interface";
 import { getClientById, updateClient } from "services/clients.service";
+import cep from "cep-promise";
 
 interface ModalEditUserProps {
   isOpen: boolean;
@@ -28,6 +27,7 @@ export function ModalEditClient({
   setIsOpen,
   currentClient,
 }: ModalEditUserProps) {
+  const [valueCep, setValueCep] = useState("");
   useQuery(["clients", currentClient], () => getClientById(currentClient), {
     onSuccess: ({ data }) => reset(data.client),
   });
@@ -79,23 +79,7 @@ export function ModalEditClient({
   const { data: listGps } = useQuery(["users-gp", "gpClient"], () =>
     getUserByRole("gerenteprojetos")
   );
-  const {
-    register,
-    reset,
-    handleSubmit,
-    setValue: setValueForm,
-  } = useForm<Clients>();
-
-  const [value, setValue, getZip] = useCep("");
-
-  useEffect(() => {
-    getZip().then((res) => {
-      setValueForm("street", `${res.logradouro}`);
-      setValueForm("city", `${res.localidade}`);
-      setValueForm("state", `${res.uf}`);
-      setValueForm("district", `${res.bairro}`);
-    });
-  }, [value]);
+  const { register, reset, handleSubmit, setValue } = useForm<Clients>();
 
   const onSubmit = handleSubmit(
     ({
@@ -137,6 +121,17 @@ export function ModalEditClient({
       reset();
     }
   );
+
+  useEffect(() => {
+    if (valueCep && valueCep.length >= 8) {
+      cep(valueCep).then(({ street, city, state, neighborhood }) => {
+        setValue("street", street);
+        setValue("city", city);
+        setValue("state", state);
+        setValue("district", neighborhood);
+      });
+    }
+  }, [valueCep]);
 
   return (
     <div>
@@ -194,8 +189,8 @@ export function ModalEditClient({
                 InputLabelProps={{ shrink: true }}
                 type="text"
                 {...register("cep")}
-                value={value}
-                onChange={(event) => setValue(event.target.value)}
+                value={valueCep}
+                onChange={(event) => setValueCep(event.target.value)}
               />
               <TextField
                 required

@@ -1,9 +1,8 @@
 import { Button, MenuItem, TextField } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import { useCep } from "cep-hook";
 import { Clients } from "interfaces/clients.interface";
 import { UserRegister } from "interfaces/users.interface";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { getUserByRole } from "services/auth.service";
@@ -11,27 +10,25 @@ import { createClients } from "services/clients.service";
 import { cepMask } from "utils/cepMask";
 import { cnpjMask } from "utils/cnpjMask";
 import { validateCNPJ } from "utils/validator";
+import cep from "cep-promise";
 
 export function RegisterClient() {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    setValue: setValueForm,
-  } = useForm<Clients>({});
+  const [valueCep, setValueCep] = useState("");
+  const { register, handleSubmit, reset, setValue } = useForm<Clients>({});
   const { data } = useQuery(["users-role", "Gerente de Projetos"], () =>
     getUserByRole("gerenteprojetos")
   );
-  const [value, setValue, getZip] = useCep("");
 
   useEffect(() => {
-    getZip().then((res) => {
-      setValueForm("street", `${res.logradouro}`);
-      setValueForm("city", `${res.localidade}`);
-      setValueForm("state", `${res.uf}`);
-      setValueForm("district", `${res.bairro}`);
-    });
-  }, [value]);
+    if (valueCep && valueCep.length >= 8) {
+      cep(valueCep).then(({ street, city, state, neighborhood }) => {
+        setValue("street", street);
+        setValue("city", city);
+        setValue("state", state);
+        setValue("district", neighborhood);
+      });
+    }
+  }, [valueCep]);
 
   const [values, setValues] = useState({ cnpj: "" });
 
@@ -82,10 +79,7 @@ export function RegisterClient() {
           gpClient,
         })
           .then(() => {
-            reset(); // limpa quase todos os campos
-            setValues({ cnpj: "" }); // limpa o campo de CNPJ
-            setValue(""); // limpa o campo de CEP
-            // unico campo que não consegui fazer limpar é o do Gerente de Projetos
+            reset();
             toast.success("Cliente criado com sucesso.");
           })
           .catch(() => toast.error("Erro ao cadastrar o cliente."));
@@ -132,8 +126,8 @@ export function RegisterClient() {
           label="CEP"
           type="text"
           {...register("cep")}
-          value={cepMask(value)}
-          onChange={(event) => setValue(event.target.value)}
+          value={cepMask(valueCep)}
+          onChange={(event) => setValueCep(event.target.value)}
         />
         <TextField
           required
