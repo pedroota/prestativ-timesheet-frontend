@@ -23,11 +23,11 @@ export function RegisterActivity() {
     getProjects()
   );
   const { data: GPList } = useQuery(["users-role", "Gerente de Projetos"], () =>
-    getUserByRole("Gerente de Projetos")
+    getUserByRole("gerenteprojetos")
   );
   const { data: consultantList } = useQuery(
     ["user-consultant", "Consultor"],
-    () => getUserByRole("Consultor")
+    () => getUserByRole("consultor")
   );
   const { register, handleSubmit, reset } = useForm<Activities>({});
   const [multipleSelect, setMultipleSelect] = useState<string[]>([]);
@@ -89,9 +89,9 @@ export function RegisterActivity() {
         <MenuItem selected disabled value="">
           Projeto - Selecione uma opção
         </MenuItem>
-        {projectList?.data.map(({ title, _id }: ProjectsInfo) => (
+        {projectList?.data.map(({ title, _id, idClient }: ProjectsInfo) => (
           <MenuItem key={_id} value={_id}>
-            {title}
+            {`${title} (Cliente: ${idClient.name})`}
           </MenuItem>
         ))}
       </TextField>

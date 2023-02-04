@@ -114,10 +114,14 @@ export function ListActivities() {
                                 {project?.title}
                               </StyledTableCell>
                               <StyledTableCell align="center">
-                                {formatCurrency(valueActivity)}
+                                {valueActivity
+                                  ? formatCurrency(valueActivity)
+                                  : "Sem Valor"}
                               </StyledTableCell>
                               <StyledTableCell align="center">
-                                {`${gpActivity?.name} ${gpActivity?.surname}`}
+                                {gpActivity
+                                  ? `${gpActivity?.name} ${gpActivity?.surname}`
+                                  : "nenhum"}
                               </StyledTableCell>
                               <StyledTableCell align="center">
                                 {description}

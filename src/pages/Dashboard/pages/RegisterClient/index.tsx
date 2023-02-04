@@ -20,7 +20,7 @@ export function RegisterClient() {
     setValue: setValueForm,
   } = useForm<Clients>({});
   const { data } = useQuery(["users-role", "Gerente de Projetos"], () =>
-    getUserByRole("Gerente de Projetos")
+    getUserByRole("gerenteprojetos")
   );
   const [value, setValue, getZip] = useCep("");
 

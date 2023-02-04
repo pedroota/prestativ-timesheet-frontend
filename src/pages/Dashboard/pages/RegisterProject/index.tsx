@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 export function RegisterProject() {
   const { data: clientList } = useQuery([], () => getClients());
   const { data: GPList } = useQuery(["users-role", "Gerente de Projetos"], () =>
-    getUserByRole("Gerente de Projetos")
+    getUserByRole("gerenteprojetos")
   );
   const { register, handleSubmit, reset } = useForm<Projects>({});
 

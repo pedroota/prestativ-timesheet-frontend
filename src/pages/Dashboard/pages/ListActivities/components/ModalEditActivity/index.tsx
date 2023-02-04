@@ -16,7 +16,7 @@ import { updateActivity, getActivityById } from "services/activities.service";
 import { Activities } from "interfaces/activities.interface";
 import { getUserByRole } from "services/auth.service";
 import { getProjects } from "services/project.service";
-import { Projects } from "interfaces/projects.interface";
+import { ProjectsInfo } from "interfaces/projects.interface";
 import Dialog from "@mui/material/Dialog";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
@@ -70,10 +70,10 @@ export function ModalEditActivity({
     }
   );
   const { data: listGps } = useQuery(["users-gp", "Gerente de Projetos"], () =>
-    getUserByRole("Gerente de Projetos")
+    getUserByRole("gerenteprojetos")
   );
   const { data: consultantList } = useQuery(["users-gp", "Consultor"], () =>
-    getUserByRole("Consultor")
+    getUserByRole("consultor")
   );
   const { data: projectList } = useQuery(["projects"], getProjects);
   const { register, reset, handleSubmit } = useForm<Activities>({
@@ -148,9 +148,9 @@ export function ModalEditActivity({
             defaultValue=""
           >
             <MenuItem value="">Selecione uma opção</MenuItem>
-            {projectList?.data.map(({ title }: Projects) => (
-              <MenuItem key={title} value={title}>
-                {title}
+            {projectList?.data.map(({ title, _id, idClient }: ProjectsInfo) => (
+              <MenuItem key={_id} value={_id}>
+                {`${title} (Cliente: ${idClient.name})`}
               </MenuItem>
             ))}
           </Select>

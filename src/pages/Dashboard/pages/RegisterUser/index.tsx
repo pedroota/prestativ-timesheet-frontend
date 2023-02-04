@@ -14,15 +14,17 @@ export function RegisterUser() {
   const { signUp } = useContext(AuthContext);
   const { register, handleSubmit, reset } = useForm<UserRegister>({});
 
-  const onSubmit = handleSubmit(({ name, surname, email, password, role }) => {
-    if (validateEmail(email)) {
-      signUp({ name, surname, email, password, role }).then(() => {
-        reset();
-      });
-    } else {
-      toast.error("O Email digitado é inválido.");
+  const onSubmit = handleSubmit(
+    ({ name, surname, email, password, role, typeField }) => {
+      if (validateEmail(email)) {
+        signUp({ name, surname, email, password, role, typeField }).then(() => {
+          reset();
+        });
+      } else {
+        toast.error("O Email digitado é inválido.");
+      }
     }
-  });
+  );
 
   return (
     <form className="c-register-user" onSubmit={onSubmit}>
@@ -59,6 +61,25 @@ export function RegisterUser() {
         type="password"
         {...register("password")}
       />
+      <TextField
+        required
+        color="warning"
+        select
+        defaultValue={"nenhum"}
+        label="Campo Relacionado"
+        type="typeField"
+        {...register("typeField")}
+      >
+        <MenuItem value={"nenhum"} key={0}>
+          Não se aplica
+        </MenuItem>
+        <MenuItem value={"gerenteprojetos"} key={1}>
+          Gerente de Projetos
+        </MenuItem>
+        <MenuItem value={"consultor"} key={2}>
+          Consultor
+        </MenuItem>
+      </TextField>
       <TextField
         label="Perfil do Usuário"
         select

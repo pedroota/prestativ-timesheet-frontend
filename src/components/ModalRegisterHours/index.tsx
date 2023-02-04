@@ -79,6 +79,10 @@ export function ModalRegisterHours({
         initialHour
       );
       const final = generateTimestampWithDateAndTime(initialDate, finalHour);
+      if (initial > final) {
+        toast.error("A hora final não pode ser anterior a hora inicial!");
+        return;
+      }
       const maxDaysCanRelease = 4; // Periodo máximo para lançar horas - editando essa variável, o sistema irá permitir que datas mais antigas sejam possiveis lançar
       const daysInMiliseconds = maxDaysCanRelease * 1000 * 60 * 60 * 24;
       const today = Date.now();

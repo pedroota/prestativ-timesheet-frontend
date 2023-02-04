@@ -34,7 +34,7 @@ export function ModalEditProject({
     onSuccess: ({ data }) => reset(data.project),
   });
   const { data: listGps } = useQuery(["users-gp", "Gerente de Projetos"], () =>
-    getUserByRole("Gerente de Projetos")
+    getUserByRole("gerenteprojetos")
   );
   const { mutate } = useMutation(
     ({ title, idClient, valueProject, gpProject, description }: Projects) =>
