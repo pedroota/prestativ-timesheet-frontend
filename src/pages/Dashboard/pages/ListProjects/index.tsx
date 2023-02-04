@@ -18,6 +18,7 @@ import { formatCurrency } from "utils/formatCurrency";
 import { ModalEditProject } from "./components/ModalEditProjects";
 import { StyledTableCell } from "components/StyledTableCell";
 import { StyledTableRow } from "components/StyledTableRow";
+import { Permission } from "components/Permission";
 
 export function ListProjects() {
   const [currentProject, setCurrentProject] = useState("");
@@ -76,9 +77,13 @@ export function ListProjects() {
                           <StyledTableCell align="center">
                             Descrição
                           </StyledTableCell>
-                          <StyledTableCell align="center">
-                            Controles
-                          </StyledTableCell>
+                          <Permission
+                            roles={["EDITAR_PROJETO" || "DELETAR_PROJETO"]}
+                          >
+                            <StyledTableCell align="center">
+                              Controles
+                            </StyledTableCell>
+                          </Permission>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -111,26 +116,34 @@ export function ListProjects() {
                               <StyledTableCell align="center">
                                 {description}
                               </StyledTableCell>
-                              <StyledTableCell
-                                sx={{
-                                  display: "flex",
-                                  gap: "20px",
-                                  justifyContent: "center",
-                                  alignItems: "center",
-                                  cursor: "pointer",
-                                }}
-                                align="center"
+                              <Permission
+                                roles={["EDITAR_PROJETO" || "DELETAR_PROJETO"]}
                               >
-                                <Edit
-                                  onClick={() => {
-                                    setCurrentProject(_id);
-                                    setIsEditingProject(
-                                      (prevState) => !prevState
-                                    );
+                                <StyledTableCell
+                                  sx={{
+                                    display: "flex",
+                                    gap: "20px",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    cursor: "pointer",
                                   }}
-                                />
-                                <Delete onClick={() => mutate(_id)} />
-                              </StyledTableCell>
+                                  align="center"
+                                >
+                                  <Permission roles={["EDITAR_PROJETO"]}>
+                                    <Edit
+                                      onClick={() => {
+                                        setCurrentProject(_id);
+                                        setIsEditingProject(
+                                          (prevState) => !prevState
+                                        );
+                                      }}
+                                    />
+                                  </Permission>
+                                  <Permission roles={["DELETAR_PROJETO"]}>
+                                    <Delete onClick={() => mutate(_id)} />
+                                  </Permission>
+                                </StyledTableCell>
+                              </Permission>
                             </StyledTableRow>
                           )
                         )}
@@ -139,11 +152,13 @@ export function ListProjects() {
                   </div>
                 </div>
               </Paper>
-              <ModalEditProject
-                isOpen={isEditingProject}
-                setIsOpen={setIsEditingProject}
-                currentProject={currentProject}
-              />
+              <Permission roles={["EDITAR_PROJETO"]}>
+                <ModalEditProject
+                  isOpen={isEditingProject}
+                  setIsOpen={setIsEditingProject}
+                  currentProject={currentProject}
+                />
+              </Permission>
             </div>
           ) : (
             <EmptyList />

@@ -11,7 +11,8 @@ import {
 import { Close } from "@mui/icons-material";
 import { SetStateAction } from "react";
 import { useForm } from "react-hook-form";
-import { Permission } from "enums/Permissions";
+import { Permission as Permissions } from "enums/Permissions";
+import { Permission } from "components/Permission";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createRoles } from "services/roles.service";
@@ -60,53 +61,58 @@ export function ModalCreateRole({ isOpen, setIsOpen }: ModalCreateRoleProps) {
   };
 
   return (
-    <Dialog open={isOpen} onClose={() => setIsOpen((prevState) => !prevState)}>
-      <Box sx={{ padding: 4, minWidth: 420 }}>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Typography fontSize="1.3rem">Criar perfil</Typography>
-          <Close
-            fontSize="large"
-            sx={{ cursor: "pointer" }}
-            onClick={() => setIsOpen((prevState) => !prevState)}
-          />
+    <Permission roles={["CRIAR_PERFIL"]}>
+      <Dialog
+        open={isOpen}
+        onClose={() => setIsOpen((prevState) => !prevState)}
+      >
+        <Box sx={{ padding: 4, minWidth: 420 }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Typography fontSize="1.3rem">Criar perfil</Typography>
+            <Close
+              fontSize="large"
+              sx={{ cursor: "pointer" }}
+              onClick={() => setIsOpen((prevState) => !prevState)}
+            />
+          </Box>
+          <form className="c-form-spacing" onSubmit={onSubmit}>
+            <TextField
+              required
+              color="warning"
+              label="Nome do cargo"
+              type="text"
+              InputLabelProps={{ shrink: true }}
+              {...register("name")}
+            />
+            <Select
+              value={multipleSelectValue}
+              {...register("permissions")}
+              onChange={handleMultipleSelectChange}
+              multiple
+            >
+              {Object.values(Permissions).map((permission, index) => (
+                <MenuItem value={permission} key={index}>
+                  {permission}
+                </MenuItem>
+              ))}
+            </Select>
+            <Button
+              type="submit"
+              variant="contained"
+              color="warning"
+              sx={{ paddingBlock: "1rem" }}
+            >
+              Criar perfil
+            </Button>
+          </form>
         </Box>
-        <form className="c-form-spacing" onSubmit={onSubmit}>
-          <TextField
-            required
-            color="warning"
-            label="Nome do cargo"
-            type="text"
-            InputLabelProps={{ shrink: true }}
-            {...register("name")}
-          />
-          <Select
-            value={multipleSelectValue}
-            {...register("permissions")}
-            onChange={handleMultipleSelectChange}
-            multiple
-          >
-            {Object.values(Permission).map((permission, index) => (
-              <MenuItem value={permission} key={index}>
-                {permission}
-              </MenuItem>
-            ))}
-          </Select>
-          <Button
-            type="submit"
-            variant="contained"
-            color="warning"
-            sx={{ paddingBlock: "1rem" }}
-          >
-            Criar perfil
-          </Button>
-        </form>
-      </Box>
-    </Dialog>
+      </Dialog>
+    </Permission>
   );
 }

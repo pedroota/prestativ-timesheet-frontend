@@ -10,6 +10,7 @@ import { createClients } from "services/clients.service";
 import { cepMask, cnpjMask } from "utils/masks";
 import { validateCNPJ } from "utils/validator";
 import cep from "cep-promise";
+import { Permission } from "components/Permission";
 
 export function RegisterClient() {
   const [valueCep, setValueCep] = useState("");
@@ -89,168 +90,170 @@ export function RegisterClient() {
   );
 
   return (
-    <form className="c-register-client" onSubmit={onSubmit}>
-      <h1 className="c-register-client--title">Cadastrar novo cliente</h1>
-      <p>Informações gerais</p>
-      <TextField
-        required
-        color="warning"
-        label="Código do cliente"
-        type="text"
-        {...register("code")}
-      />
-      <TextField
-        required
-        color="warning"
-        label="Nome / Razão Social"
-        type="text"
-        {...register("name")}
-      />
-      <TextField
-        required
-        color="warning"
-        label="CNPJ"
-        type="text"
-        value={cnpjMask(values.cnpj)}
-        {...register("cnpj")}
-        onChange={inputChange}
-      />
-      <p>Endereço do cliente</p>
-      <div className="c-register-client--input-container">
+    <Permission roles={["CADASTRO_CLIENTE"]}>
+      <form className="c-register-client" onSubmit={onSubmit}>
+        <h1 className="c-register-client--title">Cadastrar novo cliente</h1>
+        <p>Informações gerais</p>
         <TextField
           required
           color="warning"
-          sx={{ width: "100%" }}
-          InputLabelProps={{ shrink: true }}
-          label="CEP"
+          label="Código do cliente"
           type="text"
-          {...register("cep")}
-          value={cepMask(valueCep)}
-          onChange={(event) => setValueCep(event.target.value)}
+          {...register("code")}
         />
         <TextField
           required
           color="warning"
-          sx={{ width: "100%" }}
-          InputLabelProps={{ shrink: true }}
-          label="Logradouro"
+          label="Nome / Razão Social"
           type="text"
-          {...register("street")}
-        />
-      </div>
-      <div className="c-register-client--input-container">
-        <TextField
-          required
-          color="warning"
-          sx={{ width: "100%" }}
-          InputLabelProps={{ shrink: true }}
-          label="Cidade"
-          type="text"
-          {...register("city")}
+          {...register("name")}
         />
         <TextField
           required
           color="warning"
-          sx={{ width: "100%" }}
-          InputLabelProps={{ shrink: true }}
-          label="Estado"
+          label="CNPJ"
           type="text"
-          {...register("state")}
+          value={cnpjMask(values.cnpj)}
+          {...register("cnpj")}
+          onChange={inputChange}
         />
-      </div>
-      <div className="c-register-client--input-container">
-        <TextField
-          required
-          color="warning"
-          sx={{ width: "100%" }}
-          InputLabelProps={{ shrink: true }}
-          label="Bairro"
-          type="text"
-          {...register("district")}
-        />
-        <TextField
-          color="warning"
-          sx={{ width: "100%" }}
-          InputLabelProps={{ shrink: true }}
-          label="Número"
-          type="text"
-          {...register("streetNumber")}
-        />
-        <TextField
-          color="warning"
-          sx={{ width: "100%" }}
-          InputLabelProps={{ shrink: true }}
-          label="Complemento"
-          type="text"
-          {...register("complement")}
-        />
-      </div>
-      <p>Período de faturamento</p>
-      <div className="c-register-client--input-container">
-        <TextField
-          required
-          color="warning"
-          sx={{ width: "100%" }}
-          label="De"
-          type="text"
-          {...register("periodIn")}
-        />
-        <TextField
-          required
-          color="warning"
-          sx={{ width: "100%" }}
-          label="Até"
-          type="text"
-          {...register("periodUntil")}
-        />
-      </div>
-      <div className="c-register-client--input-container">
-        <TextField
-          required
-          color="warning"
-          sx={{ width: "100%" }}
-          label="Dia limite de faturamento"
-          type="text"
-          {...register("billingLimit")}
-        />
-        <TextField
-          required
-          color="warning"
-          sx={{ width: "100%" }}
-          label="Dia de pagamento"
-          type="text"
-          {...register("payDay")}
-        />
-      </div>
-      <p>Valor e Gerente de Projetos</p>
-      <div className="c-register-client--input-container">
-        <TextField
-          required
-          color="warning"
-          sx={{ width: "100%" }}
-          label="Valor"
-          type="text"
-          {...register("valueClient")}
-        />
-        <TextField
-          required
-          label="Gerente de Projetos"
-          select
-          color="warning"
-          sx={{ width: "100%" }}
-          {...register("gpClient")}
-        >
-          <MenuItem value="">Selecione uma opção</MenuItem>
-          {data?.data.map(({ name, surname, _id }: UserRegister) => (
-            <MenuItem value={_id} key={_id}>
-              {`${name} ${surname}`}
-            </MenuItem>
-          ))}
-        </TextField>
-      </div>
-      <Button type="submit" id="button-primary" variant="contained">
-        Cadastrar
-      </Button>
-    </form>
+        <p>Endereço do cliente</p>
+        <div className="c-register-client--input-container">
+          <TextField
+            required
+            color="warning"
+            sx={{ width: "100%" }}
+            InputLabelProps={{ shrink: true }}
+            label="CEP"
+            type="text"
+            {...register("cep")}
+            value={cepMask(valueCep)}
+            onChange={(event) => setValueCep(event.target.value)}
+          />
+          <TextField
+            required
+            color="warning"
+            sx={{ width: "100%" }}
+            InputLabelProps={{ shrink: true }}
+            label="Logradouro"
+            type="text"
+            {...register("street")}
+          />
+        </div>
+        <div className="c-register-client--input-container">
+          <TextField
+            required
+            color="warning"
+            sx={{ width: "100%" }}
+            InputLabelProps={{ shrink: true }}
+            label="Cidade"
+            type="text"
+            {...register("city")}
+          />
+          <TextField
+            required
+            color="warning"
+            sx={{ width: "100%" }}
+            InputLabelProps={{ shrink: true }}
+            label="Estado"
+            type="text"
+            {...register("state")}
+          />
+        </div>
+        <div className="c-register-client--input-container">
+          <TextField
+            required
+            color="warning"
+            sx={{ width: "100%" }}
+            InputLabelProps={{ shrink: true }}
+            label="Bairro"
+            type="text"
+            {...register("district")}
+          />
+          <TextField
+            color="warning"
+            sx={{ width: "100%" }}
+            InputLabelProps={{ shrink: true }}
+            label="Número"
+            type="text"
+            {...register("streetNumber")}
+          />
+          <TextField
+            color="warning"
+            sx={{ width: "100%" }}
+            InputLabelProps={{ shrink: true }}
+            label="Complemento"
+            type="text"
+            {...register("complement")}
+          />
+        </div>
+        <p>Período de faturamento</p>
+        <div className="c-register-client--input-container">
+          <TextField
+            required
+            color="warning"
+            sx={{ width: "100%" }}
+            label="De"
+            type="text"
+            {...register("periodIn")}
+          />
+          <TextField
+            required
+            color="warning"
+            sx={{ width: "100%" }}
+            label="Até"
+            type="text"
+            {...register("periodUntil")}
+          />
+        </div>
+        <div className="c-register-client--input-container">
+          <TextField
+            required
+            color="warning"
+            sx={{ width: "100%" }}
+            label="Dia limite de faturamento"
+            type="text"
+            {...register("billingLimit")}
+          />
+          <TextField
+            required
+            color="warning"
+            sx={{ width: "100%" }}
+            label="Dia de pagamento"
+            type="text"
+            {...register("payDay")}
+          />
+        </div>
+        <p>Valor e Gerente de Projetos</p>
+        <div className="c-register-client--input-container">
+          <TextField
+            required
+            color="warning"
+            sx={{ width: "100%" }}
+            label="Valor"
+            type="text"
+            {...register("valueClient")}
+          />
+          <TextField
+            required
+            label="Gerente de Projetos"
+            select
+            color="warning"
+            sx={{ width: "100%" }}
+            {...register("gpClient")}
+          >
+            <MenuItem value="">Selecione uma opção</MenuItem>
+            {data?.data.map(({ name, surname, _id }: UserRegister) => (
+              <MenuItem value={_id} key={_id}>
+                {`${name} ${surname}`}
+              </MenuItem>
+            ))}
+          </TextField>
+        </div>
+        <Button type="submit" id="button-primary" variant="contained">
+          Cadastrar
+        </Button>
+      </form>
+    </Permission>
   );
 }

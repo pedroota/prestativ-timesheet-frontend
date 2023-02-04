@@ -19,6 +19,7 @@ import { ModalEditClient } from "./components/ModalEditClient";
 import { formatCurrency } from "utils/formatCurrency";
 import { StyledTableCell } from "components/StyledTableCell";
 import { StyledTableRow } from "components/StyledTableRow";
+import { Permission } from "components/Permission";
 
 export function ListClients() {
   const [currentClient, setCurrentClient] = useState("");
@@ -79,9 +80,13 @@ export function ListClients() {
                           <StyledTableCell align="center">
                             Gerente de Projetos
                           </StyledTableCell>
-                          <StyledTableCell align="center">
-                            Controles
-                          </StyledTableCell>
+                          <Permission
+                            roles={["EDITAR_CLIENTE" || "DELETAR_CLIENTE"]}
+                          >
+                            <StyledTableCell align="center">
+                              Controles
+                            </StyledTableCell>
+                          </Permission>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -126,26 +131,34 @@ export function ListClients() {
                               <StyledTableCell align="center">
                                 {`${gpClient.name} ${gpClient.surname}`}
                               </StyledTableCell>
-                              <StyledTableCell
-                                sx={{
-                                  display: "grid",
-                                  gap: "20px",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  cursor: "pointer",
-                                }}
-                                align="center"
+                              <Permission
+                                roles={["EDITAR_CLIENTE" || "DELETAR_CLIENTE"]}
                               >
-                                <EditIcon
-                                  onClick={() => {
-                                    setCurrentClient(_id);
-                                    setIsEditingClient(
-                                      (prevState) => !prevState
-                                    );
+                                <StyledTableCell
+                                  sx={{
+                                    display: "grid",
+                                    gap: "20px",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    cursor: "pointer",
                                   }}
-                                />
-                                <DeleteIcon onClick={() => mutate(_id)} />
-                              </StyledTableCell>
+                                  align="center"
+                                >
+                                  <Permission roles={["EDITAR_CLIENTE"]}>
+                                    <EditIcon
+                                      onClick={() => {
+                                        setCurrentClient(_id);
+                                        setIsEditingClient(
+                                          (prevState) => !prevState
+                                        );
+                                      }}
+                                    />
+                                  </Permission>
+                                  <Permission roles={["DELETAR_CLIENTE"]}>
+                                    <DeleteIcon onClick={() => mutate(_id)} />
+                                  </Permission>
+                                </StyledTableCell>
+                              </Permission>
                             </StyledTableRow>
                           )
                         )}
@@ -154,11 +167,13 @@ export function ListClients() {
                   </div>
                 </div>
               </Paper>
-              <ModalEditClient
-                isOpen={isEditingClient}
-                setIsOpen={setIsEditingClient}
-                currentClient={currentClient}
-              />
+              <Permission roles={["EDITAR_CLIENTE"]}>
+                <ModalEditClient
+                  isOpen={isEditingClient}
+                  setIsOpen={setIsEditingClient}
+                  currentClient={currentClient}
+                />
+              </Permission>
             </div>
           ) : (
             <EmptyList />
