@@ -44,9 +44,9 @@ export function UserProfiles() {
         }}
       >
         <Typography variant="h4" sx={{ marginBlock: "1.3rem" }}>
-          Listagem de Cargos
+          Perfis de Usuário
         </Typography>
-        <Tooltip title="Criar novo cargo" arrow placement="top">
+        <Tooltip title="Criar novo perfil" arrow placement="top">
           <Button
             onClick={() => setIsAddingRole((prevState) => !prevState)}
             variant="contained"
@@ -57,7 +57,7 @@ export function UserProfiles() {
               paddingBlock: "0.8rem",
             }}
           >
-            Criar cargo
+            Criar perfil
           </Button>
         </Tooltip>
       </Box>
@@ -93,7 +93,7 @@ export function UserProfiles() {
                             ))
                           ) : (
                             <p>
-                              Não foram encontradas permissões para este cargo
+                              Não foram encontradas permissões para este perfil
                             </p>
                           )}
                         </StyledTableCell>

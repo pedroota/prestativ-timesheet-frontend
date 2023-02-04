@@ -38,6 +38,7 @@ import GroupIcon from "@mui/icons-material/Group";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { HeaderUser } from "components/HeaderUser";
 import { useAuthStore } from "stores/userStore";
+import { Permission } from "components/Permission";
 
 const drawerWidth = 240;
 
@@ -170,316 +171,361 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
           </IconButton>
         </DrawerHeader>
         <Divider />
-        <List>
-          <Link to="timesheet">
-            <ListItem disablePadding>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
+        <Permission roles={["TIMESHEET"]}>
+          <List>
+            <Link to="timesheet">
+              <ListItem disablePadding>
+                <ListItemButton
                   sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
                   }}
                 >
-                  <AccessTimeIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary={"TimeSheet"}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-        </List>
-        <Divider />
-        <List>
-          <Link to="register-client">
-            <ListItem disablePadding>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  <PeopleAltIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary={"Cadastrar Cliente"}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-          <Link to="register-project">
-            <ListItem disablePadding>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  <ConstructionIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary={"Cadastrar Projeto"}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-          <Link to="register-activity">
-            <ListItem disablePadding>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  <CreateIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary={"Cadastrar Atividade"}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-          <Link to="register-user">
-            <ListItem disablePadding>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  <AssignmentIndIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary={"Cadastrar Usuário"}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-        </List>
-        <Divider />
-        <List>
-          <Link to="clients">
-            <ListItem disablePadding>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  <PublicIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary={"Ver Clientes"}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-          <Link to="projects">
-            <ListItem disablePadding>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  <LibraryBooksIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary={"Ver Projetos"}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-          <Link to="activities">
-            <ListItem disablePadding>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  <WorkIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary={"Ver Atividades"}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-          <Link to="users">
-            <ListItem disablePadding>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  <HailIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary={"Ver Usuários"}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-          <Link to="logs">
-            <ListItem disablePadding>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  <HistoryIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary={"Ver Logs"}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-          <Link to="profiles">
-            <ListItem disablePadding>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  <GroupIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary={"Perfis de Usuário"}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-          <Link to="settings">
-            <ListItem disablePadding>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  <SettingsIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary={"Configurações"}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-        </List>
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <AccessTimeIcon />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={"TimeSheet"}
+                    sx={{ opacity: open ? 1 : 0 }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            </Link>
+          </List>
+          <Divider />
+        </Permission>
+        <Permission
+          roles={[
+            "CADASTRO_CLIENTE" ||
+              "CADASTRO_PROJETO" ||
+              "CADASTRO_ATIVIDADE" ||
+              "CADASTRO_USUARIO",
+          ]}
+        >
+          <List>
+            <Permission roles={["CADASTRO_CLIENTE"]}>
+              <Link to="register-client">
+                <ListItem disablePadding>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <PeopleAltIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={"Cadastrar Cliente"}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            </Permission>
+            <Permission roles={["CADASTRO_PROJETO"]}>
+              <Link to="register-project">
+                <ListItem disablePadding>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <ConstructionIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={"Cadastrar Projeto"}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            </Permission>
+            <Permission roles={["CADASTRO_ATIVIDADE"]}>
+              <Link to="register-activity">
+                <ListItem disablePadding>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <CreateIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={"Cadastrar Atividade"}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            </Permission>
+            <Permission roles={["CADASTRO_USUARIO"]}>
+              <Link to="register-user">
+                <ListItem disablePadding>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <AssignmentIndIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={"Cadastrar Usuário"}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            </Permission>
+          </List>
 
-        <Divider />
+          <Divider />
+        </Permission>
+        <Permission
+          roles={[
+            "VER_CLIENTES" ||
+              "VER_PROJETOS" ||
+              "VER_ATIVIDADES" ||
+              "VER_USUARIOS" ||
+              "VER_LOGS" ||
+              "PERFIS_USUARIO" ||
+              "CONFIGURACOES",
+          ]}
+        >
+          <List>
+            <Permission roles={["VER_CLIENTES"]}>
+              <Link to="clients">
+                <ListItem disablePadding>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <PublicIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={"Ver Clientes"}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            </Permission>
+            <Permission roles={["VER_PROJETOS"]}>
+              <Link to="projects">
+                <ListItem disablePadding>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <LibraryBooksIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={"Ver Projetos"}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            </Permission>
+            <Permission roles={["VER_ATIVIDADES"]}>
+              <Link to="activities">
+                <ListItem disablePadding>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <WorkIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={"Ver Atividades"}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            </Permission>
+            <Permission roles={["VER_USUARIOS"]}>
+              <Link to="users">
+                <ListItem disablePadding>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <HailIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={"Ver Usuários"}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            </Permission>
+            <Permission roles={["VER_LOGS"]}>
+              <Link to="logs">
+                <ListItem disablePadding>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <HistoryIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={"Ver Logs"}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            </Permission>
+            <Permission roles={["PERFIS_USUARIO"]}>
+              <Link to="profiles">
+                <ListItem disablePadding>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <GroupIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={"Perfis de Usuário"}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            </Permission>
+            <Permission roles={["CONFIGURACOES"]}>
+              <Link to="settings">
+                <ListItem disablePadding>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <SettingsIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={"Configurações"}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            </Permission>
+          </List>
+          <Divider />
+        </Permission>
         <List>
           <ListItem onClick={logOut} disablePadding>
             <ListItemButton

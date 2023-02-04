@@ -75,7 +75,7 @@ export function ModalEditRole({
             alignItems: "center",
           }}
         >
-          <Typography fontSize="1.3rem">Editar cliente</Typography>
+          <Typography fontSize="1.3rem">Editar perfil</Typography>
           <Close
             fontSize="large"
             sx={{ cursor: "pointer" }}
