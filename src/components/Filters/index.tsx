@@ -36,6 +36,7 @@ export function Filters({ receiveDataURI }: FiltersProps) {
         id="date"
         label="Data"
         type="date"
+        color="warning"
         value={selectedDate}
         sx={{ width: 220 }}
         InputLabelProps={{
@@ -46,6 +47,7 @@ export function Filters({ receiveDataURI }: FiltersProps) {
       <TextField
         style={{ width: "200px" }}
         select
+        color="warning"
         value={selectedClient}
         label="Cliente"
         name="client"
@@ -63,6 +65,7 @@ export function Filters({ receiveDataURI }: FiltersProps) {
         select
         value={selectedProject}
         label="Projeto"
+        color="warning"
         name="project"
         onChange={(event) => setSelectedProject(event.target.value)}
       >
@@ -78,6 +81,7 @@ export function Filters({ receiveDataURI }: FiltersProps) {
       <TextField
         style={{ width: "200px" }}
         select
+        color="warning"
         value={selectedActivity}
         label="Atividade"
         name="activity"
@@ -98,6 +102,7 @@ export function Filters({ receiveDataURI }: FiltersProps) {
       <TextField
         style={{ width: "200px" }}
         select
+        color="warning"
         value={selectedConsultant}
         label="Consultor"
         name="consultant"

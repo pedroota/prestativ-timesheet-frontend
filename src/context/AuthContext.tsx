@@ -32,7 +32,6 @@ export function AuthProvider({ children }: AuthContextProps) {
       password,
     })
       .then(({ data }) => {
-        console.log(data, "<<< data");
         Cookies.set("token", data?.token, { expires: 1 });
         handleAddUser(data.user);
 
