@@ -133,7 +133,7 @@ export function RegisterActivity() {
             color="warning"
             variant="outlined"
             {...register("users")}
-            sx={{ width: "100%" }}
+            sx={{ width: "100%", maxWidth: "14rem" }}
             value={multipleSelect}
             onChange={multipleSelectChange}
             multiple
