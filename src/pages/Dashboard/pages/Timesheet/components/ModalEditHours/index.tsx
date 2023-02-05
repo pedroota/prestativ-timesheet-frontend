@@ -59,21 +59,21 @@ export function ModalEditHours({
     onSuccess({ data }) {
       setValue(
         "initialDate",
-        convertDate(generateDateWithTimestamp(data?.hours.initial))
+        convertDate(generateDateWithTimestamp(data?.hours?.initial))
       );
 
-      setValue("initialHour", generateTimeWithTimestamp(data?.hours.initial));
-      setValue("finalHour", generateTimeWithTimestamp(data?.hours.final));
-      data?.hours.adjustment !== 0 &&
+      setValue("initialHour", generateTimeWithTimestamp(data?.hours?.initial));
+      setValue("finalHour", generateTimeWithTimestamp(data?.hours?.final));
+      data?.hours?.adjustment !== 0 &&
         setValue(
           "adjustment",
-          Number(generateTimeWithTimestamp(data?.hours.adjustment))
+          Number(generateTimeWithTimestamp(data?.hours?.adjustment))
         );
-      setValue("activityDesc", data?.hours.activityDesc);
-      setValue("releasedCall", data?.hours.releasedCall);
-      setSelectedClient(data?.hours.relClient._id);
-      setSelectedProject(data?.hours.relProject._id);
-      setSelectedActivity(data?.hours.relActivity._id);
+      setValue("activityDesc", data?.hours?.activityDesc);
+      setValue("releasedCall", data?.hours?.releasedCall);
+      setSelectedClient(data.hours.relClient._id);
+      setSelectedProject(data.hours.relProject._id);
+      setSelectedActivity(data.hours.relActivity._id);
     },
     enabled: isOpen,
     staleTime: 5000000,

@@ -332,12 +332,11 @@ export function Timesheet() {
                             </Permission>
                             <Permission roles={["GERENTE_DE_PROJETOS"]}>
                               <StyledTableCell align="center">
-                                {(relActivity.gpActivity
-                                  ? relActivity.gpActivity
-                                  : relProject.gpProject
-                                  ? relProject.gpProject
-                                  : relClient.gpClient
-                                ).slice(0, 5)}
+                                {relActivity.gpActivity.name
+                                  ? relActivity.gpActivity.name
+                                  : relProject.gpProject.name
+                                  ? relProject.gpProject.name
+                                  : relClient.gpClient.name}
                               </StyledTableCell>
                             </Permission>
                             <Permission roles={["CONSULTOR"]}>
