@@ -16,14 +16,8 @@ const cnpjMask = (value: string) => {
 };
 
 const currencyMask = (value: string) => {
-  const regex = /^[0-9\b]+$/;
-  if (!regex.test(value)) {
-    return false;
-  }
-  return value
-    .toString()
-    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-    .replace(".", "R$ ");
+  value = value.replace(/\D/g, "").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+  return (value = `R$ ${value}`);
 };
 
 export { cepMask, cnpjMask, currencyMask };
