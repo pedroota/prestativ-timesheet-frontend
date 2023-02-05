@@ -1,5 +1,12 @@
-import { useContext } from "react";
-import { TextField, Button, MenuItem } from "@mui/material";
+import { useContext, useState } from "react";
+import {
+  TextField,
+  Button,
+  MenuItem,
+  InputAdornment,
+  IconButton,
+} from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { AuthContext } from "context/AuthContext";
 import { useForm } from "react-hook-form";
 import { UserRegister } from "interfaces/users.interface";
@@ -11,6 +18,7 @@ import { toast } from "react-toastify";
 import { Permission } from "components/Permission";
 
 export function RegisterUser() {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const { data } = useQuery(["roles"], getRoles);
   const { signUp } = useContext(AuthContext);
   const { register, handleSubmit, reset } = useForm<UserRegister>({});
@@ -60,8 +68,21 @@ export function RegisterUser() {
           required
           color="warning"
           label="Password"
-          type="password"
+          type={isPasswordVisible ? "text" : "password"}
           {...register("password")}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() =>
+                    setIsPasswordVisible((prevState) => !prevState)
+                  }
+                >
+                  {isPasswordVisible ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
         />
         <TextField
           required
