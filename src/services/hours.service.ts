@@ -1,5 +1,5 @@
 import { Api } from "./api.service";
-import { RegisterHours, Hours } from "interfaces/hours.interface";
+import { RegisterHours, UpdateHoursProps } from "interfaces/hours.interface";
 
 export const getHours = async () => {
   const result = await Api.get("/hours");
@@ -55,12 +55,9 @@ export const updateHours = async (
     relProject,
     relActivity,
     relUser,
-    approvedGP,
-    billable,
-    released,
-    approved,
+    releasedCall,
     activityDesc,
-  }: Hours
+  }: UpdateHoursProps
 ) => {
   const result = await Api.put(`/hours/${id}`, {
     initial,
@@ -70,10 +67,7 @@ export const updateHours = async (
     relProject,
     relActivity,
     relUser,
-    approvedGP,
-    billable,
-    released,
-    approved,
+    releasedCall,
     activityDesc,
   });
 

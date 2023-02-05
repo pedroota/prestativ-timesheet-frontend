@@ -13,6 +13,9 @@ export function formatLogs(action: string) {
     case "PUT":
       returnMethod = "Atualizou";
       break;
+    case "PATCH":
+      returnMethod = "Atualizou";
+      break;
     default:
       returnMethod = "Sem informações";
       break;

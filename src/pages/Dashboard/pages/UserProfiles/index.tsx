@@ -93,7 +93,7 @@ export function UserProfiles() {
                               <Chip
                                 key={permission}
                                 label={permission}
-                                sx={{ marginInline: "0.25rem" }}
+                                sx={{ margin: "0.25rem" }}
                               />
                             ))
                           ) : (

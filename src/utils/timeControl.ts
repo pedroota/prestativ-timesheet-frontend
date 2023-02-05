@@ -80,6 +80,11 @@ function generateTotalHoursWithAdjustment(
   }
 }
 
+function convertDate(dateString: string) {
+  const parts = dateString.split("/");
+  return `${parts[2]}-${parts[1]}-${parts[0]}`;
+}
+
 export {
   generateDateWithTimestamp,
   generateTimeWithTimestamp,
@@ -89,4 +94,5 @@ export {
   generateAdjustmentWithNumberInMilliseconds,
   generateMilisecondsWithTime,
   generateTotalHoursWithAdjustment,
+  convertDate,
 };

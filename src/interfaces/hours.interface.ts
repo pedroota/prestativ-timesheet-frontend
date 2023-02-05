@@ -53,3 +53,15 @@ export interface PatchHour {
   field: string;
   value: boolean;
 }
+
+export interface UpdateHoursProps {
+  initial: number;
+  final: number;
+  adjustment: number;
+  relClient: string;
+  relProject: string;
+  relActivity: string;
+  relUser: string;
+  releasedCall: string;
+  activityDesc: string;
+}
