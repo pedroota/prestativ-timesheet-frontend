@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { getUserByRole } from "services/auth.service";
 import { createClients } from "services/clients.service";
-import { cepMask, cnpjMask } from "utils/masks";
+import { cepMask, cnpjMask, currencyMask } from "utils/masks";
 import { validateCNPJ } from "utils/validator";
 import cep from "cep-promise";
 import { Permission } from "components/Permission";
@@ -75,7 +75,7 @@ export function RegisterClient() {
           periodUntil,
           billingLimit,
           payDay,
-          valueClient,
+          valueClient: priceNumber,
           gpClient,
         })
           .then(() => {
@@ -88,6 +88,15 @@ export function RegisterClient() {
       }
     }
   );
+
+  const [price, setPrice] = useState("");
+  const [priceNumber, setPriceNumber] = useState(0);
+
+  const setNewPrice = (e: { target: { value: string } }) => {
+    const stringValue = e.target.value;
+    setPrice(stringValue);
+    setPriceNumber(Number(stringValue.slice(2)));
+  };
 
   return (
     <Permission roles={["CADASTRO_CLIENTE"]}>
@@ -232,7 +241,9 @@ export function RegisterClient() {
             sx={{ width: "100%" }}
             label="Valor"
             type="text"
+            value={price && currencyMask(price)}
             {...register("valueClient")}
+            onChange={(event) => setNewPrice(event)}
           />
           <TextField
             required

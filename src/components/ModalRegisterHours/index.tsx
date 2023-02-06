@@ -111,6 +111,24 @@ export function ModalRegisterHours({
   // Requests inputs
   const { data: clients } = useQuery(["clients"], () => getClients());
 
+  // botão DIA DE HOJE
+  const [chosenDay, setChosenDay] = useState("");
+
+  const setDay = (e: { target: { value: string } }) => {
+    setChosenDay(e.target.value);
+  };
+
+  const setToday = (yesterday: number) => {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate() - yesterday;
+    const string = `${year}-${month < 10 ? "0" + month : month}-${
+      day < 10 ? "0" + day : day
+    }`;
+    setChosenDay(string);
+  };
+
   return (
     <Dialog open={isOpen} onClose={() => setIsOpen((prevState) => !prevState)}>
       <Box sx={{ padding: 4, minWidth: 420 }}>
@@ -129,6 +147,30 @@ export function ModalRegisterHours({
           />
         </Box>
         <form className="c-form-spacing" onSubmit={onSubmit}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row-reverse",
+              gap: "1rem",
+            }}
+          >
+            <Button
+              variant="contained"
+              color="warning"
+              onClick={() => setToday(0)}
+              sx={{ paddingBlock: "1rem" }}
+            >
+              Hoje
+            </Button>
+            <Button
+              variant="contained"
+              color="warning"
+              onClick={() => setToday(1)}
+              sx={{ paddingBlock: "1rem" }}
+            >
+              Ontem
+            </Button>
+          </Box>
           <FormLabel
             sx={{
               width: "100%",
@@ -143,7 +185,9 @@ export function ModalRegisterHours({
               color="warning"
               variant="outlined"
               required
+              value={chosenDay}
               {...register("initialDate")}
+              onChange={setDay}
             />
           </FormLabel>
           <Box sx={{ display: "flex", gap: "1rem" }}>
