@@ -105,6 +105,7 @@ export function ModalRegisterHours({
         relUser: user._id,
         activityDesc,
       });
+      toast.success("Lançamento efetuado com sucesso");
     }
   );
 

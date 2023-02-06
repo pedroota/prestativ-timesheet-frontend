@@ -49,7 +49,10 @@ export function ModalEditReleasedCall({
     }
   );
 
-  const onSubmit = handleSubmit((releasedCall) => mutate(releasedCall));
+  const onSubmit = handleSubmit((releasedCall) => {
+    mutate(releasedCall);
+    toast.success("Chamado Lançado foi atualizado com sucesso.");
+  });
 
   return (
     <Permission roles={["EDITAR_CHAMADO_LANCADO"]}>
