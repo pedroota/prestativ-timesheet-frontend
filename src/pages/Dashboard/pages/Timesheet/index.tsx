@@ -19,6 +19,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import BrushIcon from "@mui/icons-material/Brush";
 import { Hours, PatchHour } from "interfaces/hours.interface";
 import { ModalRegisterHours } from "components/ModalRegisterHours";
 import { EmptyList } from "components/EmptyList";
@@ -41,10 +42,12 @@ import { Filters } from "components/Filters";
 import { Permission } from "components/Permission";
 import { PatchActivities } from "interfaces/activities.interface";
 import { currencyMask } from "utils/masks";
+import { ModalEditReleasedCall } from "./components/ModalEditReleasedCall";
 
 export function Timesheet() {
   const queryClient = useQueryClient();
   const [isEditingHour, setIsEditingHour] = useState(false);
+  const [isEditingReleasedCall, setIsEditingReleasedCall] = useState(false);
   const [currentHour, setCurrentHour] = useState("");
   const [isAddingHours, setIsAddingHours] = useState(false);
   const [stringFilters, setStringFilters] = useState("");
@@ -490,6 +493,18 @@ export function Timesheet() {
                                       cursor: "pointer",
                                     }}
                                   >
+                                    <Permission
+                                      roles={["EDITAR_CHAMADO_LANCADO"]}
+                                    >
+                                      <BrushIcon
+                                        onClick={() => {
+                                          setCurrentHour(_id);
+                                          setIsEditingReleasedCall(
+                                            (prevState) => !prevState
+                                          );
+                                        }}
+                                      />
+                                    </Permission>
                                     <Permission roles={["EDITAR_HORAS"]}>
                                       <EditIcon
                                         onClick={() => {
@@ -535,6 +550,13 @@ export function Timesheet() {
         <ModalEditHours
           isOpen={isEditingHour}
           setIsOpen={setIsEditingHour}
+          currentHour={currentHour}
+        />
+      </Permission>
+      <Permission roles={["EDITAR_CHAMADO_LANCADO"]}>
+        <ModalEditReleasedCall
+          isOpen={isEditingReleasedCall}
+          setIsOpen={setIsEditingReleasedCall}
           currentHour={currentHour}
         />
       </Permission>
