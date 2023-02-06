@@ -61,11 +61,8 @@ function generateAdjustmentWithNumberInMilliseconds(number: number) {
   }`;
 }
 
-function generateMilisecondsWithTime(dateString: string) {
-  const time = dateString.split(":");
-  const minutes = Number(time[1]) * 60 * 1000;
-  const hours = Number(time[0]) * 60 * 60 * 1000;
-  return minutes + hours;
+function generateMilisecondsWithTime(minutes: number) {
+  return minutes * 60 * 60 * 1000;
 }
 
 function generateTotalHoursWithAdjustment(
