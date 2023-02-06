@@ -126,7 +126,7 @@ export function ModalEditUser({
               color="warning"
               select
               defaultValue={"nenhum"}
-              label="Campo Relacionado"
+              label="Campo Cadastral"
               type="typeField"
               {...register("typeField")}
             >
@@ -143,7 +143,7 @@ export function ModalEditUser({
             <Select
               {...register("role")}
               labelId="select-label-helper"
-              label="Permissão"
+              label="Perfil"
               color="warning"
             >
               <MenuItem value="">Selecione uma opção</MenuItem>

@@ -89,7 +89,7 @@ export function RegisterUser() {
           color="warning"
           select
           defaultValue={"nenhum"}
-          label="Campo Relacionado"
+          label="Campo Cadastral"
           type="typeField"
           {...register("typeField")}
         >
@@ -107,7 +107,6 @@ export function RegisterUser() {
           label="Perfil do Usuário"
           select
           color="warning"
-          defaultValue="Consultor"
           {...register("role")}
         >
           <MenuItem value="">Selecione uma opção</MenuItem>

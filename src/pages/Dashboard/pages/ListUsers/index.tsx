@@ -65,10 +65,10 @@ export function ListUsers() {
                             Email
                           </StyledTableCell>
                           <StyledTableCell align="center">
-                            Campo Relacionado
+                            Campo Cadastral
                           </StyledTableCell>
                           <StyledTableCell align="center">
-                            Permissão
+                            Perfil
                           </StyledTableCell>
                           <Permission
                             roles={["EDITAR_USUARIO" || "DELETAR_USUARIO"]}
