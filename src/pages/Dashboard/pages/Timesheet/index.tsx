@@ -96,22 +96,47 @@ export function Timesheet() {
         <Typography variant="h4" sx={{ marginBlock: "1.3rem" }}>
           Timesheet
         </Typography>
-        <Permission roles={["LANCAR_HORAS"]}>
-          <Tooltip title="Cadastre novas horas" arrow placement="top">
-            <Button
-              onClick={() => setIsAddingHours((prevState) => !prevState)}
-              variant="contained"
-              color="warning"
-              sx={{
-                marginBottom: "0.8rem",
-                paddingInline: "1rem",
-                paddingBlock: "0.8rem",
-              }}
-            >
-              Lançar horas
-            </Button>
-          </Tooltip>
-        </Permission>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            flexDirection: "row-reverse",
+          }}
+        >
+          <Permission roles={["LANCAR_HORAS"]}>
+            <Tooltip title="Cadastre novas horas" arrow placement="top">
+              <Button
+                onClick={() => setIsAddingHours((prevState) => !prevState)}
+                variant="contained"
+                color="warning"
+                sx={{
+                  marginBottom: "0.8rem",
+                  paddingInline: "1rem",
+                  paddingBlock: "0.8rem",
+                }}
+              >
+                Lançar horas
+              </Button>
+            </Tooltip>
+          </Permission>
+          <Permission roles={["EXPORTAR_EXCEL"]}>
+            <Tooltip title="Exportar dados para Excel" arrow placement="top">
+              <Button
+                onClick={() => console.log("gerarExcel")}
+                variant="contained"
+                color="success"
+                sx={{
+                  marginBottom: "0.8rem",
+                  paddingInline: "1rem",
+                  paddingBlock: "0.8rem",
+                }}
+              >
+                Exportar Excel
+              </Button>
+            </Tooltip>
+          </Permission>
+        </Box>
       </Box>
       <Filters receiveDataURI={receiveDataURI} />
       {isLoading ? (
