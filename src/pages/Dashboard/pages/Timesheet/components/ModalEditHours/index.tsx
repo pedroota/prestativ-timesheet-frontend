@@ -90,7 +90,6 @@ export function ModalEditHours({
       relProject,
       relActivity,
       relUser,
-      releasedCall,
       activityDesc,
     }: UpdateHoursProps) =>
       updateHours(currentHour, {
@@ -101,7 +100,6 @@ export function ModalEditHours({
         relProject,
         relActivity,
         relUser,
-        releasedCall,
         activityDesc,
       }),
     {
@@ -124,7 +122,6 @@ export function ModalEditHours({
       finalHour,
       initialDate,
       initialHour,
-      releasedCall,
     }) => {
       const initial = generateTimestampWithDateAndTime(
         initialDate,
@@ -155,7 +152,6 @@ export function ModalEditHours({
         relActivity: selectedActivity,
         relClient: selectedClient,
         relProject: selectedProject,
-        releasedCall,
         relUser: user._id,
       });
     }

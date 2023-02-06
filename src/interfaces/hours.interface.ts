@@ -71,6 +71,5 @@ export interface UpdateHoursProps {
   relProject: string;
   relActivity: string;
   relUser: string;
-  releasedCall: string;
   activityDesc: string;
 }
