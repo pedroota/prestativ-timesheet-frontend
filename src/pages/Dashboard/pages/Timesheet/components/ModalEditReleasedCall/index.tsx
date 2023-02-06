@@ -35,7 +35,8 @@ export function ModalEditReleasedCall({
   });
 
   const { mutate } = useMutation(
-    (releasedCall: FormData) => updateReleasedCall(currentHour, releasedCall),
+    (releasedCall: FormData) =>
+      updateReleasedCall(currentHour, releasedCall.releasedCall),
     {
       onSuccess: () => {
         setIsOpen((prevState) => !prevState);

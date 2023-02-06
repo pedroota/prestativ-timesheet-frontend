@@ -74,15 +74,8 @@ export const updateHours = async (
   return result;
 };
 
-interface FormData {
-  releasedCall: string;
-}
-
-export const updateReleasedCall = async (
-  id: string,
-  releasedCall: FormData
-) => {
-  const result = await Api.put(`/hours/${id}`, {
+export const updateReleasedCall = async (id: string, releasedCall: string) => {
+  const result = await Api.patch(`/hours/releasedcall/${id}`, {
     releasedCall,
   });
 
