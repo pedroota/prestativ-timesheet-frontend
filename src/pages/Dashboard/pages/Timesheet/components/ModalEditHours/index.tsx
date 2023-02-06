@@ -90,7 +90,6 @@ export function ModalEditHours({
       relProject,
       relActivity,
       relUser,
-      releasedCall,
       activityDesc,
     }: UpdateHoursProps) =>
       updateHours(currentHour, {
@@ -101,7 +100,6 @@ export function ModalEditHours({
         relProject,
         relActivity,
         relUser,
-        releasedCall,
         activityDesc,
       }),
     {
@@ -118,14 +116,7 @@ export function ModalEditHours({
   );
 
   const onSubmit = handleSubmit(
-    ({
-      activityDesc,
-      adjustment,
-      finalHour,
-      initialDate,
-      initialHour,
-      releasedCall,
-    }) => {
+    ({ activityDesc, adjustment, finalHour, initialDate, initialHour }) => {
       const initial = generateTimestampWithDateAndTime(
         initialDate,
         initialHour
@@ -155,7 +146,6 @@ export function ModalEditHours({
         relActivity: selectedActivity,
         relClient: selectedClient,
         relProject: selectedProject,
-        releasedCall,
         relUser: user._id,
       });
     }

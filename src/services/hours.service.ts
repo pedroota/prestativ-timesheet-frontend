@@ -55,7 +55,6 @@ export const updateHours = async (
     relProject,
     relActivity,
     relUser,
-    releasedCall,
     activityDesc,
   }: UpdateHoursProps
 ) => {
@@ -67,7 +66,6 @@ export const updateHours = async (
     relProject,
     relActivity,
     relUser,
-    releasedCall,
     activityDesc,
   });
 
