@@ -483,7 +483,22 @@ export function Timesheet() {
                                 {approvedGP ||
                                 billable ||
                                 released ||
-                                approved ? null : (
+                                approved ? (
+                                  !released ? (
+                                    <Permission
+                                      roles={["EDITAR_CHAMADO_LANCADO"]}
+                                    >
+                                      <BrushIcon
+                                        onClick={() => {
+                                          setCurrentHour(_id);
+                                          setIsEditingReleasedCall(
+                                            (prevState) => !prevState
+                                          );
+                                        }}
+                                      />
+                                    </Permission>
+                                  ) : null
+                                ) : (
                                   <Box
                                     sx={{
                                       display: "flex",
