@@ -40,6 +40,7 @@ import { ModalEditHours } from "./components/ModalEditHours";
 import { Filters } from "components/Filters";
 import { Permission } from "components/Permission";
 import { PatchActivities } from "interfaces/activities.interface";
+import { currencyMask } from "utils/masks";
 
 export function Timesheet() {
   const queryClient = useQueryClient();
@@ -323,11 +324,14 @@ export function Timesheet() {
                             </Permission>
                             <Permission roles={["VALOR"]}>
                               <StyledTableCell align="center">
-                                {relActivity.valueActivity
-                                  ? relActivity.valueActivity
-                                  : relProject.valueProject
-                                  ? relProject.valueProject
-                                  : relClient.valueClient}
+                                {currencyMask(
+                                  (relActivity.valueActivity
+                                    ? relActivity.valueActivity
+                                    : relProject.valueProject
+                                    ? relProject.valueProject
+                                    : relClient.valueClient
+                                  ).toString()
+                                )}
                               </StyledTableCell>
                             </Permission>
                             <Permission roles={["GERENTE_DE_PROJETOS"]}>
