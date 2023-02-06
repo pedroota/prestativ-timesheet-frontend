@@ -40,6 +40,7 @@ export function ModalEditReleasedCall({
     {
       onSuccess: () => {
         setIsOpen((prevState) => !prevState);
+        toast.success("Chamado Lançado foi atualizado com sucesso.");
       },
       onError: () => {
         toast.error("Ocorreu um erro ao atualizar Chamado Lançado.", {
@@ -49,10 +50,7 @@ export function ModalEditReleasedCall({
     }
   );
 
-  const onSubmit = handleSubmit((releasedCall) => {
-    mutate(releasedCall);
-    toast.success("Chamado Lançado foi atualizado com sucesso.");
-  });
+  const onSubmit = handleSubmit((releasedCall) => mutate(releasedCall));
 
   return (
     <Permission roles={["EDITAR_CHAMADO_LANCADO"]}>
