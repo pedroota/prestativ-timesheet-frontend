@@ -116,13 +116,7 @@ export function ModalEditHours({
   );
 
   const onSubmit = handleSubmit(
-    ({
-      activityDesc,
-      adjustment,
-      finalHour,
-      initialDate,
-      initialHour,
-    }) => {
+    ({ activityDesc, adjustment, finalHour, initialDate, initialHour }) => {
       const initial = generateTimestampWithDateAndTime(
         initialDate,
         initialHour
