@@ -184,166 +184,182 @@ export function ModalEditHours({
             />
           </Box>
           <form className="c-form-spacing" onSubmit={onSubmit}>
-            <Box sx={{ display: "flex", gap: "1rem" }}>
-              <FormLabel
-                sx={{
-                  width: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "0.2rem",
-                }}
-              >
-                Data
+            <Permission
+              roles={["EDITAR_CAMPOS_HORAS_LANCADAS" || "EDITAR_AJUSTE"]}
+            >
+              <Box sx={{ display: "flex", gap: "1rem" }}>
+                <Permission roles={["EDITAR_CAMPOS_HORAS_LANCADAS"]}>
+                  <FormLabel
+                    sx={{
+                      width: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "0.2rem",
+                    }}
+                  >
+                    Data
+                    <TextField
+                      type="date"
+                      color="warning"
+                      variant="outlined"
+                      required
+                      {...register("initialDate")}
+                    />
+                  </FormLabel>
+                </Permission>
+                <Permission roles={["EDITAR_AJUSTE"]}>
+                  <FormLabel
+                    sx={{
+                      width: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "0.2rem",
+                    }}
+                  >
+                    Ajuste
+                    <TextField
+                      type="time"
+                      color="warning"
+                      variant="outlined"
+                      {...register("adjustment")}
+                    />
+                  </FormLabel>
+                </Permission>
+              </Box>
+            </Permission>
+            <Permission roles={["EDITAR_CAMPOS_HORAS_LANCADAS"]}>
+              <Box sx={{ display: "flex", gap: "1rem" }}>
+                <FormLabel
+                  sx={{
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "0.2rem",
+                  }}
+                >
+                  Hora inicial
+                  <TextField
+                    type="time"
+                    color="warning"
+                    variant="outlined"
+                    required
+                    {...register("initialHour")}
+                  />
+                </FormLabel>
+                <FormLabel
+                  sx={{
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "0.2rem",
+                  }}
+                >
+                  Hora final
+                  <TextField
+                    type="time"
+                    color="warning"
+                    variant="outlined"
+                    required
+                    {...register("finalHour")}
+                  />
+                </FormLabel>
+              </Box>
+            </Permission>
+            <Permission roles={["EDITAR_CAMPOS_HORAS_LANCADAS"]}>
+              <Box sx={{ display: "flex", gap: "1rem" }}>
                 <TextField
-                  type="date"
-                  color="warning"
-                  variant="outlined"
                   required
-                  {...register("initialDate")}
-                />
-              </FormLabel>
-              <FormLabel
-                sx={{
-                  width: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "0.2rem",
-                }}
-              >
-                Ajuste
-                <TextField
-                  type="time"
                   color="warning"
                   variant="outlined"
-                  {...register("adjustment")}
-                />
-              </FormLabel>
-            </Box>
-            <Box sx={{ display: "flex", gap: "1rem" }}>
-              <FormLabel
-                sx={{
-                  width: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "0.2rem",
-                }}
-              >
-                Hora inicial
-                <TextField
-                  type="time"
-                  color="warning"
-                  variant="outlined"
-                  required
-                  {...register("initialHour")}
-                />
-              </FormLabel>
-              <FormLabel
-                sx={{
-                  width: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "0.2rem",
-                }}
-              >
-                Hora final
-                <TextField
-                  type="time"
-                  color="warning"
-                  variant="outlined"
-                  required
-                  {...register("finalHour")}
-                />
-              </FormLabel>
-            </Box>
-
-            <Box sx={{ display: "flex", gap: "1rem" }}>
-              <TextField
-                required
-                color="warning"
-                variant="outlined"
-                label="Cliente"
-                select
-                value={selectedClient}
-                InputLabelProps={{ shrink: true }}
-                sx={{ width: "100%" }}
-                onChange={(event) => setSelectedClient(event.target.value)}
-              >
-                <MenuItem value="" disabled>
-                  Selecione uma opção
-                </MenuItem>
-                {clients?.data.map(({ name, _id }: ClientsInfo) => (
-                  <MenuItem key={_id} value={_id}>
-                    {name}
+                  label="Cliente"
+                  select
+                  value={selectedClient}
+                  InputLabelProps={{ shrink: true }}
+                  sx={{ width: "100%" }}
+                  onChange={(event) => setSelectedClient(event.target.value)}
+                >
+                  <MenuItem value="" disabled>
+                    Selecione uma opção
                   </MenuItem>
-                ))}
-              </TextField>
+                  {clients?.data.map(({ name, _id }: ClientsInfo) => (
+                    <MenuItem key={_id} value={_id}>
+                      {name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  required
+                  color="warning"
+                  variant="outlined"
+                  label="Projeto"
+                  InputLabelProps={{ shrink: true }}
+                  select
+                  value={selectedProject}
+                  sx={{ width: "100%" }}
+                  onChange={(event) => setSelectedProject(event.target.value)}
+                >
+                  <MenuItem value="" disabled>
+                    Selecione uma opção
+                  </MenuItem>
+                  {clients?.data
+                    .find(
+                      (client: ClientsInfo) => client._id === selectedClient
+                    )
+                    ?.projects.map(({ _id, title }: ProjectsInfo) => (
+                      <MenuItem key={_id} value={_id}>
+                        {title}
+                      </MenuItem>
+                    ))}
+                </TextField>
+              </Box>
+            </Permission>
+            <Permission roles={["EDITAR_CAMPOS_HORAS_LANCADAS"]}>
               <TextField
                 required
                 color="warning"
                 variant="outlined"
-                label="Projeto"
+                label="Atividade"
                 InputLabelProps={{ shrink: true }}
+                value={selectedActivity}
                 select
-                value={selectedProject}
-                sx={{ width: "100%" }}
-                onChange={(event) => setSelectedProject(event.target.value)}
+                onChange={(event) => setSelectedActivity(event.target.value)}
               >
                 <MenuItem value="" disabled>
                   Selecione uma opção
                 </MenuItem>
                 {clients?.data
                   .find((client: ClientsInfo) => client._id === selectedClient)
-                  ?.projects.map(({ _id, title }: ProjectsInfo) => (
+                  ?.projects.find(
+                    (project: ProjectsInfo) => project._id === selectedProject
+                  )
+                  ?.activities.map(({ _id, title }: ActivitiesInfo) => (
                     <MenuItem key={_id} value={_id}>
                       {title}
                     </MenuItem>
                   ))}
               </TextField>
-            </Box>
-
-            <TextField
-              required
-              color="warning"
-              variant="outlined"
-              label="Atividade"
-              InputLabelProps={{ shrink: true }}
-              value={selectedActivity}
-              select
-              onChange={(event) => setSelectedActivity(event.target.value)}
-            >
-              <MenuItem value="" disabled>
-                Selecione uma opção
-              </MenuItem>
-              {clients?.data
-                .find((client: ClientsInfo) => client._id === selectedClient)
-                ?.projects.find(
-                  (project: ProjectsInfo) => project._id === selectedProject
-                )
-                ?.activities.map(({ _id, title }: ActivitiesInfo) => (
-                  <MenuItem key={_id} value={_id}>
-                    {title}
-                  </MenuItem>
-                ))}
-            </TextField>
-            <TextField
-              required
-              color="warning"
-              multiline
-              rows={4}
-              variant="outlined"
-              label="Descrição da Atividade"
-              InputLabelProps={{ shrink: true }}
-              {...register("activityDesc")}
-            />
-            <TextField
-              color="warning"
-              multiline
-              rows={4}
-              variant="outlined"
-              label="Chamado Lançado"
-              InputLabelProps={{ shrink: true }}
-              {...register("releasedCall")}
-            />
+              <TextField
+                required
+                color="warning"
+                multiline
+                rows={4}
+                variant="outlined"
+                label="Descrição da Atividade"
+                InputLabelProps={{ shrink: true }}
+                {...register("activityDesc")}
+              />
+            </Permission>
+            <Permission roles={["EDITAR_CHAMADO_LANCADO"]}>
+              <TextField
+                color="warning"
+                multiline
+                rows={4}
+                variant="outlined"
+                label="Chamado Lançado"
+                InputLabelProps={{ shrink: true }}
+                {...register("releasedCall")}
+              />
+            </Permission>
             <Button
               variant="contained"
               color="warning"
