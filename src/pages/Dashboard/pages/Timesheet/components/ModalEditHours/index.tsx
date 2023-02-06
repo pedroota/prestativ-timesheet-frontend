@@ -395,17 +395,6 @@ export function ModalEditHours({
                 {...register("activityDesc")}
               />
             </Permission>
-            <Permission roles={["EDITAR_CHAMADO_LANCADO"]}>
-              <TextField
-                color="warning"
-                multiline
-                rows={4}
-                variant="outlined"
-                label="Chamado Lançado"
-                InputLabelProps={{ shrink: true }}
-                {...register("releasedCall")}
-              />
-            </Permission>
             <Button
               variant="contained"
               color="warning"

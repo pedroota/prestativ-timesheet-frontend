@@ -74,6 +74,14 @@ export const updateHours = async (
   return result;
 };
 
+export const updateReleasedCall = async (id: string, releasedCall: string) => {
+  const result = await Api.patch(`/hours/releasedcall/${id}`, {
+    releasedCall,
+  });
+
+  return result;
+};
+
 export const deleteHours = async (_id: string) => {
   const result = await Api.delete(`/hours/${_id}`);
 
