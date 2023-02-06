@@ -18,6 +18,7 @@ import { Activities } from "interfaces/activities.interface";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { Permission } from "components/Permission";
+import { currencyMask } from "utils/masks";
 
 export function RegisterActivity() {
   const { data: projectList } = useQuery(["client-project"], () =>
@@ -46,7 +47,7 @@ export function RegisterActivity() {
       createActivities({
         title,
         project,
-        valueActivity,
+        valueActivity: priceNumber,
         gpActivity,
         description,
         users,
@@ -68,6 +69,15 @@ export function RegisterActivity() {
         ? event.target.value.split(",")
         : event.target.value
     );
+  };
+
+  const [price, setPrice] = useState("");
+  const [priceNumber, setPriceNumber] = useState(0);
+
+  const setNewPrice = (e: { target: { value: string } }) => {
+    const stringValue = e.target.value;
+    setPrice(stringValue);
+    setPriceNumber(Number(stringValue.slice(2)));
   };
 
   return (
@@ -102,7 +112,9 @@ export function RegisterActivity() {
           color="warning"
           label="Valor da atividade"
           type="text"
+          value={price && currencyMask(price)}
           {...register("valueActivity")}
+          onChange={(event) => setNewPrice(event)}
         />
         <TextField
           required

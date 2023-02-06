@@ -9,6 +9,8 @@ import { UserRegister } from "interfaces/users.interface";
 import { ClientsInfo } from "interfaces/clients.interface";
 import { toast } from "react-toastify";
 import { Permission } from "components/Permission";
+import { currencyMask } from "utils/masks";
+import { useState } from "react";
 
 export function RegisterProject() {
   const { data: clientList } = useQuery([], () => getClients());
@@ -22,7 +24,7 @@ export function RegisterProject() {
       createProjects({
         title,
         idClient,
-        valueProject,
+        valueProject: priceNumber,
         gpProject,
         description,
       })
@@ -33,6 +35,15 @@ export function RegisterProject() {
         .catch(() => toast.error("Erro ao criar o projeto."));
     }
   );
+
+  const [price, setPrice] = useState("");
+  const [priceNumber, setPriceNumber] = useState(0);
+
+  const setNewPrice = (e: { target: { value: string } }) => {
+    const stringValue = e.target.value;
+    setPrice(stringValue);
+    setPriceNumber(Number(stringValue.slice(2)));
+  };
 
   return (
     <Permission roles={["CADASTRO_PROJETO"]}>
@@ -61,9 +72,11 @@ export function RegisterProject() {
         </TextField>
         <TextField
           label="Valor"
-          {...register("valueProject")}
           color="warning"
           variant="outlined"
+          value={price && currencyMask(price)}
+          {...register("valueProject")}
+          onChange={(event) => setNewPrice(event)}
         />
         <TextField
           color="warning"
