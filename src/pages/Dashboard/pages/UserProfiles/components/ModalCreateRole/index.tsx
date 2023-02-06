@@ -85,7 +85,7 @@ export function ModalCreateRole({ isOpen, setIsOpen }: ModalCreateRoleProps) {
             <TextField
               required
               color="warning"
-              label="Nome do cargo"
+              label="Nome do perfil"
               type="text"
               InputLabelProps={{ shrink: true }}
               {...register("name")}

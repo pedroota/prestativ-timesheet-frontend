@@ -91,7 +91,7 @@ export function ModalEditRole({
             <TextField
               color="warning"
               {...register("name")}
-              label="Nome do cargo"
+              label="Nome do perfil"
               InputLabelProps={{ shrink: true }}
             />
             <Select
