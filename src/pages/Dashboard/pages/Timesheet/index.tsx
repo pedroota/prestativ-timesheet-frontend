@@ -168,7 +168,7 @@ export function Timesheet() {
                         Cliente: relClient?.name,
                         Projeto: relProject?.title,
                         Atividade: relActivity?.title,
-                        Valor: currencyMask(
+                        Valor: Number(
                           (relActivity.valueActivity
                             ? relActivity.valueActivity
                             : relProject.valueProject
