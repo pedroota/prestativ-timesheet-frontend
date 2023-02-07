@@ -20,7 +20,8 @@ export function Filters({ receiveDataURI }: FiltersProps) {
   const [selectedProject, setSelectedProject] = useState("");
   const [selectedActivity, setSelectedActivity] = useState("");
   const [selectedConsultant, setSelectedConsultant] = useState("");
-  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedInitialDate, setSelectedInitialDate] = useState("");
+  const [selectedFinalDate, setSelectedFinalDate] = useState("");
 
   return (
     <Box
@@ -34,15 +35,27 @@ export function Filters({ receiveDataURI }: FiltersProps) {
       <h2>Filtros: </h2>
       <TextField
         id="date"
-        label="Data"
+        label="Data Inicial"
         type="date"
         color="warning"
-        value={selectedDate}
+        value={selectedInitialDate}
         sx={{ width: 220 }}
         InputLabelProps={{
           shrink: true,
         }}
-        onChange={(event) => setSelectedDate(event.target.value)}
+        onChange={(event) => setSelectedInitialDate(event.target.value)}
+      />
+      <TextField
+        id="date"
+        label="Data Final"
+        type="date"
+        color="warning"
+        value={selectedFinalDate}
+        sx={{ width: 220 }}
+        InputLabelProps={{
+          shrink: true,
+        }}
+        onChange={(event) => setSelectedFinalDate(event.target.value)}
       />
       <TextField
         style={{ width: "200px" }}
@@ -120,7 +133,8 @@ export function Filters({ receiveDataURI }: FiltersProps) {
         variant="contained"
         onClick={() => {
           const array = [
-            selectedDate ? `data=${selectedDate}` : "",
+            selectedInitialDate ? `dataI=${selectedInitialDate}` : "",
+            selectedFinalDate ? `dataF=${selectedFinalDate}` : "",
             selectedClient ? `relClient=${selectedClient}` : "",
             selectedProject ? `relProject=${selectedProject}` : "",
             selectedActivity ? `relActivity=${selectedActivity}` : "",
@@ -137,7 +151,8 @@ export function Filters({ receiveDataURI }: FiltersProps) {
         color="warning"
         variant="contained"
         onClick={() => {
-          setSelectedDate("");
+          setSelectedInitialDate("");
+          setSelectedFinalDate("");
           setSelectedActivity("");
           setSelectedProject("");
           setSelectedClient("");

@@ -59,6 +59,12 @@ export function ModalRegisterHours({
       onSuccess: () => {
         queryClient.invalidateQueries(["hours"]);
         setIsOpen((prevState) => !prevState);
+        toast.success("Lançamento efetuado com sucesso");
+      },
+      onError: () => {
+        toast.error("Erro ao tentar efetuar esse lançamento.", {
+          autoClose: 1000,
+        });
       },
     }
   );

@@ -131,11 +131,11 @@ export function ModalEditHours({
       const daysInMiliseconds = maxDaysCanRelease * 1000 * 60 * 60 * 24;
       const today = Date.now();
       if (initial > today + daysInMiliseconds / maxDaysCanRelease) {
-        toast.error("A data informada ainda não está disponível para lançar");
+        toast.error("A data informada não é permitida");
         return;
       }
       if (initial < today - daysInMiliseconds) {
-        toast.error("A data informada é muito antiga");
+        toast.error("A data informada não é permitida");
         return;
       }
       mutate({
@@ -148,6 +148,7 @@ export function ModalEditHours({
         relProject: selectedProject,
         relUser: user._id,
       });
+      toast.success("Lançamento alterado com sucesso");
     }
   );
 

@@ -40,6 +40,7 @@ export function ModalEditReleasedCall({
     {
       onSuccess: () => {
         setIsOpen((prevState) => !prevState);
+        toast.success("Chamado Lançado foi atualizado com sucesso.");
       },
       onError: () => {
         toast.error("Ocorreu um erro ao atualizar Chamado Lançado.", {
