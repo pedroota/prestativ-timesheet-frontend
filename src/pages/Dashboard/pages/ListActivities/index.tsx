@@ -21,6 +21,7 @@ import Checkbox from "@mui/material/Checkbox";
 import { StyledTableCell } from "components/StyledTableCell";
 import { StyledTableRow } from "components/StyledTableRow";
 import { Permission } from "components/Permission";
+import Chip from "@mui/material/Chip";
 
 interface ConsultantUsers {
   name: string;
@@ -132,9 +133,18 @@ export function ListActivities() {
                                 {description}
                               </StyledTableCell>
                               <StyledTableCell align="center">
-                                {users.map(
-                                  ({ name, surname }: ConsultantUsers) =>
-                                    `${name} ${surname}`
+                                {users.length ? (
+                                  users.map(
+                                    ({ name, surname }: ConsultantUsers) => (
+                                      <Chip
+                                        key={name}
+                                        label={`${name} ${surname}`}
+                                        sx={{ margin: "0.25rem" }}
+                                      />
+                                    )
+                                  )
+                                ) : (
+                                  <p>Nenhum usuário foi vinculado</p>
                                 )}
                               </StyledTableCell>
                               <StyledTableCell align="center">

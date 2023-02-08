@@ -162,7 +162,6 @@ export function ModalEditActivity({
               )}
             </Select>
             <TextField
-              required
               color="warning"
               label="Valor da atividade"
               type="number"
@@ -180,7 +179,6 @@ export function ModalEditActivity({
             <div className="c-register-activity--input-container">
               <Select
                 color="warning"
-                required
                 labelId="select-label-helper"
                 {...register("gpActivity")}
                 sx={{ width: "100%" }}
