@@ -79,6 +79,9 @@ export function RegisterClient() {
         })
           .then(() => {
             reset();
+            setPrice("");
+            setValueCep("");
+            setValues({ cnpj: "" });
             toast.success("Cliente criado com sucesso.");
           })
           .catch(() => toast.error("Erro ao cadastrar o cliente."));
