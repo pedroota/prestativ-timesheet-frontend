@@ -7,10 +7,6 @@ import {
   Select,
   MenuItem,
   Button,
-  List,
-  ListItem,
-  ListItemText,
-  ListSubheader,
 } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import { SetStateAction } from "react";
@@ -21,13 +17,11 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createRoles } from "services/roles.service";
 import { Roles } from "interfaces/roles.interface";
-import TableBody from "@mui/material/TableBody/TableBody";
-import { StyledTableRow } from "components/StyledTableRow";
-import { StyledTableCell } from "components/StyledTableCell";
-import Table from "@mui/material/Table/Table";
-import TableHead from "@mui/material/TableHead/TableHead";
-import TableRow from "@mui/material/TableRow/TableRow";
 import { SwitchIOS } from "components/SwitchIOS";
+import InputLabel from "@mui/material/InputLabel/InputLabel";
+import OutlinedInput from "@mui/material/OutlinedInput/OutlinedInput";
+import Checkbox from "@mui/material/Checkbox/Checkbox";
+import ListItemText from "@mui/material/ListItemText/ListItemText";
 
 interface ModalCreateRoleProps {
   isOpen: boolean;
@@ -101,15 +95,27 @@ export function ModalCreateRole({ isOpen, setIsOpen }: ModalCreateRoleProps) {
               InputLabelProps={{ shrink: true }}
               {...register("name")}
             />
+
+            <InputLabel id="demo-multiple-checkbox-label">
+              Permissões
+            </InputLabel>
             <Select
-              value={multipleSelectValue}
-              {...register("permissions")}
-              onChange={handleMultipleSelectChange}
+              labelId="demo-multiple-checkbox-label"
+              id="demo-multiple-checkbox"
               multiple
+              value={multipleSelectValue}
+              onChange={handleMultipleSelectChange}
+              renderValue={(selected) => selected.join(", ")}
             >
               {Object.values(Permissions).map((permission, index) => (
-                <MenuItem value={permission} key={index}>
-                  {permission}
+                <MenuItem key={index} value={permission}>
+                  <SwitchIOS
+                    color="warning"
+                    checked={multipleSelectValue.indexOf(permission) > -1}
+                    inputProps={{ "aria-label": "controlled" }}
+                    sx={{ marginRight: 2 }}
+                  />
+                  <ListItemText primary={permission} />
                 </MenuItem>
               ))}
             </Select>
