@@ -163,6 +163,8 @@ export function Timesheet() {
     <div>
       <Box
         sx={{
+          width: "90vw",
+          overflowX: "auto",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -217,7 +219,6 @@ export function Timesheet() {
       {isLoading ? (
         <Box
           sx={{
-            width: "100%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
