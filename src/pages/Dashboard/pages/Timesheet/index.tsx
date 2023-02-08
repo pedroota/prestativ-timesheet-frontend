@@ -66,7 +66,7 @@ export function Timesheet() {
     }
   );
 
-  const { mutate: updateCheck } = useMutation(
+  const { mutate: updateCheck, isLoading: updatingCheck } = useMutation(
     ({ _id, field, value }: PatchHour) => checkHours(_id, field, value),
     {
       onSuccess: () => {
@@ -75,7 +75,7 @@ export function Timesheet() {
     }
   );
 
-  const { mutate: updateEscope } = useMutation(
+  const { mutate: updateEscope, isLoading: updatingEscope } = useMutation(
     ({ _id, value }: PatchActivities) => updateClosedEscope(_id, value),
     {
       onSuccess: () => {
@@ -454,6 +454,7 @@ export function Timesheet() {
                                 <SwitchIOS
                                   color="warning"
                                   checked={relActivity?.closedScope}
+                                  disabled={updatingEscope}
                                   onChange={() =>
                                     updateEscope({
                                       _id: relActivity._id,
@@ -469,6 +470,7 @@ export function Timesheet() {
                                 <SwitchIOS
                                   color="warning"
                                   checked={approvedGP}
+                                  disabled={updatingCheck}
                                   onChange={() =>
                                     updateCheck({
                                       _id,
@@ -485,6 +487,7 @@ export function Timesheet() {
                                 <SwitchIOS
                                   color="warning"
                                   checked={billable}
+                                  disabled={updatingCheck}
                                   onChange={() =>
                                     updateCheck({
                                       _id,
@@ -501,6 +504,7 @@ export function Timesheet() {
                                 <SwitchIOS
                                   color="warning"
                                   checked={released}
+                                  disabled={updatingCheck}
                                   onChange={() =>
                                     updateCheck({
                                       _id,
@@ -516,7 +520,8 @@ export function Timesheet() {
                               <StyledTableCell align="center">
                                 <SwitchIOS
                                   color="warning"
-                                  defaultChecked={approved}
+                                  checked={approved}
+                                  disabled={updatingCheck}
                                   onChange={() =>
                                     updateCheck({
                                       _id,

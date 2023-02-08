@@ -1,20 +1,45 @@
 import { useState } from "react";
-import { Button, TextField, InputAdornment, IconButton } from "@mui/material";
+import {
+  Button,
+  TextField,
+  InputAdornment,
+  IconButton,
+  CircularProgress,
+} from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
-import { UserRegister } from "interfaces/users.interface";
+import { useMutation } from "@tanstack/react-query";
+import { User, UserRegister } from "interfaces/users.interface";
 import Logo from "assets/logo.png";
 import { useNavigate } from "react-router-dom";
 import { newpass } from "services/auth.service";
+import { toast } from "react-toastify";
 
 export function NewPassword() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const { register, handleSubmit } = useForm<UserRegister>({});
   const navigate = useNavigate();
 
-  const onSubmit = handleSubmit(async ({ email, password, token }) => {
-    await newpass({ email, password, token });
-    navigate("/");
+  const { mutate, isLoading } = useMutation(
+    async ({ email, password, token }: User) =>
+      await newpass({ email, password, token }),
+    {
+      onSuccess: () => {
+        navigate("/");
+        toast.success("Sua senha foi redefinida com sucesso!", {
+          autoClose: 4000,
+        });
+      },
+      onError: () => {
+        toast.error("Erro ao tentar atualizar sua senha", {
+          autoClose: 2000,
+        });
+      },
+    }
+  );
+
+  const onSubmit = handleSubmit(({ email, password, token }) => {
+    mutate({ email, password, token });
   });
 
   return (
@@ -60,8 +85,14 @@ export function NewPassword() {
             }}
           />
 
-          <Button id="button-primary" type="submit" variant="contained">
-            Redefinir Senha
+          <Button
+            id="button-primary"
+            type="submit"
+            disabled={isLoading}
+            variant="contained"
+          >
+            {isLoading && <CircularProgress size={16} />}
+            {!isLoading && "Redefinir Senha"}
           </Button>
         </div>
       </form>
