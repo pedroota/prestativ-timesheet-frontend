@@ -7,6 +7,10 @@ import {
   Select,
   MenuItem,
   Button,
+  List,
+  ListItem,
+  ListItemText,
+  ListSubheader,
 } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import { SetStateAction } from "react";
@@ -17,6 +21,13 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createRoles } from "services/roles.service";
 import { Roles } from "interfaces/roles.interface";
+import TableBody from "@mui/material/TableBody/TableBody";
+import { StyledTableRow } from "components/StyledTableRow";
+import { StyledTableCell } from "components/StyledTableCell";
+import Table from "@mui/material/Table/Table";
+import TableHead from "@mui/material/TableHead/TableHead";
+import TableRow from "@mui/material/TableRow/TableRow";
+import { SwitchIOS } from "components/SwitchIOS";
 
 interface ModalCreateRoleProps {
   isOpen: boolean;
@@ -90,6 +101,47 @@ export function ModalCreateRole({ isOpen, setIsOpen }: ModalCreateRoleProps) {
               InputLabelProps={{ shrink: true }}
               {...register("name")}
             />
+
+            <Table className="c-table" aria-label="customized table">
+              <TableHead>
+                <TableRow className="c-table--reset-head">
+                  <StyledTableCell align="center">
+                    Colunas do Timesheet
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    Lançamento de Horas
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    Menus de Cadastros
+                  </StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <StyledTableRow key={"Colunas_do_Timesheet"}>
+                  <StyledTableCell align="center">
+                    <List
+                      sx={{
+                        width: "100%",
+                        maxWidth: 360,
+                        position: "relative",
+                        overflow: "auto",
+                        maxHeight: 300,
+                        "& ul": { padding: 0 },
+                      }}
+                    >
+                      <ListItem key={"teste"}>
+                        <SwitchIOS
+                          color="warning"
+                          inputProps={{ "aria-label": "controlled" }}
+                          sx={{ marginRight: "1rem" }}
+                        />
+                        <ListItemText primary={"DATA"} />
+                      </ListItem>
+                    </List>
+                  </StyledTableCell>
+                </StyledTableRow>
+              </TableBody>
+            </Table>
             <Select
               value={multipleSelectValue}
               {...register("permissions")}
