@@ -16,6 +16,9 @@ import { useForm } from "react-hook-form";
 import { Permission as Permissions } from "enums/Permissions";
 import { Permission } from "components/Permission";
 import { Roles } from "interfaces/roles.interface";
+import InputLabel from "@mui/material/InputLabel";
+import { SwitchIOS } from "components/SwitchIOS";
+import ListItemText from "@mui/material/ListItemText";
 
 interface ModalEditRoleProps {
   isOpen: boolean;
@@ -94,15 +97,27 @@ export function ModalEditRole({
               label="Nome do perfil"
               InputLabelProps={{ shrink: true }}
             />
+
+            <InputLabel id="demo-multiple-checkbox-label">
+              Permissões
+            </InputLabel>
             <Select
+              labelId="demo-multiple-checkbox-label"
+              id="demo-multiple-checkbox"
               multiple
               value={multipleSelectValue}
-              color="warning"
               onChange={handleMultipleSelectChange}
+              renderValue={(selected) => selected.join(", ")}
             >
               {Object.values(Permissions).map((permission, index) => (
-                <MenuItem value={permission} key={index}>
-                  {permission}
+                <MenuItem key={index} value={permission}>
+                  <SwitchIOS
+                    color="warning"
+                    checked={multipleSelectValue.indexOf(permission) > -1}
+                    inputProps={{ "aria-label": "controlled" }}
+                    sx={{ marginRight: 2 }}
+                  />
+                  <ListItemText primary={permission} />
                 </MenuItem>
               ))}
             </Select>
