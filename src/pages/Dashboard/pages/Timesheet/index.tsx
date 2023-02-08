@@ -89,6 +89,76 @@ export function Timesheet() {
     setStringFilters(decoded);
   };
 
+  const handleTransformExcel = () => {
+    const hourxToExcel = hours?.data.map(
+      ({
+        initial,
+        final,
+        adjustment,
+        relClient,
+        relProject,
+        relActivity,
+        relUser,
+        approvedGP,
+        billable,
+        released,
+        approved,
+        releasedCall,
+        activityDesc,
+        createdAt,
+        updatedAt,
+      }: Hours) => {
+        return new Object({
+          Data: generateDateWithTimestamp(initial),
+          DiaSemana: generateDayWeekWithTimestamp(initial),
+          HoraInicial: generateTimeWithTimestamp(initial),
+          HoraFinal: generateTimeWithTimestamp(final),
+          Total: generateTotalHours(initial, final),
+          Ajuste: generateAdjustmentWithNumberInMilliseconds(adjustment),
+          TotalAjuste: generateTotalHoursWithAdjustment(
+            initial,
+            final,
+            adjustment
+          ),
+          Cliente: relClient?.name,
+          Projeto: relProject?.title,
+          Atividade: relActivity?.title,
+          Valor: Number(
+            (relActivity.valueActivity
+              ? relActivity.valueActivity
+              : relProject.valueProject
+              ? relProject.valueProject
+              : relClient.valueClient
+            ).toString()
+          ),
+          GerenteProjetos: relActivity.gpActivity.name
+            ? relActivity.gpActivity.name
+            : relProject.gpProject.name
+            ? relProject.gpProject.name
+            : relClient.gpClient.name,
+          Consultor: `${relUser?.name} ${relUser?.surname}`,
+          EscopoFechado: relActivity?.closedScope ? "sim" : "não",
+          AprovadoGP: approvedGP ? "sim" : "não",
+          Faturável: billable ? "sim" : "não",
+          Lançado: released ? "sim" : "não",
+          Aprovado: approved ? "sim" : "não",
+          ChamadoLancado: releasedCall ? releasedCall : " ",
+          DescricaoAtividade: activityDesc,
+          DataCriacao: `${generateDateWithTimestamp(
+            createdAt
+          )} ${generateTimeWithTimestamp(createdAt)}`,
+          DataEdicao: `${generateDateWithTimestamp(
+            updatedAt
+          )} ${generateTimeWithTimestamp(updatedAt)}`,
+        });
+      }
+    );
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(hourxToExcel);
+    XLSX.utils.book_append_sheet(wb, ws, "Timesheet");
+    XLSX.writeFile(wb, "TimesheetExcel.xlsx");
+  };
+
   return (
     <div>
       <Box
@@ -128,83 +198,7 @@ export function Timesheet() {
           <Permission roles={["EXPORTAR_EXCEL"]}>
             <Tooltip title="Exportar dados para Excel" arrow placement="top">
               <Button
-                onClick={() => {
-                  console.log(hours);
-
-                  const hourxToExcel = hours?.data.map(
-                    ({
-                      _id,
-                      initial,
-                      final,
-                      adjustment,
-                      relClient,
-                      relProject,
-                      relActivity,
-                      relUser,
-                      approvedGP,
-                      billable,
-                      released,
-                      approved,
-                      releasedCall,
-                      activityDesc,
-                      createdAt,
-                      updatedAt,
-                    }: Hours) => {
-                      return new Object({
-                        Data: generateDateWithTimestamp(initial),
-                        DiaSemana: generateDayWeekWithTimestamp(initial),
-                        HoraInicial: generateTimeWithTimestamp(initial),
-                        HoraFinal: generateTimeWithTimestamp(final),
-                        Total: generateTotalHours(initial, final),
-                        Ajuste:
-                          generateAdjustmentWithNumberInMilliseconds(
-                            adjustment
-                          ),
-                        TotalAjuste: generateTotalHoursWithAdjustment(
-                          initial,
-                          final,
-                          adjustment
-                        ),
-                        Cliente: relClient?.name,
-                        Projeto: relProject?.title,
-                        Atividade: relActivity?.title,
-                        Valor: Number(
-                          (relActivity.valueActivity
-                            ? relActivity.valueActivity
-                            : relProject.valueProject
-                            ? relProject.valueProject
-                            : relClient.valueClient
-                          ).toString()
-                        ),
-                        GerenteProjetos: relActivity.gpActivity.name
-                          ? relActivity.gpActivity.name
-                          : relProject.gpProject.name
-                          ? relProject.gpProject.name
-                          : relClient.gpClient.name,
-                        Consultor: `${relUser?.name} ${relUser?.surname}`,
-                        EscopoFechado: relActivity?.closedScope ? "sim" : "não",
-                        AprovadoGP: approvedGP ? "sim" : "não",
-                        Faturável: billable ? "sim" : "não",
-                        Lançado: released ? "sim" : "não",
-                        Aprovado: approved ? "sim" : "não",
-                        ChamadoLancado: releasedCall ? releasedCall : " ",
-                        DescricaoAtividade: activityDesc,
-                        DataCriacao: `${generateDateWithTimestamp(
-                          createdAt
-                        )} ${generateTimeWithTimestamp(createdAt)}`,
-                        DataEdicao: `${generateDateWithTimestamp(
-                          updatedAt
-                        )} ${generateTimeWithTimestamp(updatedAt)}`,
-                      });
-                    }
-                  );
-                  console.log(hourxToExcel);
-                  const wb = XLSX.utils.book_new();
-                  const ws = XLSX.utils.json_to_sheet(hourxToExcel);
-
-                  XLSX.utils.book_append_sheet(wb, ws, "Timesheet");
-                  XLSX.writeFile(wb, "TimesheetExcel.xlsx");
-                }}
+                onClick={handleTransformExcel}
                 variant="contained"
                 color="success"
                 sx={{

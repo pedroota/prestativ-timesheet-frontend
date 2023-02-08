@@ -35,15 +35,7 @@ export function RegisterActivity() {
   const [multipleSelect, setMultipleSelect] = useState<string[]>([]);
 
   const onSubmit = handleSubmit(
-    ({
-      title,
-      project,
-      valueActivity,
-      gpActivity,
-      description,
-      users,
-      closedScope,
-    }) => {
+    ({ title, project, gpActivity, description, users, closedScope }) => {
       createActivities({
         title,
         project,

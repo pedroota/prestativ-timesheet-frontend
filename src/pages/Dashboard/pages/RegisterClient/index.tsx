@@ -56,7 +56,6 @@ export function RegisterClient() {
       periodUntil,
       billingLimit,
       payDay,
-      valueClient,
       gpClient,
     }) => {
       if (validateCNPJ(cnpj)) {

@@ -20,7 +20,7 @@ export function RegisterProject() {
   const { register, handleSubmit, reset } = useForm<Projects>({});
 
   const onSubmit = handleSubmit(
-    ({ title, idClient, valueProject, gpProject, description }) => {
+    ({ title, idClient, gpProject, description }) => {
       createProjects({
         title,
         idClient,
