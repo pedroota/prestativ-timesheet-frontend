@@ -118,7 +118,7 @@ export function ModalCreateRole({ isOpen, setIsOpen }: ModalCreateRoleProps) {
               </TableHead>
               <TableBody>
                 <StyledTableRow key={"Colunas_do_Timesheet"}>
-                  <StyledTableCell align="center">
+                  <StyledTableCell>
                     <List
                       sx={{
                         width: "100%",
@@ -126,16 +126,65 @@ export function ModalCreateRole({ isOpen, setIsOpen }: ModalCreateRoleProps) {
                         position: "relative",
                         overflow: "auto",
                         maxHeight: 300,
-                        "& ul": { padding: 0 },
+                        marginLeft: "-1rem",
+                        marginRight: "3rem",
                       }}
                     >
-                      <ListItem key={"teste"}>
+                      <ListItem key={"DATA"}>
                         <SwitchIOS
                           color="warning"
                           inputProps={{ "aria-label": "controlled" }}
                           sx={{ marginRight: "1rem" }}
                         />
                         <ListItemText primary={"DATA"} />
+                      </ListItem>
+                      <ListItem key={"DIA_DA_SEMANA"}>
+                        <SwitchIOS
+                          color="warning"
+                          inputProps={{ "aria-label": "controlled" }}
+                          sx={{ marginRight: "1rem" }}
+                        />
+                        <ListItemText primary={"DIA DA SEMANA"} />
+                      </ListItem>
+                      <ListItem key={"HORA_INICIAL"}>
+                        <SwitchIOS
+                          color="warning"
+                          inputProps={{ "aria-label": "controlled" }}
+                          sx={{ marginRight: "1rem" }}
+                        />
+                        <ListItemText primary={"HORA INICIAL"} />
+                      </ListItem>
+                      <ListItem key={"HORA_FINAL"}>
+                        <SwitchIOS
+                          color="warning"
+                          inputProps={{ "aria-label": "controlled" }}
+                          sx={{ marginRight: "1rem" }}
+                        />
+                        <ListItemText primary={"HORA FINAL"} />
+                      </ListItem>
+                      <ListItem key={"TOTAL"}>
+                        <SwitchIOS
+                          color="warning"
+                          inputProps={{ "aria-label": "controlled" }}
+                          sx={{ marginRight: "1rem" }}
+                        />
+                        <ListItemText primary={"TOTAL"} />
+                      </ListItem>
+                      <ListItem key={"AJUSTE"}>
+                        <SwitchIOS
+                          color="warning"
+                          inputProps={{ "aria-label": "controlled" }}
+                          sx={{ marginRight: "1rem" }}
+                        />
+                        <ListItemText primary={"AJUSTE"} />
+                      </ListItem>
+                      <ListItem key={"TOTAL_COM_AJUSTE"}>
+                        <SwitchIOS
+                          color="warning"
+                          inputProps={{ "aria-label": "controlled" }}
+                          sx={{ marginRight: "1rem" }}
+                        />
+                        <ListItemText primary={"TOTAL COM AJUSTE"} />
                       </ListItem>
                     </List>
                   </StyledTableCell>
