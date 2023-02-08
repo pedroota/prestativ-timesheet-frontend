@@ -6,16 +6,18 @@ import {
   Box,
   Typography,
   Dialog,
+  CircularProgress,
 } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserByRole } from "services/auth.service";
-import { Clients } from "interfaces/clients.interface";
+import { Clients, RegisterClients } from "interfaces/clients.interface";
 import { UserRegister } from "interfaces/users.interface";
 import { getClientById, updateClient } from "services/clients.service";
 import cep from "cep-promise";
 import { Permission } from "components/Permission";
+import { currencyMask } from "utils/masks";
 
 interface ModalEditUserProps {
   isOpen: boolean;
@@ -28,12 +30,15 @@ export function ModalEditClient({
   setIsOpen,
   currentClient,
 }: ModalEditUserProps) {
+  const [price, setPrice] = useState("");
+  const [priceNumber, setPriceNumber] = useState(0);
+  const [gpClient, setGpClient] = useState("");
   const [valueCep, setValueCep] = useState("");
   useQuery(["clients", currentClient], () => getClientById(currentClient), {
     onSuccess: ({ data }) => reset(data.client),
   });
   const queryClient = useQueryClient();
-  const { mutate } = useMutation(
+  const { mutate, isLoading } = useMutation(
     ({
       code,
       name,
@@ -49,9 +54,7 @@ export function ModalEditClient({
       periodUntil,
       billingLimit,
       payDay,
-      valueClient,
-      gpClient,
-    }: Clients) =>
+    }: RegisterClients) =>
       updateClient(currentClient, {
         code,
         name,
@@ -67,7 +70,7 @@ export function ModalEditClient({
         periodUntil,
         billingLimit,
         payDay,
-        valueClient,
+        valueClient: priceNumber,
         gpClient,
       }),
     {
@@ -99,7 +102,6 @@ export function ModalEditClient({
       billingLimit,
       payDay,
       valueClient,
-      gpClient,
     }) => {
       mutate({
         code,
@@ -122,6 +124,12 @@ export function ModalEditClient({
       reset();
     }
   );
+
+  const setNewPrice = (e: { target: { value: string } }) => {
+    const stringValue = e.target.value;
+    setPrice(stringValue);
+    setPriceNumber(Number(stringValue.slice(2)));
+  };
 
   useEffect(() => {
     if (valueCep && valueCep.length >= 8) {
@@ -299,9 +307,10 @@ export function ModalEditClient({
                 color="warning"
                 sx={{ width: "100%" }}
                 label="Valor"
-                type="number"
-                InputLabelProps={{ shrink: true }}
+                type="text"
+                value={price && currencyMask(price)}
                 {...register("valueClient")}
+                onChange={(event) => setNewPrice(event)}
               />
               <TextField
                 required
@@ -309,7 +318,8 @@ export function ModalEditClient({
                 label="Gerente de Projetos"
                 color="warning"
                 sx={{ width: "100%" }}
-                {...register("gpClient")}
+                value={gpClient}
+                onChange={(event) => setGpClient(event.target.value)}
               >
                 <MenuItem value="">Selecione uma opção</MenuItem>
                 {listGps?.data.map(
@@ -323,12 +333,13 @@ export function ModalEditClient({
             </div>
 
             <Button
-              sx={{ paddingBlock: "1rem" }}
-              variant="contained"
-              color="warning"
               type="submit"
+              id="button-primary"
+              disabled={isLoading}
+              variant="contained"
             >
-              Concluído
+              {isLoading && <CircularProgress size={16} />}
+              {!isLoading && "Concluído"}
             </Button>
           </form>
         </Box>
