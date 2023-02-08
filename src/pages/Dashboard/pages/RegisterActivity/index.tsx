@@ -4,8 +4,9 @@ import {
   TextField,
   MenuItem,
   SelectChangeEvent,
+  CircularProgress,
 } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { getProjects } from "services/project.service";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -15,12 +16,19 @@ import { ProjectsInfo } from "interfaces/projects.interface";
 import { UserRegister } from "interfaces/users.interface";
 import { toast } from "react-toastify";
 import { Activities } from "interfaces/activities.interface";
-import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { Permission } from "components/Permission";
 import { currencyMask } from "utils/masks";
+import { SwitchIOS } from "components/SwitchIOS";
 
 export function RegisterActivity() {
+  const [gpActivity, setGpActivity] = useState("");
+  const [nameProject, setNameProject] = useState("");
+  const [price, setPrice] = useState("");
+  const [priceNumber, setPriceNumber] = useState(0);
+  const [fieldClosedScope, setFieldClosedScope] = useState(false);
+  const [multipleSelect, setMultipleSelect] = useState<string[]>([]);
+
   const { data: projectList } = useQuery(["client-project"], () =>
     getProjects()
   );
@@ -32,10 +40,16 @@ export function RegisterActivity() {
     () => getUserByRole("consultor")
   );
   const { register, handleSubmit, reset } = useForm<Activities>({});
-  const [multipleSelect, setMultipleSelect] = useState<string[]>([]);
 
-  const onSubmit = handleSubmit(
-    ({ title, project, gpActivity, description, users, closedScope }) => {
+  const { mutate, isLoading } = useMutation(
+    ({
+      title,
+      project,
+      gpActivity,
+      description,
+      users,
+      closedScope,
+    }: Activities) =>
       createActivities({
         title,
         project,
@@ -44,12 +58,37 @@ export function RegisterActivity() {
         description,
         users,
         closedScope,
-      })
-        .then(() => {
-          reset();
-          toast.success("Atividade cadastrada com sucesso.");
-        })
-        .catch(() => toast.error("Erro ao cadastrar a atividade."));
+      }),
+    {
+      onSuccess: () => {
+        reset();
+        setFieldClosedScope(false);
+        setGpActivity("");
+        setNameProject("");
+        setPrice("");
+        setPriceNumber(0);
+        setMultipleSelect([]);
+        toast.success("Atividade criada com sucesso.");
+      },
+      onError: () => {
+        toast.error("Ocorreu algum erro ao criar a atividade", {
+          autoClose: 1500,
+        });
+      },
+    }
+  );
+
+  const onSubmit = handleSubmit(
+    ({ title, project, gpActivity, description, users, closedScope }) => {
+      mutate({
+        title,
+        project,
+        valueActivity: priceNumber,
+        gpActivity,
+        description,
+        users,
+        closedScope,
+      });
     }
   );
 
@@ -62,9 +101,6 @@ export function RegisterActivity() {
         : event.target.value
     );
   };
-
-  const [price, setPrice] = useState("");
-  const [priceNumber, setPriceNumber] = useState(0);
 
   const setNewPrice = (e: { target: { value: string } }) => {
     const stringValue = e.target.value;
@@ -88,7 +124,8 @@ export function RegisterActivity() {
           {...register("project")}
           select
           label="Projeto"
-          defaultValue=""
+          value={nameProject}
+          onChange={(event) => setNameProject(event.target.value)}
         >
           <MenuItem selected disabled value="">
             Projeto - Selecione uma opção
@@ -121,7 +158,8 @@ export function RegisterActivity() {
             sx={{ width: "100%" }}
             select
             label="Gerente de projetos"
-            defaultValue=""
+            value={gpActivity}
+            onChange={(event) => setGpActivity(event.target.value)}
           >
             <MenuItem selected disabled value="">
               GP - Selecione uma opção
@@ -153,12 +191,24 @@ export function RegisterActivity() {
             )}
           </Select>
           <FormControlLabel
-            control={<Checkbox {...register("closedScope")} />}
+            control={
+              <SwitchIOS
+                value={fieldClosedScope}
+                {...register("closedScope")}
+                onChange={() => setFieldClosedScope(!fieldClosedScope)}
+              />
+            }
             label="Escopo Fechado"
           />
         </div>
-        <Button type="submit" id="button-primary" variant="contained">
-          Cadastrar atividade
+        <Button
+          type="submit"
+          id="button-primary"
+          disabled={isLoading}
+          variant="contained"
+        >
+          {isLoading && <CircularProgress size={16} />}
+          {!isLoading && "Cadastrar"}
         </Button>
       </form>
     </Permission>
