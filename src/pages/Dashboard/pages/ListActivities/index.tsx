@@ -22,6 +22,7 @@ import { StyledTableCell } from "components/StyledTableCell";
 import { StyledTableRow } from "components/StyledTableRow";
 import { Permission } from "components/Permission";
 import Chip from "@mui/material/Chip";
+import { SwitchIOS } from "components/SwitchIOS";
 
 interface ConsultantUsers {
   name: string;
@@ -148,11 +149,12 @@ export function ListActivities() {
                                 )}
                               </StyledTableCell>
                               <StyledTableCell align="center">
-                                {!closedScope ? (
-                                  <Checkbox />
-                                ) : (
-                                  <Checkbox defaultChecked />
-                                )}
+                                <SwitchIOS
+                                  color="warning"
+                                  checked={closedScope}
+                                  disabled={false}
+                                  inputProps={{ "aria-label": "controlled" }}
+                                />
                               </StyledTableCell>
                               <Permission
                                 roles={[
