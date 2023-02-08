@@ -100,7 +100,6 @@ export function RegisterActivity() {
           ))}
         </TextField>
         <TextField
-          required
           color="warning"
           label="Valor da atividade"
           type="text"

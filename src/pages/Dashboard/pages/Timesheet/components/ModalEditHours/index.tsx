@@ -162,17 +162,6 @@ export function ModalEditHours({
     setChosenDay(e.target.value);
   };
 
-  const setToday = (yesterday: number) => {
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate() - yesterday;
-    const string = `${year}-${month < 10 ? "0" + month : month}-${
-      day < 10 ? "0" + day : day
-    }`;
-    setChosenDay(string);
-  };
-
   return (
     <Permission roles={["EDITAR_HORAS"]}>
       <Dialog
@@ -198,30 +187,6 @@ export function ModalEditHours({
             <Permission
               roles={["EDITAR_CAMPOS_HORAS_LANCADAS" || "EDITAR_AJUSTE"]}
             >
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row-reverse",
-                  gap: "1rem",
-                }}
-              >
-                <Button
-                  variant="contained"
-                  color="warning"
-                  onClick={() => setToday(0)}
-                  sx={{ paddingBlock: "1rem" }}
-                >
-                  Hoje
-                </Button>
-                <Button
-                  variant="contained"
-                  color="warning"
-                  onClick={() => setToday(1)}
-                  sx={{ paddingBlock: "1rem" }}
-                >
-                  Ontem
-                </Button>
-              </Box>
               <Box sx={{ display: "flex", gap: "1rem" }}>
                 <Permission roles={["EDITAR_CAMPOS_HORAS_LANCADAS"]}>
                   <FormLabel

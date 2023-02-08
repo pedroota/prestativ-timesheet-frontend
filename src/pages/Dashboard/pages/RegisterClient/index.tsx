@@ -85,6 +85,7 @@ export function RegisterClient() {
         setValues({ cnpj: "" });
         setPrice("");
         setGpClient("");
+        toast.success("Cadastro de cliente efetuado com sucesso!");
       },
       onError: () => {
         toast.error("Ocorreu algum erro ao criar o cliente", {

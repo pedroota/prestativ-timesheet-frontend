@@ -79,6 +79,9 @@ export function ModalRegisterHours({
       relActivity,
       activityDesc,
     }) => {
+      if (!initialDate) {
+        initialDate = chosenDay;
+      }
       const initial = generateTimestampWithDateAndTime(
         initialDate,
         initialHour
@@ -93,11 +96,11 @@ export function ModalRegisterHours({
       const today = Date.now();
       const adjustment = 0; // Presets the adjusment property to 0, just ADMs can change it
       if (initial > today + daysInMiliseconds / maxDaysCanRelease) {
-        toast.error("A data informada ainda não está disponível para lançar");
+        toast.error("A data informada ainda não está disponível");
         return;
       }
       if (initial < today - daysInMiliseconds) {
-        toast.error("A data informada é muito antiga");
+        toast.error("A data informada não está disponível");
         return;
       }
 
@@ -164,7 +167,6 @@ export function ModalRegisterHours({
               variant="contained"
               color="warning"
               onClick={() => setToday(0)}
-              sx={{ paddingBlock: "1rem" }}
             >
               Hoje
             </Button>
@@ -172,7 +174,6 @@ export function ModalRegisterHours({
               variant="contained"
               color="warning"
               onClick={() => setToday(1)}
-              sx={{ paddingBlock: "1rem" }}
             >
               Ontem
             </Button>
