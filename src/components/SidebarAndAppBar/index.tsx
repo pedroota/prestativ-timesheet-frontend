@@ -37,7 +37,6 @@ import PublicIcon from "@mui/icons-material/Public";
 import GroupIcon from "@mui/icons-material/Group";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { HeaderUser } from "components/HeaderUser";
-import { useAuthStore } from "stores/userStore";
 import { Permission } from "components/Permission";
 
 const drawerWidth = 240;
@@ -116,14 +115,13 @@ interface SidebarAndAppBarProps {
 }
 
 export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
-  const handleRemoveUser = useAuthStore((state) => state.handleRemoveUser);
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
   const logOut = () => {
-    Cookies.remove("token", { path: "" });
-    handleRemoveUser();
+    Cookies.remove("token", { path: "/" });
+    localStorage.removeItem("prestativ-user");
     navigate("/");
   };
 
