@@ -1,5 +1,5 @@
 import { Api } from "./api.service";
-import { Clients } from "interfaces/clients.interface";
+import { RegisterClients } from "interfaces/clients.interface";
 
 export const getClients = async () => {
   const result = await Api.get("/clients");
@@ -24,7 +24,7 @@ export const createClients = async ({
   payDay,
   valueClient,
   gpClient,
-}: Clients) => {
+}: RegisterClients) => {
   const result = await Api.post("/clients", {
     code,
     name,
@@ -66,7 +66,7 @@ export const updateClient = async (
     payDay,
     valueClient,
     gpClient,
-  }: Clients
+  }: RegisterClients
 ) => {
   const results = await Api.put(`/clients/${id}`, {
     code,

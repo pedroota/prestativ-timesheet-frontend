@@ -1,5 +1,5 @@
-import { Button, MenuItem, TextField } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
+import { Button, MenuItem, TextField, CircularProgress } from "@mui/material";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Clients } from "interfaces/clients.interface";
 import { UserRegister } from "interfaces/users.interface";
 import { useState, useEffect } from "react";
@@ -13,6 +13,9 @@ import cep from "cep-promise";
 import { Permission } from "components/Permission";
 
 export function RegisterClient() {
+  const [gpClient, setGpClient] = useState("");
+  const [price, setPrice] = useState("");
+  const [priceNumber, setPriceNumber] = useState(0);
   const [valueCep, setValueCep] = useState("");
   const { register, handleSubmit, reset, setValue } = useForm<Clients>({});
   const { data } = useQuery(["users-role", "Gerente de Projetos"], () =>
@@ -40,6 +43,58 @@ export function RegisterClient() {
     });
   };
 
+  const { mutate, isLoading } = useMutation(
+    ({
+      code,
+      name,
+      cnpj,
+      cep,
+      street,
+      streetNumber,
+      complement,
+      district,
+      city,
+      state,
+      periodIn,
+      periodUntil,
+      billingLimit,
+      payDay,
+    }: Clients) =>
+      createClients({
+        code,
+        name,
+        cnpj,
+        cep,
+        street,
+        streetNumber,
+        complement,
+        district,
+        city,
+        state,
+        periodIn,
+        periodUntil,
+        billingLimit,
+        payDay,
+        valueClient: priceNumber,
+        gpClient,
+      }),
+    {
+      onSuccess: () => {
+        reset();
+        setValueCep("");
+        setValues({ cnpj: "" });
+        setPrice("");
+        setGpClient("");
+        toast.success("Cadastro de cliente efetuado com sucesso!");
+      },
+      onError: () => {
+        toast.error("Ocorreu algum erro ao criar o cliente", {
+          autoClose: 1500,
+        });
+      },
+    }
+  );
+
   const onSubmit = handleSubmit(
     ({
       code,
@@ -58,41 +113,32 @@ export function RegisterClient() {
       payDay,
       gpClient,
     }) => {
-      if (validateCNPJ(cnpj)) {
-        createClients({
-          code,
-          name,
-          cnpj,
-          cep,
-          street,
-          streetNumber,
-          complement,
-          district,
-          city,
-          state,
-          periodIn,
-          periodUntil,
-          billingLimit,
-          payDay,
-          valueClient: priceNumber,
-          gpClient,
-        })
-          .then(() => {
-            reset();
-            setPrice("");
-            setValueCep("");
-            setValues({ cnpj: "" });
-            toast.success("Cliente criado com sucesso.");
-          })
-          .catch(() => toast.error("Erro ao cadastrar o cliente."));
-      } else {
-        toast.error("O CNPJ digitado é inválido.");
+      // Validates CNPJ
+      if (!validateCNPJ(cnpj)) {
+        console.log(validateCNPJ(cnpj));
+        return toast.error("O CNPJ digitado é inválido", { autoClose: 1500 });
       }
+
+      mutate({
+        code,
+        name,
+        cnpj,
+        cep,
+        street,
+        streetNumber,
+        complement,
+        district,
+        city,
+        state,
+        periodIn,
+        periodUntil,
+        billingLimit,
+        payDay,
+        valueClient: priceNumber,
+        gpClient,
+      });
     }
   );
-
-  const [price, setPrice] = useState("");
-  const [priceNumber, setPriceNumber] = useState(0);
 
   const setNewPrice = (e: { target: { value: string } }) => {
     const stringValue = e.target.value;
@@ -253,7 +299,8 @@ export function RegisterClient() {
             select
             color="warning"
             sx={{ width: "100%" }}
-            {...register("gpClient")}
+            value={gpClient}
+            onChange={(event) => setGpClient(event.target.value)}
           >
             <MenuItem value="">Selecione uma opção</MenuItem>
             {data?.data.map(({ name, surname, _id }: UserRegister) => (
@@ -263,8 +310,14 @@ export function RegisterClient() {
             ))}
           </TextField>
         </div>
-        <Button type="submit" id="button-primary" variant="contained">
-          Cadastrar
+        <Button
+          type="submit"
+          id="button-primary"
+          disabled={isLoading}
+          variant="contained"
+        >
+          {isLoading && <CircularProgress size={16} />}
+          {!isLoading && "Cadastrar"}
         </Button>
       </form>
     </Permission>
