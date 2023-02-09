@@ -131,11 +131,11 @@ export function Timesheet() {
               : relClient.valueClient
             ).toString()
           ),
-          GerenteProjetos: relActivity.gpActivity.name
-            ? relActivity.gpActivity.name
-            : relProject.gpProject.name
-            ? relProject.gpProject.name
-            : relClient.gpClient.name,
+          GerenteProjetos: relActivity
+            ? `${relActivity.gpActivity.name} ${relActivity.gpActivity.surname}`
+            : relProject
+            ? `${relProject.gpProject.name} ${relProject.gpProject.surname}`
+            : `${relClient.gpClient.name} ${relClient.gpClient.surname}`,
           Consultor: `${relUser?.name} ${relUser?.surname}`,
           EscopoFechado: relActivity?.closedScope ? "sim" : "não",
           AprovadoGP: approvedGP ? "sim" : "não",
@@ -437,11 +437,11 @@ export function Timesheet() {
                             </Permission>
                             <Permission roles={["GERENTE_DE_PROJETOS"]}>
                               <StyledTableCell align="center">
-                                {relActivity.gpActivity.name
-                                  ? relActivity.gpActivity.name
-                                  : relProject.gpProject.name
-                                  ? relProject.gpProject.name
-                                  : relClient.gpClient.name}
+                                {relActivity
+                                  ? `${relActivity.gpActivity.name} ${relActivity.gpActivity.surname}`
+                                  : relProject
+                                  ? `${relProject.gpProject.name} ${relProject.gpProject.surname}`
+                                  : `${relClient.gpClient.name} ${relClient.gpClient.surname}`}
                               </StyledTableCell>
                             </Permission>
                             <Permission roles={["CONSULTOR"]}>
