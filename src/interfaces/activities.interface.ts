@@ -27,6 +27,10 @@ export interface ActivitiesInfo {
   project: {
     _id: string;
     title: string;
+    idClient: {
+      _id: string;
+      name: string;
+    };
   };
   valueActivity: number;
   gpActivity: {
