@@ -4,6 +4,7 @@
   &--helper {
     display: table;
     table-layout: fixed;
+    min-width: 100%;
   }
 
   &--reset-head {
