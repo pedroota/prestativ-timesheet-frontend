@@ -21,6 +21,8 @@ import Dialog from "@mui/material/Dialog";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { Permission } from "components/Permission";
+import FormLabel from "@mui/material/FormLabel";
+import { SwitchIOS } from "components/SwitchIOS";
 
 interface ModalEditActivityProps {
   isOpen: boolean;
@@ -144,9 +146,9 @@ export function ModalEditActivity({
               type="text"
               {...register("title")}
             />
-            <Select
+            <TextField
               color="warning"
-              labelId="select-label-helper"
+              select
               {...register("project")}
               required
               label="Projeto relacionado"
@@ -160,7 +162,7 @@ export function ModalEditActivity({
                   </MenuItem>
                 )
               )}
-            </Select>
+            </TextField>
             <TextField
               color="warning"
               label="Valor da atividade"
@@ -177,49 +179,121 @@ export function ModalEditActivity({
               {...register("description")}
             />
             <div className="c-register-activity--input-container">
-              <Select
-                color="warning"
-                labelId="select-label-helper"
-                {...register("gpActivity")}
-                sx={{ width: "100%" }}
-                defaultValue=""
-                label="Gerente de projetos relacionado"
+              <FormLabel
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.2rem",
+                }}
               >
-                <MenuItem value="">Selecione uma opção</MenuItem>
-                {listGps?.data.map(
-                  ({ name, surname, _id }: UserRegister, index: number) => (
-                    <MenuItem key={index} value={_id}>
-                      {`${name} ${surname}`}
-                    </MenuItem>
-                  )
-                )}
-              </Select>
-              <Select
-                color="warning"
-                labelId="select-label-helper"
-                {...register("users")}
-                sx={{ width: "100%" }}
-                value={multipleSelect}
-                onChange={multipleSelectChange}
-                multiple
-                required
-                label="Consultores relacionado"
+                Gerente-Projetos
+                <TextField
+                  color="warning"
+                  select
+                  {...register("gpActivity")}
+                  sx={{ width: "100%" }}
+                  defaultValue=""
+                >
+                  <MenuItem value="">Selecione uma opção</MenuItem>
+                  {listGps?.data.map(
+                    ({ name, surname, _id }: UserRegister, index: number) => (
+                      <MenuItem key={index} value={_id}>
+                        {`${name} ${surname}`}
+                      </MenuItem>
+                    )
+                  )}
+                </TextField>
+              </FormLabel>
+
+              <FormLabel
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.2rem",
+                }}
               >
-                <MenuItem value="">Selecione uma opção</MenuItem>
-                {consultantList?.data.map(
-                  ({ name, surname }: UserRegister, index: number) => (
-                    <MenuItem key={index} value={`${name} ${surname}`}>
-                      {`${name} ${surname}`}
-                    </MenuItem>
-                  )
-                )}
-              </Select>
-              <FormControlLabel
-                control={
-                  <Checkbox defaultChecked {...register("closedScope")} />
-                }
-                label="Escopo Fechado"
-              />
+                Consultores
+                <Select
+                  color="warning"
+                  labelId="select-label-helper"
+                  {...register("users")}
+                  sx={{ width: "100%" }}
+                  value={multipleSelect}
+                  onChange={multipleSelectChange}
+                  multiple
+                  required
+                >
+                  <MenuItem value="">Selecione uma opção</MenuItem>
+                  {consultantList?.data.map(
+                    ({ name, surname }: UserRegister, index: number) => (
+                      <MenuItem key={index} value={`${name} ${surname}`}>
+                        {`${name} ${surname}`}
+                      </MenuItem>
+                    )
+                  )}
+                </Select>
+              </FormLabel>
+              <FormLabel
+                sx={{
+                  width: "40%",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.2rem",
+                }}
+              >
+                Escopo-Fechado
+                <SwitchIOS
+                  // value={fieldClosedScope}
+                  {...register("closedScope")}
+                  // onChange={() => setFieldClosedScope(!fieldClosedScope)}
+                />
+              </FormLabel>
+            </div>
+            <div className="c-register-activity--input-container">
+              <FormLabel
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.2rem",
+                }}
+              >
+                Validade da Atividade
+                <TextField
+                  sx={{ width: "100%", gap: "0.2rem" }}
+                  type="date"
+                  color="warning"
+                  variant="outlined"
+                  required
+                  // value={}
+                  {...register("activityValidity")}
+                  // onChange={}
+                />
+              </FormLabel>
+              <FormLabel
+                sx={{
+                  gap: "0.2rem",
+                  width: "100%",
+                }}
+              >
+                Habilitar/Desabilitar
+                <div className="c-register-activity--input-container">
+                  <TextField
+                    type="time"
+                    color="warning"
+                    variant="outlined"
+                    required
+                    // {...register("activityValidity")}
+                  />
+                  <SwitchIOS
+                    // value={habilitar/desabilitar}
+                    {...register("closedScope")}
+                    // onChange={() => habilitar/desabilitar}
+                  />
+                </div>
+              </FormLabel>
             </div>
 
             <Button
