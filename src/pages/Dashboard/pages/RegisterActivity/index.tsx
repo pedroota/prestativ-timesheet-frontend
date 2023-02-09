@@ -20,6 +20,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import { Permission } from "components/Permission";
 import { currencyMask } from "utils/masks";
 import { SwitchIOS } from "components/SwitchIOS";
+import FormLabel from "@mui/material/FormLabel/FormLabel";
 
 export function RegisterActivity() {
   const [gpActivity, setGpActivity] = useState("");
@@ -49,6 +50,7 @@ export function RegisterActivity() {
       description,
       users,
       closedScope,
+      activityValidity,
     }: Activities) =>
       createActivities({
         title,
@@ -58,6 +60,7 @@ export function RegisterActivity() {
         description,
         users,
         closedScope,
+        activityValidity,
       }),
     {
       onSuccess: () => {
@@ -68,6 +71,7 @@ export function RegisterActivity() {
         setPrice("");
         setPriceNumber(0);
         setMultipleSelect([]);
+        setChosenDay(oneMonthLater);
         toast.success("Atividade criada com sucesso.");
       },
       onError: () => {
@@ -79,7 +83,15 @@ export function RegisterActivity() {
   );
 
   const onSubmit = handleSubmit(
-    ({ title, project, gpActivity, description, users, closedScope }) => {
+    ({
+      title,
+      project,
+      gpActivity,
+      description,
+      users,
+      closedScope,
+      activityValidity,
+    }) => {
       mutate({
         title,
         project,
@@ -88,6 +100,7 @@ export function RegisterActivity() {
         description,
         users,
         closedScope,
+        activityValidity,
       });
     }
   );
@@ -106,6 +119,24 @@ export function RegisterActivity() {
     const stringValue = e.target.value;
     setPrice(stringValue);
     setPriceNumber(Number(stringValue.slice(2)));
+  };
+
+  // Validade Data
+  function oneMonthLater() {
+    const date = new Date();
+    date.setMonth(date.getMonth() + 1);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDay();
+    return `${year}-${month < 10 ? `0${month}` : month}-${
+      day < 10 ? `0${day}` : day
+    }`;
+  }
+
+  const [chosenDay, setChosenDay] = useState(oneMonthLater);
+
+  const setDay = (e: { target: { value: string } }) => {
+    setChosenDay(e.target.value);
   };
 
   return (
@@ -190,6 +221,30 @@ export function RegisterActivity() {
               )
             )}
           </Select>
+        </div>
+        <div className="c-register-activity--input-container">
+          <FormLabel
+            sx={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              gap: "0.2rem",
+            }}
+          >
+            Validade da Atividade
+            <TextField
+              type="date"
+              color="warning"
+              variant="outlined"
+              required
+              value={chosenDay}
+              {...register("activityValidity")}
+              onChange={setDay}
+              sx={{
+                marginRight: "2rem",
+              }}
+            />
+          </FormLabel>
           <FormControlLabel
             control={
               <SwitchIOS
