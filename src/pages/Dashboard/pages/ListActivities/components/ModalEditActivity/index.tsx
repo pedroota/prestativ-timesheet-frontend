@@ -18,8 +18,6 @@ import { getUserByRole } from "services/auth.service";
 import { getProjects } from "services/project.service";
 import { ProjectsInfo } from "interfaces/projects.interface";
 import Dialog from "@mui/material/Dialog";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import { Permission } from "components/Permission";
 import FormLabel from "@mui/material/FormLabel";
 import { SwitchIOS } from "components/SwitchIOS";
