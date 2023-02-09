@@ -5,6 +5,7 @@ import { PrivateRoutes } from "./privateRoutes";
 import { LoginPage } from "pages/LoginPage";
 import { Dashboard } from "pages/Dashboard";
 import { Timesheet } from "pages/Dashboard/pages/Timesheet";
+import { DashboardView } from "pages/Dashboard/pages/DashboardView";
 import { RegisterUser } from "pages/Dashboard/pages/RegisterUser";
 import { RegisterClient } from "pages/Dashboard/pages/RegisterClient";
 import { RegisterProject } from "pages/Dashboard/pages/RegisterProject";
@@ -125,6 +126,14 @@ export function Router() {
               element={
                 <Permission roles={["CONFIGURACOES"]}>
                   <SettingsAdmin />
+                </Permission>
+              }
+            />
+            <Route
+              path="dashboard"
+              element={
+                <Permission roles={["DASHBOARD"]}>
+                  <DashboardView />
                 </Permission>
               }
             />

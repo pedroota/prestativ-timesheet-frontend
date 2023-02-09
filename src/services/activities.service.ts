@@ -7,6 +7,12 @@ export const getActivities = async () => {
   return result;
 };
 
+export const getActiveActivities = async () => {
+  const result = await Api.get("/active/activities");
+
+  return result;
+};
+
 export const getActivityById = async (id: string) => {
   const result = await Api.get(`/activities/${id}`);
 
@@ -68,6 +74,12 @@ export const updateActivity = async (
 
 export const updateClosedEscope = async (_id: string, value: boolean) => {
   const result = await Api.patch(`/activities/closedscope/${_id}`, { value });
+
+  return result;
+};
+
+export const updateActivityValidity = async (_id: string, value: number) => {
+  const result = await Api.patch(`/active/activities/${_id}`, { value });
 
   return result;
 };

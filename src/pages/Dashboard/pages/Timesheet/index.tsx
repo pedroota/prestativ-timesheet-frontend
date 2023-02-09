@@ -66,7 +66,7 @@ export function Timesheet() {
     }
   );
 
-  const { mutate: updateCheck } = useMutation(
+  const { mutate: updateCheck, isLoading: updatingCheck } = useMutation(
     ({ _id, field, value }: PatchHour) => checkHours(_id, field, value),
     {
       onSuccess: () => {
@@ -75,7 +75,7 @@ export function Timesheet() {
     }
   );
 
-  const { mutate: updateEscope } = useMutation(
+  const { mutate: updateEscope, isLoading: updatingEscope } = useMutation(
     ({ _id, value }: PatchActivities) => updateClosedEscope(_id, value),
     {
       onSuccess: () => {
@@ -131,11 +131,11 @@ export function Timesheet() {
               : relClient.valueClient
             ).toString()
           ),
-          GerenteProjetos: relActivity.gpActivity.name
-            ? relActivity.gpActivity.name
-            : relProject.gpProject.name
-            ? relProject.gpProject.name
-            : relClient.gpClient.name,
+          GerenteProjetos: relActivity
+            ? `${relActivity.gpActivity.name} ${relActivity.gpActivity.surname}`
+            : relProject
+            ? `${relProject.gpProject.name} ${relProject.gpProject.surname}`
+            : `${relClient.gpClient.name} ${relClient.gpClient.surname}`,
           Consultor: `${relUser?.name} ${relUser?.surname}`,
           EscopoFechado: relActivity?.closedScope ? "sim" : "não",
           AprovadoGP: approvedGP ? "sim" : "não",
@@ -163,6 +163,8 @@ export function Timesheet() {
     <div>
       <Box
         sx={{
+          width: "90vw",
+          overflowX: "auto",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -217,7 +219,6 @@ export function Timesheet() {
       {isLoading ? (
         <Box
           sx={{
-            width: "100%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -436,11 +437,11 @@ export function Timesheet() {
                             </Permission>
                             <Permission roles={["GERENTE_DE_PROJETOS"]}>
                               <StyledTableCell align="center">
-                                {relActivity.gpActivity.name
-                                  ? relActivity.gpActivity.name
-                                  : relProject.gpProject.name
-                                  ? relProject.gpProject.name
-                                  : relClient.gpClient.name}
+                                {relActivity
+                                  ? `${relActivity.gpActivity.name} ${relActivity.gpActivity.surname}`
+                                  : relProject
+                                  ? `${relProject.gpProject.name} ${relProject.gpProject.surname}`
+                                  : `${relClient.gpClient.name} ${relClient.gpClient.surname}`}
                               </StyledTableCell>
                             </Permission>
                             <Permission roles={["CONSULTOR"]}>
@@ -453,6 +454,7 @@ export function Timesheet() {
                                 <SwitchIOS
                                   color="warning"
                                   checked={relActivity?.closedScope}
+                                  disabled={updatingEscope}
                                   onChange={() =>
                                     updateEscope({
                                       _id: relActivity._id,
@@ -468,6 +470,7 @@ export function Timesheet() {
                                 <SwitchIOS
                                   color="warning"
                                   checked={approvedGP}
+                                  disabled={updatingCheck}
                                   onChange={() =>
                                     updateCheck({
                                       _id,
@@ -484,6 +487,7 @@ export function Timesheet() {
                                 <SwitchIOS
                                   color="warning"
                                   checked={billable}
+                                  disabled={updatingCheck}
                                   onChange={() =>
                                     updateCheck({
                                       _id,
@@ -500,6 +504,7 @@ export function Timesheet() {
                                 <SwitchIOS
                                   color="warning"
                                   checked={released}
+                                  disabled={updatingCheck}
                                   onChange={() =>
                                     updateCheck({
                                       _id,
@@ -515,7 +520,8 @@ export function Timesheet() {
                               <StyledTableCell align="center">
                                 <SwitchIOS
                                   color="warning"
-                                  defaultChecked={approved}
+                                  checked={approved}
+                                  disabled={updatingCheck}
                                   onChange={() =>
                                     updateCheck({
                                       _id,

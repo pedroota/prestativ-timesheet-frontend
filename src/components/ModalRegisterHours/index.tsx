@@ -8,6 +8,7 @@ import {
   Button,
   FormLabel,
   MenuItem,
+  CircularProgress,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { generateTimestampWithDateAndTime } from "utils/timeControl";
@@ -34,7 +35,7 @@ export function ModalRegisterHours({
   const [selectedProject, setSelectedProject] = useState("");
   const queryClient = useQueryClient();
   const { register, handleSubmit } = useForm();
-  const { mutate } = useMutation(
+  const { mutate, isLoading } = useMutation(
     ({
       initial,
       final,
@@ -317,10 +318,12 @@ export function ModalRegisterHours({
           <Button
             variant="contained"
             color="warning"
+            disabled={isLoading}
             type="submit"
             sx={{ paddingBlock: "1rem" }}
           >
-            Cadastrar horas
+            {isLoading && <CircularProgress size={16} />}
+            {!isLoading && "Cadastrar"}
           </Button>
         </form>
       </Box>

@@ -1,5 +1,12 @@
 import { Dispatch, SetStateAction } from "react";
-import { Dialog, Box, TextField, Typography, Button } from "@mui/material";
+import {
+  Dialog,
+  Box,
+  TextField,
+  Typography,
+  Button,
+  CircularProgress,
+} from "@mui/material";
 import { Close } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -34,7 +41,7 @@ export function ModalEditReleasedCall({
     refetchOnWindowFocus: false,
   });
 
-  const { mutate } = useMutation(
+  const { mutate, isLoading } = useMutation(
     (releasedCall: FormData) =>
       updateReleasedCall(currentHour, releasedCall.releasedCall),
     {
@@ -89,9 +96,11 @@ export function ModalEditReleasedCall({
               variant="contained"
               color="warning"
               type="submit"
+              disabled={isLoading}
               sx={{ paddingBlock: "1rem" }}
             >
-              Concluído
+              {isLoading && <CircularProgress size={16} />}
+              {!isLoading && "Concluído"}
             </Button>
           </form>
         </Box>

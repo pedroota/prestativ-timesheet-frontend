@@ -10,6 +10,7 @@ export interface Hours {
     gpClient: {
       _id: string;
       name: string;
+      surname: string;
     };
   };
   relProject: {
@@ -19,6 +20,7 @@ export interface Hours {
     gpProject: {
       _id: string;
       name: string;
+      surname: string;
     };
   };
   relActivity: {
@@ -28,6 +30,7 @@ export interface Hours {
     gpActivity: {
       _id: string;
       name: string;
+      surname: string;
     };
     closedScope: boolean;
   };

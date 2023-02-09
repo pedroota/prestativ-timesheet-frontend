@@ -1,17 +1,35 @@
-import { Button, TextField } from "@mui/material";
+import { Button, TextField, CircularProgress } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { User } from "interfaces/users.interface";
 import Logo from "assets/logo.png";
 import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
 import { forgot } from "services/auth.service";
+import { toast } from "react-toastify";
 
 export function ForgotPassword() {
   const { register, handleSubmit } = useForm<User>({});
   const navigate = useNavigate();
 
-  const onSubmit = handleSubmit(async ({ email }) => {
-    await forgot(email);
-    navigate("/newpass");
+  const { mutate, isLoading } = useMutation(
+    async (email: string) => await forgot(email),
+    {
+      onSuccess: () => {
+        navigate("/newpass");
+        toast.success("Token Enviado para o seu e-mail", {
+          autoClose: 4000,
+        });
+      },
+      onError: () => {
+        toast.error("Ocorreu algum erro ao gerar o seu Token", {
+          autoClose: 2000,
+        });
+      },
+    }
+  );
+
+  const onSubmit = handleSubmit(({ email }) => {
+    mutate(email);
   });
 
   return (
@@ -29,8 +47,14 @@ export function ForgotPassword() {
             label="Seu Email"
             {...register("email")}
           />
-          <Button id="button-primary" type="submit" variant="contained">
-            Enviar Token
+          <Button
+            id="button-primary"
+            type="submit"
+            disabled={isLoading}
+            variant="contained"
+          >
+            {isLoading && <CircularProgress size={16} />}
+            {!isLoading && "Enviar Token"}
           </Button>
         </div>
       </form>

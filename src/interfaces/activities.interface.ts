@@ -18,6 +18,7 @@ export interface Activities {
     }
   ];
   closedScope: boolean;
+  activityValidity?: number;
 }
 
 export interface ActivitiesInfo {
@@ -26,6 +27,10 @@ export interface ActivitiesInfo {
   project: {
     _id: string;
     title: string;
+    idClient: {
+      _id: string;
+      name: string;
+    };
   };
   valueActivity: number;
   gpActivity: {
@@ -41,6 +46,7 @@ export interface ActivitiesInfo {
     }
   ];
   closedScope: boolean;
+  activityValidity?: number;
 }
 
 export interface PatchActivities {

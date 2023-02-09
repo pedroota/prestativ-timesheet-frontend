@@ -5,12 +5,13 @@ import {
   MenuItem,
   InputAdornment,
   IconButton,
+  CircularProgress,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { AuthContext } from "context/AuthContext";
 import { useForm } from "react-hook-form";
 import { UserRegister } from "interfaces/users.interface";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { getRoles } from "services/roles.service";
 import { Roles } from "interfaces/roles.interface";
 import { validateEmail } from "utils/validator";
@@ -23,15 +24,33 @@ export function RegisterUser() {
   const { signUp } = useContext(AuthContext);
   const { register, handleSubmit, reset } = useForm<UserRegister>({});
 
+  const [typeFieldValue, setTypeFieldValue] = useState("nenhum");
+  const [userProfile, setUserProfile] = useState("");
+
+  const { mutate, isLoading } = useMutation(
+    ({ name, surname, email, password, role, typeField }: UserRegister) =>
+      signUp({ name, surname, email, password, role, typeField }),
+    {
+      onSuccess: () => {
+        reset();
+        setTypeFieldValue("nenhum");
+        setUserProfile("");
+      },
+      onError: () => {
+        toast.error("Ocorreu algum erro ao criar o usuário", {
+          autoClose: 1500,
+        });
+      },
+    }
+  );
+
   const onSubmit = handleSubmit(
     ({ name, surname, email, password, role, typeField }) => {
-      if (validateEmail(email)) {
-        signUp({ name, surname, email, password, role, typeField }).then(() => {
-          reset();
-        });
-      } else {
-        toast.error("O Email digitado é inválido.");
+      if (!validateEmail(email)) {
+        console.log(validateEmail(email));
+        return toast.error("O Email digitado é inválido", { autoClose: 1500 });
       }
+      mutate({ name, surname, email, password, role, typeField });
     }
   );
 
@@ -88,10 +107,11 @@ export function RegisterUser() {
           required
           color="warning"
           select
-          defaultValue={"nenhum"}
           label="Campo Cadastral"
           type="typeField"
           {...register("typeField")}
+          value={typeFieldValue}
+          onChange={(event) => setTypeFieldValue(event.target.value)}
         >
           <MenuItem value={"nenhum"} key={0}>
             Não se aplica
@@ -108,6 +128,8 @@ export function RegisterUser() {
           select
           color="warning"
           {...register("role")}
+          value={userProfile}
+          onChange={(event) => setUserProfile(event.target.value)}
         >
           <MenuItem value="">Selecione uma opção</MenuItem>
           {data?.data.map((role: Roles) => (
@@ -116,8 +138,14 @@ export function RegisterUser() {
             </MenuItem>
           ))}
         </TextField>
-        <Button id="button-primary" type="submit" variant="contained">
-          Cadastrar
+        <Button
+          id="button-primary"
+          type="submit"
+          disabled={isLoading}
+          variant="contained"
+        >
+          {isLoading && <CircularProgress size={16} />}
+          {!isLoading && "Cadastrar"}
         </Button>
       </form>
     </Permission>

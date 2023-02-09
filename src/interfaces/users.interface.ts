@@ -3,6 +3,7 @@ import { Roles } from "./roles.interface";
 export interface User {
   email: string;
   password: string;
+  token?: string;
 }
 
 export interface UserRegister {

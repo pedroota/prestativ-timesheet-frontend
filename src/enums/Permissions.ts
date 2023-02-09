@@ -60,4 +60,5 @@ export enum Permission {
 
   VER_LOGS = "VER_LOGS",
   CONFIGURACOES = "CONFIGURACOES",
+  DASHBOARD = "DASHBOARD",
 }

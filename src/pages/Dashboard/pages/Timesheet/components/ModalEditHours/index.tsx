@@ -7,6 +7,7 @@ import {
   MenuItem,
   FormLabel,
   Button,
+  CircularProgress,
 } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
@@ -81,7 +82,7 @@ export function ModalEditHours({
     refetchOnWindowFocus: false,
   });
 
-  const { mutate } = useMutation(
+  const { mutate, isLoading } = useMutation(
     ({
       initial,
       final,
@@ -355,9 +356,11 @@ export function ModalEditHours({
               variant="contained"
               color="warning"
               type="submit"
+              disabled={isLoading}
               sx={{ paddingBlock: "1rem" }}
             >
-              Concluído
+              {isLoading && <CircularProgress size={16} />}
+              {!isLoading && "Concluído"}
             </Button>
           </form>
         </Box>

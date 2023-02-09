@@ -11,17 +11,21 @@ import {
   CircularProgress,
   Box,
 } from "@mui/material";
+import {
+  generateDateWithTimestamp,
+  generateTimeWithTimestamp,
+} from "utils/timeControl";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { ActivitiesInfo } from "interfaces/activities.interface";
 import { EmptyList } from "components/EmptyList";
 import { formatCurrency } from "utils/formatCurrency";
 import { ModalEditActivity } from "./components/ModalEditActivity";
-import Checkbox from "@mui/material/Checkbox";
 import { StyledTableCell } from "components/StyledTableCell";
 import { StyledTableRow } from "components/StyledTableRow";
 import { Permission } from "components/Permission";
 import Chip from "@mui/material/Chip";
+import { SwitchIOS } from "components/SwitchIOS";
 
 interface ConsultantUsers {
   name: string;
@@ -91,6 +95,9 @@ export function ListActivities() {
                           <StyledTableCell align="center">
                             Escopo Fechado
                           </StyledTableCell>
+                          <StyledTableCell align="center">
+                            Validade da Atividade
+                          </StyledTableCell>
                           <Permission
                             roles={["EDITAR_ATIVIDADE" || "DELETAR_ATIVIDADE"]}
                           >
@@ -111,13 +118,14 @@ export function ListActivities() {
                             description,
                             users,
                             closedScope,
+                            activityValidity,
                           }: ActivitiesInfo) => (
                             <StyledTableRow key={_id}>
                               <StyledTableCell align="center">
                                 {title}
                               </StyledTableCell>
                               <StyledTableCell align="center">
-                                {project?.title}
+                                {`${project?.title} (Cliente: ${project?.idClient.name})`}
                               </StyledTableCell>
                               <StyledTableCell align="center">
                                 {valueActivity
@@ -148,11 +156,21 @@ export function ListActivities() {
                                 )}
                               </StyledTableCell>
                               <StyledTableCell align="center">
-                                {!closedScope ? (
-                                  <Checkbox />
-                                ) : (
-                                  <Checkbox defaultChecked />
-                                )}
+                                <SwitchIOS
+                                  color="warning"
+                                  checked={closedScope}
+                                  disabled={false}
+                                  inputProps={{ "aria-label": "controlled" }}
+                                />
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                {activityValidity
+                                  ? `${generateDateWithTimestamp(
+                                      activityValidity
+                                    )} ${generateTimeWithTimestamp(
+                                      activityValidity
+                                    )}`
+                                  : "não definido"}
                               </StyledTableCell>
                               <Permission
                                 roles={[
