@@ -26,6 +26,7 @@ import Cookies from "js-cookie";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import ConstructionIcon from "@mui/icons-material/Construction";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 import CreateIcon from "@mui/icons-material/Create";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import HailIcon from "@mui/icons-material/Hail";
@@ -328,7 +329,8 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
               "VER_USUARIOS" ||
               "VER_LOGS" ||
               "PERFIS_USUARIO" ||
-              "CONFIGURACOES",
+              "CONFIGURACOES" ||
+              "DASHBOARD",
           ]}
         >
           <List>
@@ -515,6 +517,33 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                     </ListItemIcon>
                     <ListItemText
                       primary={"Configurações"}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            </Permission>
+            <Permission roles={["DASHBOARD"]}>
+              <Link to="dashboard">
+                <ListItem disablePadding>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <DashboardIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={"Dashboard"}
                       sx={{ opacity: open ? 1 : 0 }}
                     />
                   </ListItemButton>
