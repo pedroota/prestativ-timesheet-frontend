@@ -18,6 +18,13 @@ export const getHoursFilters = async (filters: string) => {
 
 export const getHoursById = async (_id: string) => {
   const result = await Api.get(`/hours/${_id}`);
+
+  return result;
+};
+
+export const getHoursByUser = async (_id: string) => {
+  const result = await Api.get(`/hours/user/${_id}`);
+
   return result;
 };
 
