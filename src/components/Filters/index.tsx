@@ -8,6 +8,7 @@ import { getClients } from "services/clients.service";
 import { useState } from "react";
 import { getAllUsers } from "services/auth.service";
 import { UserInfo } from "interfaces/users.interface";
+import { useAuthStore } from "stores/userStore";
 
 interface FiltersProps {
   receiveDataURI: (encondeURIParams: string) => void;
@@ -22,6 +23,14 @@ export function Filters({ receiveDataURI }: FiltersProps) {
   const [selectedConsultant, setSelectedConsultant] = useState("");
   const [selectedInitialDate, setSelectedInitialDate] = useState("");
   const [selectedFinalDate, setSelectedFinalDate] = useState("");
+
+  const { user } = useAuthStore((state) => state);
+  const validateUser = () => {
+    if (user.typeField == "nenhum") {
+      return true;
+    }
+    return false;
+  };
 
   return (
     <Box
@@ -113,22 +122,25 @@ export function Filters({ receiveDataURI }: FiltersProps) {
             </MenuItem>
           ))}
       </TextField>
-      <TextField
-        style={{ width: "200px" }}
-        select
-        color="warning"
-        value={selectedConsultant}
-        label="Consultor"
-        name="consultant"
-        onChange={(event) => setSelectedConsultant(event.target.value)}
-      >
-        <MenuItem value="">Selecione uma opção</MenuItem>
-        {users?.data.map(({ name, surname, _id }: UserInfo) => (
-          <MenuItem key={_id} value={_id}>
-            {`${name} ${surname}`}
-          </MenuItem>
-        ))}
-      </TextField>
+      {validateUser() ? (
+        <TextField
+          style={{ width: "200px" }}
+          select
+          color="warning"
+          value={selectedConsultant}
+          label="Consultor"
+          name="consultant"
+          onChange={(event) => setSelectedConsultant(event.target.value)}
+        >
+          <MenuItem value="">Selecione uma opção</MenuItem>
+          {users?.data.map(({ name, surname, _id }: UserInfo) => (
+            <MenuItem key={_id} value={_id}>
+              {`${name} ${surname}`}
+            </MenuItem>
+          ))}
+        </TextField>
+      ) : null}
+
       <Button
         color="warning"
         variant="contained"

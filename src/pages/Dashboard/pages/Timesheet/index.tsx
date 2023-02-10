@@ -3,7 +3,6 @@ import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import {
   checkHours,
   deleteHours,
-  getHoursByUser,
   getHoursFilters,
 } from "services/hours.service";
 import {
@@ -60,8 +59,14 @@ export function Timesheet() {
     getHoursFilters(stringFilters)
   );
 
-  const { data: hoursByUser } = useQuery(["hours", user._id], () =>
-    getHoursByUser(user._id)
+  const { data: hoursByUser } = useQuery(
+    ["hours", user._id, stringFilters],
+    () =>
+      getHoursFilters(
+        stringFilters
+          ? `${stringFilters}&relUser=${user._id}`
+          : `relUser=${user._id}`
+      )
   );
 
   const { mutate: deleteHour } = useMutation(
@@ -167,7 +172,7 @@ export function Timesheet() {
   };
 
   const validateUserRegisterHours = () => {
-    if (user.typeField) {
+    if (user.typeField !== "nenhum") {
       return hoursByUser;
     }
     return hours;
