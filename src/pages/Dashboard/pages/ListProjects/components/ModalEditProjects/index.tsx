@@ -96,12 +96,11 @@ export function ModalEditProject({
               color="warning"
               variant="outlined"
             />
-            <Select
+            <TextField
               color="warning"
-              labelId="select-label-helper"
+              select
               {...register("idClient")}
-              label="Cliente Relacionado"
-              defaultValue=""
+              label="Cliente"
             >
               <MenuItem value="">Selecione uma opção</MenuItem>
               {clientList?.data.map(({ code, name }: Clients) => (
@@ -109,7 +108,7 @@ export function ModalEditProject({
                   {name}
                 </MenuItem>
               ))}
-            </Select>
+            </TextField>
             <TextField
               label="Valor"
               {...register("valueProject")}
@@ -121,7 +120,7 @@ export function ModalEditProject({
               labelId="select-label-helper"
               {...register("gpProject")}
               sx={{ display: "none" }}
-              label="Gerente de Projetos Relacionado"
+              label="Gerente de Projetos"
               value={findGpId()}
             >
               <MenuItem value="">Selecione uma opção</MenuItem>

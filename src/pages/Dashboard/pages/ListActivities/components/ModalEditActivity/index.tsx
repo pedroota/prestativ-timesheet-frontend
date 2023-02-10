@@ -154,7 +154,7 @@ export function ModalEditActivity({
               select
               {...register("project")}
               required
-              label="Projeto relacionado"
+              label="Projeto"
               defaultValue=""
             >
               <MenuItem value="">Selecione uma opção</MenuItem>
