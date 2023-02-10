@@ -144,6 +144,7 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
             <MenuIcon />
           </IconButton>
           <Box
+            className="mobile"
             sx={{
               display: "flex",
               alignItems: "center",

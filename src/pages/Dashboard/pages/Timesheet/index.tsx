@@ -162,6 +162,7 @@ export function Timesheet() {
   return (
     <div>
       <Box
+        className="mobile"
         sx={{
           width: "90vw",
           overflowX: "auto",

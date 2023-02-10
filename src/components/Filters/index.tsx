@@ -25,6 +25,7 @@ export function Filters({ receiveDataURI }: FiltersProps) {
 
   return (
     <Box
+      className="mobile"
       style={{
         display: "flex",
         flexWrap: "wrap",

@@ -7,3 +7,10 @@
 @use "./register-user";
 @use "./tables";
 @use "./timesheet";
+
+@media (max-width: 1070px) {
+    .mobile {
+        display: flex;
+        flex-direction: column;
+    }
+}
