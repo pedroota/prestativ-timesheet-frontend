@@ -19,6 +19,7 @@ import { Roles } from "interfaces/roles.interface";
 import InputLabel from "@mui/material/InputLabel";
 import { SwitchIOS } from "components/SwitchIOS";
 import ListItemText from "@mui/material/ListItemText";
+import { toast } from "react-toastify";
 
 interface ModalEditRoleProps {
   isOpen: boolean;
@@ -49,6 +50,12 @@ export function ModalEditRole({
       onSuccess: () => {
         queryClient.invalidateQueries(["roles"]);
         setIsOpen((prevState) => !prevState);
+        toast.success("Perfil foi atualizado com sucesso!");
+      },
+      onError: () => {
+        toast.error("Ocorreu algum erro ao editar este perfil", {
+          autoClose: 1500,
+        });
       },
     }
   );
