@@ -17,14 +17,14 @@
   .c-table {
     overflow-x: auto;
     width: 100%;
-  
+
     &--helper {
       display: table;
       table-layout: fixed;
       width: 100%;
       max-width: 90%;
     }
-  
+
     &--reset-head {
       > th {
         white-space: nowrap;
