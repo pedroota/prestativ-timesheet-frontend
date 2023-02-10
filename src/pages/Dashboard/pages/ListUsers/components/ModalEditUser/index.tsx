@@ -133,8 +133,8 @@ export function ModalEditUser({
               <MenuItem value={"nenhum"} key={0}>
                 Não se aplica
               </MenuItem>
-              <MenuItem value={"gerenteprojetos"} key={1}>
-                Gerente de Projetos
+              <MenuItem value={"gerenteprojetos"} disabled key={1}>
+                Gerente de Projetos (em desenvolvimento)
               </MenuItem>
               <MenuItem value={"consultor"} key={2}>
                 Consultor

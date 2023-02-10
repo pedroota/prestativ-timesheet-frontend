@@ -73,6 +73,11 @@ export function ModalEditActivity({
   const { data: listGps } = useQuery(["users-gp", "Gerente de Projetos"], () =>
     getUserByRole("gerenteprojetos")
   );
+
+  function findGpId() {
+    return listGps?.data[0]._id;
+  }
+
   const { data: consultantList } = useQuery(["users-gp", "Consultor"], () =>
     getUserByRole("consultor")
   );
@@ -180,7 +185,7 @@ export function ModalEditActivity({
               <FormLabel
                 sx={{
                   width: "100%",
-                  display: "flex",
+                  display: "none",
                   flexDirection: "column",
                   gap: "0.2rem",
                 }}
@@ -190,8 +195,8 @@ export function ModalEditActivity({
                   color="warning"
                   select
                   {...register("gpActivity")}
-                  sx={{ width: "100%" }}
-                  defaultValue=""
+                  sx={{ width: "100%", display: "none" }}
+                  defaultValue={() => findGpId()}
                 >
                   <MenuItem value="">Selecione uma opção</MenuItem>
                   {listGps?.data.map(

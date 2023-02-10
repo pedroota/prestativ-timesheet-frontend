@@ -83,6 +83,10 @@ export function ModalEditClient({
   const { data: listGps } = useQuery(["users-gp", "gpClient"], () =>
     getUserByRole("gerenteprojetos")
   );
+
+  function findGpId() {
+    setGpClient(listGps?.data[0]._id);
+  }
   const { register, reset, handleSubmit, setValue } = useForm<Clients>();
 
   const onSubmit = handleSubmit(
@@ -103,6 +107,7 @@ export function ModalEditClient({
       payDay,
       valueClient,
     }) => {
+      findGpId();
       mutate({
         code,
         name,
@@ -300,7 +305,7 @@ export function ModalEditClient({
                 InputLabelProps={{ shrink: true }}
               />
             </div>
-            <p>Valor e Gerente de Projetos</p>
+            {/* <p>Valor e Gerente de Projetos</p> */}
             <div className="c-register-client--input-container">
               <TextField
                 required
@@ -317,7 +322,7 @@ export function ModalEditClient({
                 select
                 label="Gerente de Projetos"
                 color="warning"
-                sx={{ width: "100%" }}
+                sx={{ width: "100%", display: "none" }}
                 value={gpClient}
                 onChange={(event) => setGpClient(event.target.value)}
               >

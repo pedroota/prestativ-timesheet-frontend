@@ -21,6 +21,11 @@ export function RegisterProject() {
   const { data: GPList } = useQuery(["users-role", "Gerente de Projetos"], () =>
     getUserByRole("gerenteprojetos")
   );
+
+  function findGpId() {
+    setGpProject(GPList?.data[0]._id);
+  }
+
   const { register, handleSubmit, reset } = useForm<Projects>({});
 
   const { mutate, isLoading } = useMutation(
@@ -50,6 +55,8 @@ export function RegisterProject() {
 
   const onSubmit = handleSubmit(
     ({ title, idClient, gpProject, description }) => {
+      findGpId();
+
       mutate({
         title,
         idClient,
@@ -106,6 +113,7 @@ export function RegisterProject() {
           label="Gerente de Projetos"
           select
           value={gpProject}
+          sx={{ display: "none" }}
           onChange={(event) => setGpProject(event.target.value)}
         >
           <MenuItem value="">Selecione uma opção</MenuItem>

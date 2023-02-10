@@ -22,6 +22,10 @@ export function RegisterClient() {
     getUserByRole("gerenteprojetos")
   );
 
+  function findGpId() {
+    setGpClient(data?.data[0]._id);
+  }
+
   useEffect(() => {
     if (valueCep && valueCep.length >= 8) {
       cep(valueCep).then(({ street, city, state, neighborhood }) => {
@@ -118,6 +122,8 @@ export function RegisterClient() {
         console.log(validateCNPJ(cnpj));
         return toast.error("O CNPJ digitado é inválido", { autoClose: 1500 });
       }
+
+      findGpId();
 
       mutate({
         code,
@@ -281,7 +287,7 @@ export function RegisterClient() {
             {...register("payDay")}
           />
         </div>
-        <p>Valor e Gerente de Projetos</p>
+        {/* <p>Valor e Gerente de Projetos</p> */}
         <div className="c-register-client--input-container">
           <TextField
             required
@@ -298,7 +304,7 @@ export function RegisterClient() {
             label="Gerente de Projetos"
             select
             color="warning"
-            sx={{ width: "100%" }}
+            sx={{ width: "100%", display: "none" }}
             value={gpClient}
             onChange={(event) => setGpClient(event.target.value)}
           >

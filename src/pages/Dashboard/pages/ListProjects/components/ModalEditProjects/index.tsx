@@ -37,6 +37,11 @@ export function ModalEditProject({
   const { data: listGps } = useQuery(["users-gp", "Gerente de Projetos"], () =>
     getUserByRole("gerenteprojetos")
   );
+
+  function findGpId() {
+    return listGps?.data[0]._id;
+  }
+
   const { mutate } = useMutation(
     ({ title, idClient, valueProject, gpProject, description }: Projects) =>
       updateProjects(currentProject, {
@@ -115,8 +120,9 @@ export function ModalEditProject({
               color="warning"
               labelId="select-label-helper"
               {...register("gpProject")}
+              sx={{ display: "none" }}
               label="Gerente de Projetos Relacionado"
-              defaultValue=""
+              value={findGpId()}
             >
               <MenuItem value="">Selecione uma opção</MenuItem>
               {listGps?.data.map(
