@@ -19,8 +19,6 @@ import { createRoles } from "services/roles.service";
 import { Roles } from "interfaces/roles.interface";
 import { SwitchIOS } from "components/SwitchIOS";
 import InputLabel from "@mui/material/InputLabel/InputLabel";
-import OutlinedInput from "@mui/material/OutlinedInput/OutlinedInput";
-import Checkbox from "@mui/material/Checkbox/Checkbox";
 import ListItemText from "@mui/material/ListItemText/ListItemText";
 
 interface ModalCreateRoleProps {
