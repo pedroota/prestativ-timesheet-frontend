@@ -24,7 +24,7 @@ type AuthContextProps = {
 export const AuthContext = createContext({} as AuthContextType);
 
 export function AuthProvider({ children }: AuthContextProps) {
-  const handleAddUser = useAuthStore((state) => state.handleAddUser);
+  const { handleAddUser } = useAuthStore((state) => state);
 
   async function signIn({ email, password }: User) {
     await signin({

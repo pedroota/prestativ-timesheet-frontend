@@ -3,6 +3,7 @@ import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import {
   checkHours,
   deleteHours,
+  getHoursByUser,
   getHoursFilters,
 } from "services/hours.service";
 import {
@@ -45,8 +46,10 @@ import { Permission } from "components/Permission";
 import { PatchActivities } from "interfaces/activities.interface";
 import { currencyMask } from "utils/masks";
 import { ModalEditReleasedCall } from "./components/ModalEditReleasedCall";
+import { useAuthStore } from "stores/userStore";
 
 export function Timesheet() {
+  const { user } = useAuthStore((state) => state);
   const queryClient = useQueryClient();
   const [isEditingHour, setIsEditingHour] = useState(false);
   const [isEditingReleasedCall, setIsEditingReleasedCall] = useState(false);
@@ -55,6 +58,10 @@ export function Timesheet() {
   const [stringFilters, setStringFilters] = useState("");
   const { data: hours, isLoading } = useQuery(["hours", stringFilters], () =>
     getHoursFilters(stringFilters)
+  );
+
+  const { data: hoursByUser } = useQuery(["hours", user._id], () =>
+    getHoursByUser(user._id)
   );
 
   const { mutate: deleteHour } = useMutation(
@@ -159,6 +166,13 @@ export function Timesheet() {
     XLSX.writeFile(wb, "TimesheetExcel.xlsx");
   };
 
+  const validateUserRegisterHours = () => {
+    if (user.typeField) {
+      return hoursByUser;
+    }
+    return hours;
+  };
+
   return (
     <div>
       <Box
@@ -230,7 +244,7 @@ export function Timesheet() {
         </Box>
       ) : (
         <>
-          {hours?.data.length ? (
+          {validateUserRegisterHours()?.data.length ? (
             <Paper className="c-timesheet">
               <div className="c-table">
                 <div className="c-table--helper">
@@ -348,7 +362,7 @@ export function Timesheet() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {hours?.data.map(
+                      {validateUserRegisterHours()?.data.map(
                         ({
                           _id,
                           initial,

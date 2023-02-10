@@ -6,14 +6,22 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./sass/main.scss";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useThemeStore } from "stores/themeStore";
 
 function App() {
-  const theme = createTheme();
+  const theme = useThemeStore((state) => state.theme);
+  const lightTheme = createTheme();
+
+  const darkTheme = createTheme({
+    palette: {
+      mode: "dark",
+    },
+  });
 
   const queryClient = new QueryClient();
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme ? lightTheme : darkTheme}>
       <CssBaseline />
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
