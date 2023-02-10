@@ -243,7 +243,7 @@ export function Timesheet() {
         </Box>
       ) : (
         <>
-          {hours?.data.length ? (
+          {validateUserRegisterHours()?.data.length ? (
             <Paper className="c-timesheet">
               <div className="c-table">
                 <div className="c-table--helper">
