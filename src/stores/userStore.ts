@@ -8,7 +8,7 @@ export interface User {
   name: string;
   surname: string;
   role: Roles;
-  typeField?: string;
+  typeField: string;
 }
 
 export interface UserStore {
