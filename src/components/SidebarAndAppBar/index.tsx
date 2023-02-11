@@ -24,7 +24,6 @@ import Cookies from "js-cookie";
 
 // Icons
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
@@ -200,39 +199,8 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
           </List>
           <Divider />
         </Permission>
-        <Permission
-          roles={[
-            "CADASTRO_CLIENTE" || "CADASTRO_PROJETO" || "CADASTRO_USUARIO",
-          ]}
-        >
+        <Permission roles={["CADASTRO_PROJETO" || "CADASTRO_USUARIO"]}>
           <List>
-            <Permission roles={["CADASTRO_CLIENTE"]}>
-              <Link to="register-client">
-                <ListItem disablePadding>
-                  <ListItemButton
-                    sx={{
-                      minHeight: 48,
-                      justifyContent: open ? "initial" : "center",
-                      px: 2.5,
-                    }}
-                  >
-                    <ListItemIcon
-                      sx={{
-                        minWidth: 0,
-                        mr: open ? 3 : "auto",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <PeopleAltIcon />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={"Cadastrar Cliente"}
-                      sx={{ opacity: open ? 1 : 0 }}
-                    />
-                  </ListItemButton>
-                </ListItem>
-              </Link>
-            </Permission>
             <Permission roles={["CADASTRO_PROJETO"]}>
               <Link to="register-project">
                 <ListItem disablePadding>

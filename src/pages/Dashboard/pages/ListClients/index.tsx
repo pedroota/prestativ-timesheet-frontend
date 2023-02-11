@@ -10,6 +10,7 @@ import {
   Typography,
   Box,
   CircularProgress,
+  Button,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -20,8 +21,10 @@ import { formatCurrency } from "utils/formatCurrency";
 import { StyledTableCell } from "components/StyledTableCell";
 import { StyledTableRow } from "components/StyledTableRow";
 import { Permission } from "components/Permission";
+import { ModalRegisterClient } from "./components/ModalRegisterClient";
 
 export function ListClients() {
+  const [isAddingClient, setIsAddingClient] = useState(false);
   const [currentClient, setCurrentClient] = useState("");
   const [isEditingClient, setIsEditingClient] = useState(false);
   const { data: clients, isLoading } = useQuery(["clients"], () =>
@@ -38,9 +41,27 @@ export function ListClients() {
 
   return (
     <div>
-      <Typography variant="h4" sx={{ marginBlock: "1.3rem" }}>
-        Listagem de Clientes
-      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Typography variant="h4" sx={{ marginBlock: "1.3rem" }}>
+          Listagem de Clientes
+        </Typography>
+
+        <Permission roles={["CADASTRO_CLIENTE"]}>
+          <Button
+            variant="contained"
+            color="warning"
+            onClick={() => setIsAddingClient((prevState) => !prevState)}
+          >
+            Cadastrar cliente
+          </Button>
+        </Permission>
+      </Box>
       {isLoading ? (
         <Box
           sx={{
@@ -178,6 +199,12 @@ export function ListClients() {
                   isOpen={isEditingClient}
                   setIsOpen={setIsEditingClient}
                   currentClient={currentClient}
+                />
+              </Permission>
+              <Permission roles={["CADASTRO_CLIENTE"]}>
+                <ModalRegisterClient
+                  isOpen={isAddingClient}
+                  setIsOpen={setIsAddingClient}
                 />
               </Permission>
             </div>
