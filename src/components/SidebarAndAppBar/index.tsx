@@ -27,7 +27,6 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import CreateIcon from "@mui/icons-material/Create";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import HailIcon from "@mui/icons-material/Hail";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
@@ -203,10 +202,7 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
         </Permission>
         <Permission
           roles={[
-            "CADASTRO_CLIENTE" ||
-              "CADASTRO_PROJETO" ||
-              "CADASTRO_ATIVIDADE" ||
-              "CADASTRO_USUARIO",
+            "CADASTRO_CLIENTE" || "CADASTRO_PROJETO" || "CADASTRO_USUARIO",
           ]}
         >
           <List>
@@ -258,33 +254,6 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                     </ListItemIcon>
                     <ListItemText
                       primary={"Cadastrar Projeto"}
-                      sx={{ opacity: open ? 1 : 0 }}
-                    />
-                  </ListItemButton>
-                </ListItem>
-              </Link>
-            </Permission>
-            <Permission roles={["CADASTRO_ATIVIDADE"]}>
-              <Link to="register-activity">
-                <ListItem disablePadding>
-                  <ListItemButton
-                    sx={{
-                      minHeight: 48,
-                      justifyContent: open ? "initial" : "center",
-                      px: 2.5,
-                    }}
-                  >
-                    <ListItemIcon
-                      sx={{
-                        minWidth: 0,
-                        mr: open ? 3 : "auto",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <CreateIcon />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={"Cadastrar Atividade"}
                       sx={{ opacity: open ? 1 : 0 }}
                     />
                   </ListItemButton>

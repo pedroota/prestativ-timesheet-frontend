@@ -10,6 +10,7 @@ import {
   Typography,
   CircularProgress,
   Box,
+  Button,
 } from "@mui/material";
 import {
   generateDateWithTimestamp,
@@ -26,6 +27,7 @@ import { StyledTableRow } from "components/StyledTableRow";
 import { Permission } from "components/Permission";
 import Chip from "@mui/material/Chip";
 import { SwitchIOS } from "components/SwitchIOS";
+import { ModalRegisterActivity } from "./components/ModalRegisterActivity";
 
 interface ConsultantUsers {
   name: string;
@@ -33,6 +35,7 @@ interface ConsultantUsers {
 }
 
 export function ListActivities() {
+  const [isAddingActivity, setIsAddingActivity] = useState(false);
   const [currentActivity, setCurrentActivity] = useState("");
   const [isEditingActivity, setIsEditingActivity] = useState(false);
   const queryClient = useQueryClient();
@@ -49,9 +52,26 @@ export function ListActivities() {
 
   return (
     <div>
-      <Typography variant="h4" sx={{ marginBlock: "1.3rem" }}>
-        Listagem de Atividades
-      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Typography variant="h4" sx={{ marginBlock: "1.3rem" }}>
+          Listagem de Atividades
+        </Typography>
+        <Permission roles={["CADASTRO_ATIVIDADE"]}>
+          <Button
+            variant="contained"
+            color="warning"
+            onClick={() => setIsAddingActivity((prevState) => !prevState)}
+          >
+            Criar atividade
+          </Button>
+        </Permission>
+      </Box>
       {isLoading ? (
         <Box
           sx={{
@@ -221,6 +241,13 @@ export function ListActivities() {
                   isOpen={isEditingActivity}
                   setIsOpen={setIsEditingActivity}
                   currentActivity={currentActivity}
+                />
+              </Permission>
+
+              <Permission roles={["CADASTRO_ATIVIDADE"]}>
+                <ModalRegisterActivity
+                  isOpen={isAddingActivity}
+                  setIsOpen={setIsAddingActivity}
                 />
               </Permission>
             </div>

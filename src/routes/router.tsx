@@ -9,7 +9,6 @@ import { DashboardView } from "pages/Dashboard/pages/DashboardView";
 import { RegisterUser } from "pages/Dashboard/pages/RegisterUser";
 import { RegisterClient } from "pages/Dashboard/pages/RegisterClient";
 import { RegisterProject } from "pages/Dashboard/pages/RegisterProject";
-import { RegisterActivity } from "pages/Dashboard/pages/RegisterActivity";
 import { ListClients } from "pages/Dashboard/pages/ListClients";
 import { ListProjects } from "pages/Dashboard/pages/ListProjects";
 import { ListActivities } from "pages/Dashboard/pages/ListActivities";
@@ -54,14 +53,6 @@ export function Router() {
               element={
                 <Permission roles={["CADASTRO_PROJETO"]}>
                   <RegisterProject />
-                </Permission>
-              }
-            />
-            <Route
-              path="register-activity"
-              element={
-                <Permission roles={["CADASTRO_ATIVIDADE"]}>
-                  <RegisterActivity />
                 </Permission>
               }
             />
