@@ -24,6 +24,7 @@ import {
 import { UpdateHoursProps } from "interfaces/hours.interface";
 import { toast } from "react-toastify";
 import { useAuthStore } from "stores/userStore";
+import { getUserById } from "services/auth.service";
 
 interface ModalEditHoursProps {
   isOpen: boolean;
@@ -40,6 +41,12 @@ interface FormData {
   releasedCall: string;
 }
 
+interface ActivityModalReturnProps {
+  _id: string;
+  title: string;
+  activityValidity: number;
+}
+
 export function ModalEditHours({
   isOpen,
   setIsOpen,
@@ -49,6 +56,7 @@ export function ModalEditHours({
   const user = useAuthStore((state) => state.user);
   const [selectedActivity, setSelectedActivity] = useState("");
   const { register, handleSubmit, setValue } = useForm<FormData>();
+  const { data } = useQuery(["users", user._id], () => getUserById(user._id));
 
   // Get current hour data
   useQuery(["hours", currentHour], () => getHoursById(currentHour), {
@@ -270,6 +278,16 @@ export function ModalEditHours({
                 <MenuItem value="" disabled>
                   Selecione uma opção
                 </MenuItem>
+                {data?.data?.user?.activities
+                  .filter(
+                    (activity: ActivityModalReturnProps) =>
+                      activity?.activityValidity > Date.now()
+                  )
+                  .map((activity: ActivityModalReturnProps) => (
+                    <MenuItem value={activity._id} key={activity._id}>
+                      {activity.title}
+                    </MenuItem>
+                  ))}
               </TextField>
               <TextField
                 required

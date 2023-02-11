@@ -27,6 +27,7 @@ interface ModalRegisterHoursProps {
 interface ActivityModalReturnProps {
   _id: string;
   title: string;
+  activityValidity: number;
 }
 
 export function ModalRegisterHours({
@@ -37,6 +38,7 @@ export function ModalRegisterHours({
   const queryClient = useQueryClient();
   const { register, handleSubmit } = useForm();
   const { data } = useQuery(["users", user._id], () => getUserById(user._id));
+
   const { mutate, isLoading } = useMutation(
     ({
       initial,
@@ -233,13 +235,16 @@ export function ModalRegisterHours({
             <MenuItem value="" disabled>
               Selecione uma opção
             </MenuItem>
-            {data?.data?.user?.activities.map(
-              (activity: ActivityModalReturnProps) => (
+            {data?.data?.user?.activities
+              .filter(
+                (activity: ActivityModalReturnProps) =>
+                  activity?.activityValidity > Date.now()
+              )
+              .map((activity: ActivityModalReturnProps) => (
                 <MenuItem value={activity._id} key={activity._id}>
                   {activity.title}
                 </MenuItem>
-              )
-            )}
+              ))}
           </TextField>
           <TextField
             required
