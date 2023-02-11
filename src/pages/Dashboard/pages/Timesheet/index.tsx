@@ -310,7 +310,10 @@ export function Timesheet() {
                           </StyledTableCell>
                         </Permission>
                         <Permission roles={["GERENTE_DE_PROJETOS"]}>
-                          <StyledTableCell align="center">
+                          <StyledTableCell
+                            sx={{ display: "none" }}
+                            align="center"
+                          >
                             Gerente de Projetos
                           </StyledTableCell>
                         </Permission>
@@ -464,7 +467,10 @@ export function Timesheet() {
                               </StyledTableCell>
                             </Permission>
                             <Permission roles={["GERENTE_DE_PROJETOS"]}>
-                              <StyledTableCell align="center">
+                              <StyledTableCell
+                                sx={{ display: "none" }}
+                                align="center"
+                              >
                                 {relActivity
                                   ? `${relActivity.gpActivity.name} ${relActivity.gpActivity.surname}`
                                   : relProject
