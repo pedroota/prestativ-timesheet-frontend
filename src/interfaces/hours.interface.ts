@@ -52,8 +52,6 @@ export interface Hours {
 export interface RegisterHours {
   initial: number;
   final: number;
-  relClient: string;
-  relProject: string;
   relActivity: string;
   relUser: string;
   activityDesc: string;
@@ -70,8 +68,6 @@ export interface UpdateHoursProps {
   initial: number;
   final: number;
   adjustment: number;
-  relClient: string;
-  relProject: string;
   relActivity: string;
   relUser: string;
   activityDesc: string;

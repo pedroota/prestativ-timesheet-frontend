@@ -11,11 +11,7 @@ import {
 } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
-import { ClientsInfo } from "interfaces/clients.interface";
-import { ProjectsInfo } from "interfaces/projects.interface";
-import { ActivitiesInfo } from "interfaces/activities.interface";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getClients } from "services/clients.service";
 import { getHoursById, updateHours } from "services/hours.service";
 import { Permission } from "components/Permission";
 import {
@@ -51,8 +47,6 @@ export function ModalEditHours({
 }: ModalEditHoursProps) {
   const queryClient = useQueryClient();
   const user = useAuthStore((state) => state.user);
-  const [selectedClient, setSelectedClient] = useState("");
-  const [selectedProject, setSelectedProject] = useState("");
   const [selectedActivity, setSelectedActivity] = useState("");
   const { register, handleSubmit, setValue } = useForm<FormData>();
 
@@ -73,8 +67,6 @@ export function ModalEditHours({
         );
       setValue("activityDesc", data?.hours?.activityDesc);
       setValue("releasedCall", data?.hours?.releasedCall);
-      setSelectedClient(data.hours.relClient._id);
-      setSelectedProject(data.hours.relProject._id);
       setSelectedActivity(data.hours.relActivity._id);
     },
     enabled: isOpen,
@@ -87,8 +79,6 @@ export function ModalEditHours({
       initial,
       final,
       adjustment,
-      relClient,
-      relProject,
       relActivity,
       relUser,
       activityDesc,
@@ -97,8 +87,6 @@ export function ModalEditHours({
         initial,
         final,
         adjustment,
-        relClient,
-        relProject,
         relActivity,
         relUser,
         activityDesc,
@@ -145,16 +133,11 @@ export function ModalEditHours({
         activityDesc,
         adjustment: adjusted,
         relActivity: selectedActivity,
-        relClient: selectedClient,
-        relProject: selectedProject,
         relUser: user._id,
       });
       toast.success("Lançamento alterado com sucesso");
     }
   );
-
-  // Requests inputs
-  const { data: clients } = useQuery(["clients"], () => getClients());
 
   // botão DIA DE HOJE
   const [chosenDay, setChosenDay] = useState("");
@@ -268,54 +251,7 @@ export function ModalEditHours({
                 </FormLabel>
               </Box>
             </Permission>
-            <Permission roles={["EDITAR_CAMPOS_HORAS_LANCADAS"]}>
-              <Box sx={{ display: "flex", gap: "1rem" }}>
-                <TextField
-                  required
-                  color="warning"
-                  variant="outlined"
-                  label="Cliente"
-                  select
-                  value={selectedClient}
-                  InputLabelProps={{ shrink: true }}
-                  sx={{ width: "100%" }}
-                  onChange={(event) => setSelectedClient(event.target.value)}
-                >
-                  <MenuItem value="" disabled>
-                    Selecione uma opção
-                  </MenuItem>
-                  {clients?.data.map(({ name, _id }: ClientsInfo) => (
-                    <MenuItem key={_id} value={_id}>
-                      {name}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                <TextField
-                  required
-                  color="warning"
-                  variant="outlined"
-                  label="Projeto"
-                  InputLabelProps={{ shrink: true }}
-                  select
-                  value={selectedProject}
-                  sx={{ width: "100%" }}
-                  onChange={(event) => setSelectedProject(event.target.value)}
-                >
-                  <MenuItem value="" disabled>
-                    Selecione uma opção
-                  </MenuItem>
-                  {clients?.data
-                    .find(
-                      (client: ClientsInfo) => client._id === selectedClient
-                    )
-                    ?.projects.map(({ _id, title }: ProjectsInfo) => (
-                      <MenuItem key={_id} value={_id}>
-                        {title}
-                      </MenuItem>
-                    ))}
-                </TextField>
-              </Box>
-            </Permission>
+
             <Permission roles={["EDITAR_CAMPOS_HORAS_LANCADAS"]}>
               <TextField
                 required
@@ -330,16 +266,6 @@ export function ModalEditHours({
                 <MenuItem value="" disabled>
                   Selecione uma opção
                 </MenuItem>
-                {clients?.data
-                  .find((client: ClientsInfo) => client._id === selectedClient)
-                  ?.projects.find(
-                    (project: ProjectsInfo) => project._id === selectedProject
-                  )
-                  ?.activities.map(({ _id, title }: ActivitiesInfo) => (
-                    <MenuItem key={_id} value={_id}>
-                      {title}
-                    </MenuItem>
-                  ))}
               </TextField>
               <TextField
                 required

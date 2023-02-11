@@ -21,7 +21,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import BrushIcon from "@mui/icons-material/Brush";
 import { Hours, PatchHour } from "interfaces/hours.interface";
-import { ModalRegisterHours } from "components/ModalRegisterHours";
+import { ModalRegisterHours } from "pages/Dashboard/pages/Timesheet/components/ModalRegisterHours";
 import { EmptyList } from "components/EmptyList";
 import { StyledTableRow } from "components/StyledTableRow";
 import { StyledTableCell } from "components/StyledTableCell";

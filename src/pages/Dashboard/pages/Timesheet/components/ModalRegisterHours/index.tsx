@@ -15,33 +15,33 @@ import { generateTimestampWithDateAndTime } from "utils/timeControl";
 import { RegisterHours } from "interfaces/hours.interface";
 import { createHours } from "services/hours.service";
 import { useState } from "react";
-import { getClients } from "services/clients.service";
-import { ClientsInfo } from "interfaces/clients.interface";
-import { ProjectsInfo } from "interfaces/projects.interface";
-import { ActivitiesInfo } from "interfaces/activities.interface";
 import { toast } from "react-toastify";
 import { useAuthStore } from "stores/userStore";
+import { getUserById } from "services/auth.service";
+
 interface ModalRegisterHoursProps {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+interface ActivityModalReturnProps {
+  _id: string;
+  title: string;
 }
 
 export function ModalRegisterHours({
   isOpen,
   setIsOpen,
 }: ModalRegisterHoursProps) {
-  const user = useAuthStore((state) => state.user);
-  const [selectedClient, setSelectedClient] = useState("");
-  const [selectedProject, setSelectedProject] = useState("");
+  const { user } = useAuthStore((state) => state);
   const queryClient = useQueryClient();
   const { register, handleSubmit } = useForm();
+  const { data } = useQuery(["users", user._id], () => getUserById(user._id));
   const { mutate, isLoading } = useMutation(
     ({
       initial,
       final,
       adjustment,
-      relClient,
-      relProject,
       relActivity,
       relUser,
       activityDesc,
@@ -50,8 +50,6 @@ export function ModalRegisterHours({
         initial,
         final,
         adjustment,
-        relClient,
-        relProject,
         relActivity,
         relUser,
         activityDesc,
@@ -71,15 +69,7 @@ export function ModalRegisterHours({
   );
 
   const onSubmit = handleSubmit(
-    ({
-      initialDate,
-      initialHour,
-      finalHour,
-      relClient,
-      relProject,
-      relActivity,
-      activityDesc,
-    }) => {
+    ({ initialDate, initialHour, finalHour, relActivity, activityDesc }) => {
       if (!initialDate) {
         initialDate = chosenDay;
       }
@@ -109,17 +99,12 @@ export function ModalRegisterHours({
         initial,
         final,
         adjustment,
-        relClient,
-        relProject,
         relActivity,
         relUser: user._id,
         activityDesc,
       });
     }
   );
-
-  // Requests inputs
-  const { data: clients } = useQuery(["clients"], () => getClients());
 
   // botão DIA DE HOJE
   const [chosenDay, setChosenDay] = useState("");
@@ -160,7 +145,7 @@ export function ModalRegisterHours({
           <Box
             sx={{
               display: "flex",
-              flexDirection: "row-reverse",
+              flexDirection: "row",
               gap: "1rem",
             }}
           >
@@ -235,53 +220,6 @@ export function ModalRegisterHours({
             </FormLabel>
           </Box>
 
-          <Box sx={{ display: "flex", gap: "1rem" }}>
-            <TextField
-              required
-              color="warning"
-              variant="outlined"
-              label="Cliente"
-              select
-              defaultValue=""
-              InputLabelProps={{ shrink: true }}
-              sx={{ width: "100%" }}
-              {...register("relClient")}
-              onChange={(event) => setSelectedClient(event.target.value)}
-            >
-              <MenuItem value="" disabled>
-                Selecione uma opção
-              </MenuItem>
-              {clients?.data.map(({ name, _id }: ClientsInfo) => (
-                <MenuItem key={_id} value={_id}>
-                  {name}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              required
-              color="warning"
-              variant="outlined"
-              label="Projeto"
-              InputLabelProps={{ shrink: true }}
-              select
-              defaultValue=""
-              sx={{ width: "100%" }}
-              {...register("relProject")}
-              onChange={(event) => setSelectedProject(event.target.value)}
-            >
-              <MenuItem value="" disabled>
-                Selecione uma opção
-              </MenuItem>
-              {clients?.data
-                .find((client: ClientsInfo) => client._id === selectedClient)
-                ?.projects.map(({ _id, title }: ProjectsInfo) => (
-                  <MenuItem key={_id} value={_id}>
-                    {title}
-                  </MenuItem>
-                ))}
-            </TextField>
-          </Box>
-
           <TextField
             required
             color="warning"
@@ -295,16 +233,13 @@ export function ModalRegisterHours({
             <MenuItem value="" disabled>
               Selecione uma opção
             </MenuItem>
-            {clients?.data
-              .find((client: ClientsInfo) => client._id === selectedClient)
-              ?.projects.find(
-                (project: ProjectsInfo) => project._id === selectedProject
-              )
-              ?.activities.map(({ _id, title }: ActivitiesInfo) => (
-                <MenuItem key={_id} value={_id}>
-                  {title}
+            {data?.data?.user?.activities.map(
+              (activity: ActivityModalReturnProps) => (
+                <MenuItem value={activity._id} key={activity._id}>
+                  {activity.title}
                 </MenuItem>
-              ))}
+              )
+            )}
           </TextField>
           <TextField
             required
