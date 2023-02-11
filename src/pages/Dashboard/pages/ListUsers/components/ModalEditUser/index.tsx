@@ -5,6 +5,7 @@ import {
   Box,
   Typography,
   Modal,
+  CircularProgress,
 } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import { UserRegister } from "interfaces/users.interface";
@@ -14,6 +15,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Roles } from "interfaces/roles.interface";
 import { getUserById, updateUser } from "services/auth.service";
 import { Permission } from "components/Permission";
+import { toast } from "react-toastify";
 
 const style = {
   position: "absolute",
@@ -45,7 +47,7 @@ export function ModalEditUser({
     },
   });
   const queryClient = useQueryClient();
-  const { mutate } = useMutation(
+  const { mutate, isLoading } = useMutation(
     ({ name, surname, email, password, role, typeField }: UserRegister) =>
       updateUser(currentUser, {
         name,
@@ -59,6 +61,12 @@ export function ModalEditUser({
       onSuccess: () => {
         queryClient.invalidateQueries(["users", "user"]);
         setIsOpen((prevState) => !prevState);
+        toast.success("Usuário foi atualizado com sucesso!");
+      },
+      onError: () => {
+        toast.error("Ocorreu algum erro ao editar este Usuário!", {
+          autoClose: 1500,
+        });
       },
     }
   );
@@ -159,7 +167,8 @@ export function ModalEditUser({
               color="warning"
               type="submit"
             >
-              Concluído
+              {isLoading && <CircularProgress size={16} />}
+              {!isLoading && "Concluído"}
             </Button>
           </form>
         </Box>

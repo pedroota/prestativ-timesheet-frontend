@@ -7,6 +7,7 @@ import {
   Select,
   MenuItem,
   Button,
+  CircularProgress,
 } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import { SetStateAction } from "react";
@@ -34,7 +35,7 @@ interface FormCreateRoles {
 
 export function ModalCreateRole({ isOpen, setIsOpen }: ModalCreateRoleProps) {
   const queryClient = useQueryClient();
-  const { mutate } = useMutation(
+  const { mutate, isLoading } = useMutation(
     ({ name, permissions }: Pick<Roles, "name" | "permissions">) =>
       createRoles({ name, permissions }),
     {
@@ -130,7 +131,8 @@ export function ModalCreateRole({ isOpen, setIsOpen }: ModalCreateRoleProps) {
               color="warning"
               sx={{ paddingBlock: "1rem" }}
             >
-              Criar perfil
+              {isLoading && <CircularProgress size={16} />}
+              {!isLoading && "Criar perfil"}
             </Button>
           </form>
         </Box>

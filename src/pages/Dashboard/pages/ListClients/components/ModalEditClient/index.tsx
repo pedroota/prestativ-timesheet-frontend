@@ -18,6 +18,7 @@ import { getClientById, updateClient } from "services/clients.service";
 import cep from "cep-promise";
 import { Permission } from "components/Permission";
 import { currencyMask } from "utils/masks";
+import { toast } from "react-toastify";
 
 interface ModalEditUserProps {
   isOpen: boolean;
@@ -77,6 +78,12 @@ export function ModalEditClient({
       onSuccess: () => {
         queryClient.invalidateQueries(["clients"]);
         setIsOpen((prevState) => !prevState);
+        toast.success("Cliente foi atualizado com sucesso!");
+      },
+      onError: () => {
+        toast.error("Ocorreu algum erro ao editar este cliente!", {
+          autoClose: 1500,
+        });
       },
     }
   );
