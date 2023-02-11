@@ -10,7 +10,7 @@ import { TransitionProps } from "@mui/material/transitions";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
-    children: React.ReactElement<any, any>;
+    children: React.ReactElement;
   },
   ref: React.Ref<unknown>
 ) {
@@ -18,39 +18,36 @@ const Transition = React.forwardRef(function Transition(
 });
 
 export function DialogDeleting() {
-  const [open, setOpen] = React.useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const [isOpen, setIsOpen] = React.useState(false);
 
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
+      <Button
+        variant="outlined"
+        onClick={() => setIsOpen((prevState) => !prevState)}
+      >
         Slide in alert dialog
       </Button>
       <Dialog
-        open={open}
+        open={isOpen}
         TransitionComponent={Transition}
         keepMounted
-        onClose={handleClose}
+        onClose={() => setIsOpen((prevState) => !prevState)}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>
-          {"Você realmente deseja deletar esses dados?"}
-        </DialogTitle>
+        <DialogTitle>Você realmente deseja deletar esses dados?</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
             Esta operação não poderá ser desfeita!
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Disagree</Button>
-          <Button onClick={handleClose}>Agree</Button>
+          <Button onClick={() => setIsOpen((prevState) => !prevState)}>
+            Disagree
+          </Button>
+          <Button onClick={() => setIsOpen((prevState) => !prevState)}>
+            Agree
+          </Button>
         </DialogActions>
       </Dialog>
     </div>
