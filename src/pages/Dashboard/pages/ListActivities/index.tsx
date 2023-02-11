@@ -83,7 +83,10 @@ export function ListActivities() {
                           <StyledTableCell align="center">
                             Valor Atividade
                           </StyledTableCell>
-                          <StyledTableCell align="center">
+                          <StyledTableCell
+                            sx={{ display: "none" }}
+                            align="center"
+                          >
                             Gerente de Projetos
                           </StyledTableCell>
                           <StyledTableCell align="center">
@@ -132,7 +135,10 @@ export function ListActivities() {
                                   ? formatCurrency(valueActivity)
                                   : "Sem Valor"}
                               </StyledTableCell>
-                              <StyledTableCell align="center">
+                              <StyledTableCell
+                                sx={{ display: "none" }}
+                                align="center"
+                              >
                                 {gpActivity
                                   ? `${gpActivity?.name} ${gpActivity?.surname}`
                                   : "nenhum"}

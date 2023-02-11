@@ -20,6 +20,7 @@ import { Roles } from "interfaces/roles.interface";
 import { SwitchIOS } from "components/SwitchIOS";
 import InputLabel from "@mui/material/InputLabel/InputLabel";
 import ListItemText from "@mui/material/ListItemText/ListItemText";
+import { toast } from "react-toastify";
 
 interface ModalCreateRoleProps {
   isOpen: boolean;
@@ -41,7 +42,13 @@ export function ModalCreateRole({ isOpen, setIsOpen }: ModalCreateRoleProps) {
         queryClient.invalidateQueries(["roles"]);
         reset();
         setMultipleSelectValue([]);
+        toast.success("Cadastro de perfil efetuado com sucesso!");
         setIsOpen((prevState) => !prevState);
+      },
+      onError: () => {
+        toast.error("Ocorreu algum erro ao criar o perfil", {
+          autoClose: 1500,
+        });
       },
     }
   );

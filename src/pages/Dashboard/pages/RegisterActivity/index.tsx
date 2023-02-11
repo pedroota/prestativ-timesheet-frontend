@@ -36,6 +36,11 @@ export function RegisterActivity() {
   const { data: GPList } = useQuery(["users-role", "Gerente de Projetos"], () =>
     getUserByRole("gerenteprojetos")
   );
+
+  function findGpId() {
+    setGpActivity(GPList?.data[0]._id);
+  }
+
   const { data: consultantList } = useQuery(
     ["user-consultant", "Consultor"],
     () => getUserByRole("consultor")
@@ -92,6 +97,7 @@ export function RegisterActivity() {
       closedScope,
       activityValidity,
     }) => {
+      findGpId();
       mutate({
         title,
         project,
@@ -186,7 +192,7 @@ export function RegisterActivity() {
           <TextField
             color="warning"
             {...register("gpActivity")}
-            sx={{ width: "100%" }}
+            sx={{ width: "100%", display: "none" }}
             select
             label="Gerente de projetos"
             value={gpActivity}
@@ -201,26 +207,36 @@ export function RegisterActivity() {
               </MenuItem>
             ))}
           </TextField>
-          <Select
-            color="warning"
-            variant="outlined"
-            {...register("users")}
-            sx={{ width: "100%", maxWidth: "14rem" }}
-            value={multipleSelect}
-            onChange={multipleSelectChange}
-            multiple
+          <FormLabel
+            sx={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              gap: "0.2rem",
+            }}
           >
-            <MenuItem value="" disabled>
-              Selecione uma opção
-            </MenuItem>
-            {consultantList?.data.map(
-              ({ name, surname, _id }: UserRegister) => (
-                <MenuItem key={_id} value={_id}>
-                  {`${name} ${surname}`}
-                </MenuItem>
-              )
-            )}
-          </Select>
+            Consultores (Selecione no mínimo uma opção)
+            <Select
+              color="warning"
+              variant="outlined"
+              {...register("users")}
+              sx={{ width: "100%" }} // maxWidth: "14rem"
+              value={multipleSelect}
+              onChange={multipleSelectChange}
+              multiple
+            >
+              <MenuItem value="" disabled>
+                Selecione no mínimo uma opção
+              </MenuItem>
+              {consultantList?.data.map(
+                ({ name, surname, _id }: UserRegister) => (
+                  <MenuItem key={_id} value={_id}>
+                    {`${name} ${surname}`}
+                  </MenuItem>
+                )
+              )}
+            </Select>
+          </FormLabel>
         </div>
         <div className="c-register-activity--input-container">
           <FormLabel

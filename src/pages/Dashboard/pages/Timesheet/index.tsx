@@ -3,7 +3,6 @@ import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import {
   checkHours,
   deleteHours,
-  getHoursByUser,
   getHoursFilters,
 } from "services/hours.service";
 import {
@@ -60,8 +59,14 @@ export function Timesheet() {
     getHoursFilters(stringFilters)
   );
 
-  const { data: hoursByUser } = useQuery(["hours", user._id], () =>
-    getHoursByUser(user._id)
+  const { data: hoursByUser } = useQuery(
+    ["hours", user._id, stringFilters],
+    () =>
+      getHoursFilters(
+        stringFilters
+          ? `${stringFilters}&relUser=${user._id}`
+          : `relUser=${user._id}`
+      )
   );
 
   const { mutate: deleteHour } = useMutation(
@@ -138,11 +143,11 @@ export function Timesheet() {
               : relClient.valueClient
             ).toString()
           ),
-          GerenteProjetos: relActivity
-            ? `${relActivity.gpActivity.name} ${relActivity.gpActivity.surname}`
-            : relProject
-            ? `${relProject.gpProject.name} ${relProject.gpProject.surname}`
-            : `${relClient.gpClient.name} ${relClient.gpClient.surname}`,
+          // GerenteProjetos: relActivity
+          //   ? `${relActivity.gpActivity.name} ${relActivity.gpActivity.surname}`
+          //   : relProject
+          //   ? `${relProject.gpProject.name} ${relProject.gpProject.surname}`
+          //   : `${relClient.gpClient.name} ${relClient.gpClient.surname}`,
           Consultor: `${relUser?.name} ${relUser?.surname}`,
           EscopoFechado: relActivity?.closedScope ? "sim" : "não",
           AprovadoGP: approvedGP ? "sim" : "não",
@@ -167,7 +172,7 @@ export function Timesheet() {
   };
 
   const validateUserRegisterHours = () => {
-    if (user.typeField) {
+    if (user.typeField !== "nenhum") {
       return hoursByUser;
     }
     return hours;
@@ -176,6 +181,7 @@ export function Timesheet() {
   return (
     <div>
       <Box
+        className="mobile"
         sx={{
           width: "90vw",
           overflowX: "auto",
@@ -304,7 +310,10 @@ export function Timesheet() {
                           </StyledTableCell>
                         </Permission>
                         <Permission roles={["GERENTE_DE_PROJETOS"]}>
-                          <StyledTableCell align="center">
+                          <StyledTableCell
+                            sx={{ display: "none" }}
+                            align="center"
+                          >
                             Gerente de Projetos
                           </StyledTableCell>
                         </Permission>
@@ -450,7 +459,10 @@ export function Timesheet() {
                               </StyledTableCell>
                             </Permission>
                             <Permission roles={["GERENTE_DE_PROJETOS"]}>
-                              <StyledTableCell align="center">
+                              <StyledTableCell
+                                sx={{ display: "none" }}
+                                align="center"
+                              >
                                 {relActivity
                                   ? `${relActivity.gpActivity.name} ${relActivity.gpActivity.surname}`
                                   : relProject

@@ -8,6 +8,8 @@ import { getClients } from "services/clients.service";
 import { useState } from "react";
 import { getAllUsers } from "services/auth.service";
 import { UserInfo } from "interfaces/users.interface";
+import { useAuthStore } from "stores/userStore";
+import { getActiveActivities } from "services/activities.service";
 
 interface FiltersProps {
   receiveDataURI: (encondeURIParams: string) => void;
@@ -16,6 +18,9 @@ interface FiltersProps {
 export function Filters({ receiveDataURI }: FiltersProps) {
   const { data: clients } = useQuery(["clients"], () => getClients());
   const { data: users } = useQuery(["users"], () => getAllUsers());
+  const { data: activeActivities } = useQuery(["activities"], () =>
+    getActiveActivities()
+  );
   const [selectedClient, setSelectedClient] = useState("");
   const [selectedProject, setSelectedProject] = useState("");
   const [selectedActivity, setSelectedActivity] = useState("");
@@ -23,8 +28,17 @@ export function Filters({ receiveDataURI }: FiltersProps) {
   const [selectedInitialDate, setSelectedInitialDate] = useState("");
   const [selectedFinalDate, setSelectedFinalDate] = useState("");
 
+  const { user } = useAuthStore((state) => state);
+  const validateUser = () => {
+    if (user.typeField == "nenhum") {
+      return true;
+    }
+    return false;
+  };
+
   return (
     <Box
+      className="mobile"
       style={{
         display: "flex",
         flexWrap: "wrap",
@@ -57,77 +71,104 @@ export function Filters({ receiveDataURI }: FiltersProps) {
         }}
         onChange={(event) => setSelectedFinalDate(event.target.value)}
       />
-      <TextField
-        style={{ width: "200px" }}
-        select
-        color="warning"
-        value={selectedClient}
-        label="Cliente"
-        name="client"
-        onChange={(event) => setSelectedClient(event.target.value)}
-      >
-        <MenuItem value="">Selecione uma opção</MenuItem>
-        {clients?.data.map(({ code, name, _id }: ClientsInfo) => (
-          <MenuItem key={code} value={_id}>
-            {name}
-          </MenuItem>
-        ))}
-      </TextField>
-      <TextField
-        style={{ width: "200px" }}
-        select
-        value={selectedProject}
-        label="Projeto"
-        color="warning"
-        name="project"
-        onChange={(event) => setSelectedProject(event.target.value)}
-      >
-        <MenuItem value="">Selecione uma opção</MenuItem>
-        {clients?.data
-          .find((client: ClientsInfo) => client._id === selectedClient)
-          ?.projects.map(({ _id, title }: ProjectsInfo) => (
+      {validateUser() ? (
+        <>
+          <TextField
+            style={{ width: "200px" }}
+            select
+            color="warning"
+            value={selectedClient}
+            label="Cliente"
+            name="client"
+            onChange={(event) => setSelectedClient(event.target.value)}
+          >
+            <MenuItem value="">Selecione uma opção</MenuItem>
+            {clients?.data.map(({ code, name, _id }: ClientsInfo) => (
+              <MenuItem key={code} value={_id}>
+                {name}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            style={{ width: "200px" }}
+            select
+            value={selectedProject}
+            label="Projeto"
+            color="warning"
+            name="project"
+            onChange={(event) => setSelectedProject(event.target.value)}
+          >
+            <MenuItem value="">Selecione uma opção</MenuItem>
+            {clients?.data
+              .find((client: ClientsInfo) => client._id === selectedClient)
+              ?.projects.map(({ _id, title }: ProjectsInfo) => (
+                <MenuItem key={_id} value={_id}>
+                  {title}
+                </MenuItem>
+              ))}
+          </TextField>
+          <TextField
+            style={{ width: "200px" }}
+            select
+            color="warning"
+            value={selectedActivity}
+            label="Atividade"
+            name="activity"
+            onChange={(event) => setSelectedActivity(event.target.value)}
+          >
+            <MenuItem value="">Selecione uma opção</MenuItem>
+            {clients?.data
+              .find((client: ClientsInfo) => client._id === selectedClient)
+              ?.projects.find(
+                (project: ProjectsInfo) => project._id === selectedProject
+              )
+              ?.activities.map(({ _id, title }: ActivitiesInfo) => (
+                <MenuItem key={_id} value={_id}>
+                  {title}
+                </MenuItem>
+              ))}
+          </TextField>
+        </>
+      ) : (
+        <TextField
+          style={{ width: "200px" }}
+          select
+          color="warning"
+          value={selectedActivity}
+          label="Atividade"
+          name="activity"
+          onChange={(event) => setSelectedActivity(event.target.value)}
+        >
+          <MenuItem value="">Selecione uma opção</MenuItem>
+          {activeActivities?.data.activity.map(
+            ({ _id, title }: ActivitiesInfo) => (
+              <MenuItem key={_id} value={_id}>
+                {title}
+              </MenuItem>
+            )
+          )}
+        </TextField>
+      )}
+
+      {validateUser() ? (
+        <TextField
+          style={{ width: "200px" }}
+          select
+          color="warning"
+          value={selectedConsultant}
+          label="Consultor"
+          name="consultant"
+          onChange={(event) => setSelectedConsultant(event.target.value)}
+        >
+          <MenuItem value="">Selecione uma opção</MenuItem>
+          {users?.data.map(({ name, surname, _id }: UserInfo) => (
             <MenuItem key={_id} value={_id}>
-              {title}
+              {`${name} ${surname}`}
             </MenuItem>
           ))}
-      </TextField>
-      <TextField
-        style={{ width: "200px" }}
-        select
-        color="warning"
-        value={selectedActivity}
-        label="Atividade"
-        name="activity"
-        onChange={(event) => setSelectedActivity(event.target.value)}
-      >
-        <MenuItem value="">Selecione uma opção</MenuItem>
-        {clients?.data
-          .find((client: ClientsInfo) => client._id === selectedClient)
-          ?.projects.find(
-            (project: ProjectsInfo) => project._id === selectedProject
-          )
-          ?.activities.map(({ _id, title }: ActivitiesInfo) => (
-            <MenuItem key={_id} value={_id}>
-              {title}
-            </MenuItem>
-          ))}
-      </TextField>
-      <TextField
-        style={{ width: "200px" }}
-        select
-        color="warning"
-        value={selectedConsultant}
-        label="Consultor"
-        name="consultant"
-        onChange={(event) => setSelectedConsultant(event.target.value)}
-      >
-        <MenuItem value="">Selecione uma opção</MenuItem>
-        {users?.data.map(({ name, surname, _id }: UserInfo) => (
-          <MenuItem key={_id} value={_id}>
-            {`${name} ${surname}`}
-          </MenuItem>
-        ))}
-      </TextField>
+        </TextField>
+      ) : null}
+
       <Button
         color="warning"
         variant="contained"

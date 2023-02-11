@@ -1,7 +1,6 @@
 import {
   Button,
   MenuItem,
-  Select,
   TextField,
   Box,
   Typography,
@@ -133,17 +132,17 @@ export function ModalEditUser({
               <MenuItem value={"nenhum"} key={0}>
                 Não se aplica
               </MenuItem>
-              <MenuItem value={"gerenteprojetos"} key={1}>
-                Gerente de Projetos
+              <MenuItem value={"gerenteprojetos"} disabled key={1}>
+                Gerente de Projetos (em desenvolvimento)
               </MenuItem>
               <MenuItem value={"consultor"} key={2}>
                 Consultor
               </MenuItem>
             </TextField>
-            <Select
+            <TextField
               {...register("role")}
-              labelId="select-label-helper"
               label="Perfil"
+              select
               color="warning"
             >
               <MenuItem value="">Selecione uma opção</MenuItem>
@@ -152,7 +151,7 @@ export function ModalEditUser({
                   {role?.name}
                 </MenuItem>
               ))}
-            </Select>
+            </TextField>
 
             <Button
               sx={{ paddingBlock: "1rem" }}
