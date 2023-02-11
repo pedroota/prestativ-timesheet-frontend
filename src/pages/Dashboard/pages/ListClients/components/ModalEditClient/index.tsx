@@ -130,10 +130,9 @@ export function ModalEditClient({
     }
   );
 
-  const setNewPrice = (e: { target: { value: string } }) => {
-    const stringValue = e.target.value;
-    setPrice(stringValue);
-    setPriceNumber(Number(stringValue.slice(2)));
+  const setNewPrice = (value: string) => {
+    setPrice(value);
+    setPriceNumber(Number(value.slice(2)));
   };
 
   useEffect(() => {
@@ -305,7 +304,7 @@ export function ModalEditClient({
                 InputLabelProps={{ shrink: true }}
               />
             </div>
-            {/* <p>Valor e Gerente de Projetos</p> */}
+            <p>Valor e Gerente de Projetos</p>
             <div className="c-register-client--input-container">
               <TextField
                 required
@@ -313,16 +312,17 @@ export function ModalEditClient({
                 sx={{ width: "100%" }}
                 label="Valor"
                 type="text"
-                value={price && currencyMask(price)}
+                value={currencyMask(price)}
                 {...register("valueClient")}
-                onChange={(event) => setNewPrice(event)}
+                InputLabelProps={{ shrink: true }}
+                onChange={(event) => setNewPrice(event.target.value)}
               />
               <TextField
                 required
                 select
                 label="Gerente de Projetos"
                 color="warning"
-                sx={{ width: "100%", display: "none" }}
+                sx={{ width: "100%" }}
                 value={gpClient}
                 onChange={(event) => setGpClient(event.target.value)}
               >

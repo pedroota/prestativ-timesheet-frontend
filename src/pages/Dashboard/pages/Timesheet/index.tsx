@@ -310,10 +310,7 @@ export function Timesheet() {
                           </StyledTableCell>
                         </Permission>
                         <Permission roles={["GERENTE_DE_PROJETOS"]}>
-                          <StyledTableCell
-                            sx={{ display: "none" }}
-                            align="center"
-                          >
+                          <StyledTableCell align="center">
                             Gerente de Projetos
                           </StyledTableCell>
                         </Permission>
@@ -433,41 +430,48 @@ export function Timesheet() {
                             </Permission>
                             <Permission roles={["CLIENTE"]}>
                               <StyledTableCell align="center">
-                                {relClient?.name}
+                                {relClient
+                                  ? relClient?.name
+                                  : "Sem cliente especificado"}
                               </StyledTableCell>
                             </Permission>
                             <Permission roles={["PROJETO"]}>
                               <StyledTableCell align="center">
-                                {relProject?.title}
+                                {relProject
+                                  ? relProject?.title
+                                  : "Sem projeto especificado"}
                               </StyledTableCell>
                             </Permission>
                             <Permission roles={["ATIVIDADE"]}>
                               <StyledTableCell align="center">
-                                {relActivity?.title}
+                                {relActivity
+                                  ? relActivity?.title
+                                  : "Sem atividade especificada"}
                               </StyledTableCell>
                             </Permission>
                             <Permission roles={["VALOR"]}>
                               <StyledTableCell align="center">
-                                {currencyMask(
-                                  (relActivity.valueActivity
-                                    ? relActivity.valueActivity
-                                    : relProject.valueProject
-                                    ? relProject.valueProject
-                                    : relClient.valueClient
-                                  ).toString()
-                                )}
+                                {relActivity || relProject || relClient
+                                  ? currencyMask(
+                                      (relActivity.valueActivity
+                                        ? relActivity.valueActivity
+                                        : relProject.valueProject
+                                        ? relProject.valueProject
+                                        : relClient.valueClient
+                                      ).toString()
+                                    )
+                                  : "Sem valor especificado"}
                               </StyledTableCell>
                             </Permission>
                             <Permission roles={["GERENTE_DE_PROJETOS"]}>
-                              <StyledTableCell
-                                sx={{ display: "none" }}
-                                align="center"
-                              >
+                              <StyledTableCell align="center">
                                 {relActivity
                                   ? `${relActivity.gpActivity.name} ${relActivity.gpActivity.surname}`
                                   : relProject
                                   ? `${relProject.gpProject.name} ${relProject.gpProject.surname}`
-                                  : `${relClient.gpClient.name} ${relClient.gpClient.surname}`}
+                                  : relClient
+                                  ? `${relClient.gpClient.name} ${relClient.gpClient.surname}`
+                                  : "Sem registro especificado"}
                               </StyledTableCell>
                             </Permission>
                             <Permission roles={["CONSULTOR"]}>
@@ -479,12 +483,16 @@ export function Timesheet() {
                               <StyledTableCell align="center">
                                 <SwitchIOS
                                   color="warning"
-                                  checked={relActivity?.closedScope}
+                                  checked={
+                                    relActivity && relActivity?.closedScope
+                                  }
                                   disabled={updatingEscope}
                                   onChange={() =>
                                     updateEscope({
-                                      _id: relActivity._id,
-                                      value: !relActivity?.closedScope,
+                                      _id: relActivity && relActivity._id,
+                                      value:
+                                        relActivity &&
+                                        !relActivity?.closedScope,
                                     })
                                   }
                                   inputProps={{ "aria-label": "controlled" }}

@@ -60,14 +60,15 @@ export function ModalEditHours({
 
       setValue("initialHour", generateTimeWithTimestamp(data?.hours?.initial));
       setValue("finalHour", generateTimeWithTimestamp(data?.hours?.final));
-      data?.hours?.adjustment !== 0 &&
+      data.hours &&
+        data?.hours.adjustment !== 0 &&
         setValue(
           "adjustment",
           Number(generateTimeWithTimestamp(data?.hours?.adjustment))
         );
       setValue("activityDesc", data?.hours?.activityDesc);
       setValue("releasedCall", data?.hours?.releasedCall);
-      setSelectedActivity(data.hours.relActivity._id);
+      setSelectedActivity(data.hours && data.hours.relActivity._id);
     },
     enabled: isOpen,
     staleTime: 5000000,
@@ -150,7 +151,10 @@ export function ModalEditHours({
     <Permission roles={["EDITAR_HORAS"]}>
       <Dialog
         open={isOpen}
-        onClose={() => setIsOpen((prevState) => !prevState)}
+        onClose={() => {
+          currentHour = "";
+          setIsOpen((prevState) => !prevState);
+        }}
       >
         <Box sx={{ padding: 4, minWidth: 420 }}>
           <Box
