@@ -10,6 +10,7 @@ import {
   Typography,
   Box,
   CircularProgress,
+  Button,
 } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 import { ProjectsInfo } from "interfaces/projects.interface";
@@ -19,10 +20,12 @@ import { ModalEditProject } from "./components/ModalEditProjects";
 import { StyledTableCell } from "components/StyledTableCell";
 import { StyledTableRow } from "components/StyledTableRow";
 import { Permission } from "components/Permission";
+import { ModalRegisterProject } from "./components/ModalRegisterProjects";
 
 export function ListProjects() {
   const [currentProject, setCurrentProject] = useState("");
   const [isEditingProject, setIsEditingProject] = useState(false);
+  const [isAddingProject, setIsAddingProject] = useState(false);
   const queryClient = useQueryClient();
   const { data: projects, isLoading } = useQuery(["projects"], () =>
     getProjects()
@@ -37,9 +40,26 @@ export function ListProjects() {
 
   return (
     <div>
-      <Typography variant="h4" sx={{ marginBlock: "1.3rem" }}>
-        Listagem de Projetos
-      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <Typography variant="h4" sx={{ marginBlock: "1.3rem" }}>
+          Listagem de Projetos
+        </Typography>
+        <Permission roles={["CADASTRO_PROJETO"]}>
+          <Button
+            variant="contained"
+            color="warning"
+            onClick={() => setIsAddingProject((prevState) => !prevState)}
+          >
+            Cadastrar projeto
+          </Button>
+        </Permission>
+      </Box>
       {isLoading ? (
         <Box
           sx={{
@@ -158,19 +178,27 @@ export function ListProjects() {
                   </div>
                 </div>
               </Paper>
-              <Permission roles={["EDITAR_PROJETO"]}>
-                <ModalEditProject
-                  isOpen={isEditingProject}
-                  setIsOpen={setIsEditingProject}
-                  currentProject={currentProject}
-                />
-              </Permission>
             </div>
           ) : (
             <EmptyList />
           )}
         </>
       )}
+
+      <Permission roles={["EDITAR_PROJETO"]}>
+        <ModalEditProject
+          isOpen={isEditingProject}
+          setIsOpen={setIsEditingProject}
+          currentProject={currentProject}
+        />
+      </Permission>
+
+      <Permission roles={["CADASTRO_PROJETO"]}>
+        <ModalRegisterProject
+          isOpen={isAddingProject}
+          setIsOpen={setIsAddingProject}
+        />
+      </Permission>
     </div>
   );
 }

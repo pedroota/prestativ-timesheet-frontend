@@ -7,7 +7,6 @@ import { Dashboard } from "pages/Dashboard";
 import { Timesheet } from "pages/Dashboard/pages/Timesheet";
 import { DashboardView } from "pages/Dashboard/pages/DashboardView";
 import { RegisterUser } from "pages/Dashboard/pages/RegisterUser";
-import { RegisterProject } from "pages/Dashboard/pages/RegisterProject";
 import { ListClients } from "pages/Dashboard/pages/ListClients";
 import { ListProjects } from "pages/Dashboard/pages/ListProjects";
 import { ListActivities } from "pages/Dashboard/pages/ListActivities";
@@ -39,14 +38,6 @@ export function Router() {
               }
             />
 
-            <Route
-              path="register-project"
-              element={
-                <Permission roles={["CADASTRO_PROJETO"]}>
-                  <RegisterProject />
-                </Permission>
-              }
-            />
             <Route
               path="register-user"
               element={
