@@ -6,20 +6,26 @@ import { ClientsInfo } from "interfaces/clients.interface";
 import { ProjectsInfo } from "interfaces/projects.interface";
 import { getClients } from "services/clients.service";
 import { useState } from "react";
-import { getAllUsers } from "services/auth.service";
+import { getAllUsers, getUserById } from "services/auth.service";
 import { UserInfo } from "interfaces/users.interface";
 import { useAuthStore } from "stores/userStore";
-import { getActiveActivities } from "services/activities.service";
 
 interface FiltersProps {
   receiveDataURI: (encondeURIParams: string) => void;
 }
 
+interface ActivityModalReturnProps {
+  _id: string;
+  title: string;
+  activityValidity: number;
+}
+
 export function Filters({ receiveDataURI }: FiltersProps) {
+  const user = useAuthStore((state) => state.user);
   const { data: clients } = useQuery(["clients"], () => getClients());
   const { data: users } = useQuery(["users"], () => getAllUsers());
-  const { data: activeActivities } = useQuery(["activities"], () =>
-    getActiveActivities()
+  const { data: thisUser } = useQuery(["users", user._id], () =>
+    getUserById(user._id)
   );
   const [selectedClient, setSelectedClient] = useState("");
   const [selectedProject, setSelectedProject] = useState("");
@@ -27,8 +33,6 @@ export function Filters({ receiveDataURI }: FiltersProps) {
   const [selectedConsultant, setSelectedConsultant] = useState("");
   const [selectedInitialDate, setSelectedInitialDate] = useState("");
   const [selectedFinalDate, setSelectedFinalDate] = useState("");
-
-  const { user } = useAuthStore((state) => state);
   const validateUser = () => {
     if (user.typeField == "nenhum") {
       return true;
@@ -140,10 +144,10 @@ export function Filters({ receiveDataURI }: FiltersProps) {
           onChange={(event) => setSelectedActivity(event.target.value)}
         >
           <MenuItem value="">Selecione uma opção</MenuItem>
-          {activeActivities?.data.activity.map(
-            ({ _id, title }: ActivitiesInfo) => (
-              <MenuItem key={_id} value={_id}>
-                {title}
+          {thisUser?.data?.user?.activities.map(
+            (activity: ActivityModalReturnProps) => (
+              <MenuItem value={activity._id} key={activity._id}>
+                {activity.title}
               </MenuItem>
             )
           )}

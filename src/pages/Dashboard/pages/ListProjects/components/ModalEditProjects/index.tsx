@@ -6,6 +6,7 @@ import {
   Box,
   Typography,
   Dialog,
+  CircularProgress,
 } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
@@ -17,6 +18,7 @@ import { getClients } from "services/clients.service";
 import { Clients } from "interfaces/clients.interface";
 import { updateProjects, getProjectById } from "services/project.service";
 import { Permission } from "components/Permission";
+import { toast } from "react-toastify";
 
 interface ModalEditUserProps {
   isOpen: boolean;
@@ -42,7 +44,7 @@ export function ModalEditProject({
     return listGps?.data[0]._id;
   }
 
-  const { mutate } = useMutation(
+  const { mutate, isLoading } = useMutation(
     ({ title, idClient, valueProject, gpProject, description }: Projects) =>
       updateProjects(currentProject, {
         title,
@@ -55,6 +57,12 @@ export function ModalEditProject({
       onSuccess: () => {
         queryClient.invalidateQueries(["projects"]);
         setIsOpen((prevState) => !prevState);
+        toast.success("Projeto foi atualizado com sucesso!");
+      },
+      onError: () => {
+        toast.error("Ocorreu algum erro ao editar este Projeto!", {
+          autoClose: 1500,
+        });
       },
     }
   );
@@ -144,7 +152,8 @@ export function ModalEditProject({
               color="warning"
               type="submit"
             >
-              Concluído
+              {isLoading && <CircularProgress size={16} />}
+              {!isLoading && "Concluído"}
             </Button>
           </form>
         </Box>
