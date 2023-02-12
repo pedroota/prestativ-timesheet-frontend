@@ -8,6 +8,7 @@ import {
   MenuItem,
   Button,
   SelectChangeEvent,
+  CircularProgress,
 } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -43,7 +44,7 @@ export function ModalEditRole({
     enabled: !!currentRole,
   });
 
-  const { mutate } = useMutation(
+  const { mutate, isLoading } = useMutation(
     ({ name, permissions }: Pick<Roles, "name" | "permissions">) =>
       updateRoles(currentRole, { name, permissions }),
     {
@@ -134,7 +135,8 @@ export function ModalEditRole({
               color="warning"
               sx={{ paddingBlock: "1rem" }}
             >
-              Conluído
+              {isLoading && <CircularProgress size={16} />}
+              {!isLoading && "Concluído"}
             </Button>
           </form>
         </Box>

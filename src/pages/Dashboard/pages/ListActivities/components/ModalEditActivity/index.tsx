@@ -7,6 +7,7 @@ import {
   Box,
   Typography,
   SelectChangeEvent,
+  CircularProgress,
 } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import { UserRegister } from "interfaces/users.interface";
@@ -21,6 +22,7 @@ import Dialog from "@mui/material/Dialog";
 import { Permission } from "components/Permission";
 import FormLabel from "@mui/material/FormLabel";
 import { SwitchIOS } from "components/SwitchIOS";
+import { toast } from "react-toastify";
 
 interface ModalEditActivityProps {
   isOpen: boolean;
@@ -44,7 +46,7 @@ export function ModalEditActivity({
   );
   const [multipleSelect, setMultipleSelect] = useState<string[]>([]);
   const queryClient = useQueryClient();
-  const { mutate } = useMutation(
+  const { mutate, isLoading } = useMutation(
     ({
       title,
       project,
@@ -67,6 +69,12 @@ export function ModalEditActivity({
       onSuccess: () => {
         queryClient.invalidateQueries(["activities"]);
         setIsOpen((prevState) => !prevState);
+        toast.success("Atividade foi atualizada com sucesso!");
+      },
+      onError: () => {
+        toast.error("Ocorreu algum erro ao editar esta atividade!", {
+          autoClose: 1500,
+        });
       },
     }
   );
@@ -305,7 +313,8 @@ export function ModalEditActivity({
               color="warning"
               type="submit"
             >
-              Concluído
+              {isLoading && <CircularProgress size={16} />}
+              {!isLoading && "Concluído"}
             </Button>
           </form>
         </Box>
