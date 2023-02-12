@@ -10,6 +10,7 @@ import {
   Typography,
   Box,
   CircularProgress,
+  Button,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -19,8 +20,10 @@ import { ModalEditUser } from "./components/ModalEditUser";
 import { StyledTableCell } from "components/StyledTableCell";
 import { StyledTableRow } from "components/StyledTableRow";
 import { Permission } from "components/Permission";
+import { ModalRegisterUser } from "./components/ModalRegisterUser";
 
 export function ListUsers() {
+  const [isAddingUser, setIsAddingUser] = useState(false);
   const [isEditingUser, setIsEditingUser] = useState(false);
   const [currentUser, setCurrentUser] = useState("");
   const { data: users, isLoading } = useQuery(["users"], () => getAllUsers());
@@ -35,9 +38,26 @@ export function ListUsers() {
 
   return (
     <div>
-      <Typography variant="h4" sx={{ marginBlock: "1.3rem" }}>
-        Listagem de Usuários
-      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <Typography variant="h4" sx={{ marginBlock: "1.3rem" }}>
+          Listagem de Usuários
+        </Typography>
+        <Permission roles={["CADASTRO_USUARIO"]}>
+          <Button
+            variant="contained"
+            color="warning"
+            onClick={() => setIsAddingUser((prevState) => !prevState)}
+          >
+            Cadastrar usuário
+          </Button>
+        </Permission>
+      </Box>
       {isLoading ? (
         <Box
           sx={{
@@ -147,6 +167,12 @@ export function ListUsers() {
                   isOpen={isEditingUser}
                   setIsOpen={setIsEditingUser}
                   currentUser={currentUser}
+                />
+              </Permission>
+              <Permission roles={["CADASTRO_USUARIO"]}>
+                <ModalRegisterUser
+                  isOpen={isAddingUser}
+                  setIsOpen={setIsAddingUser}
                 />
               </Permission>
             </div>

@@ -23,17 +23,18 @@ import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
 // Icons
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
-import HailIcon from "@mui/icons-material/Hail";
-import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
-import HistoryIcon from "@mui/icons-material/History";
-import WorkIcon from "@mui/icons-material/Work";
-import ExitToApp from "@mui/icons-material/ExitToApp";
-import PublicIcon from "@mui/icons-material/Public";
-import GroupIcon from "@mui/icons-material/Group";
-import SettingsIcon from "@mui/icons-material/Settings";
+import {
+  AccessTime,
+  Dashboard,
+  LibraryBooks,
+  Hail,
+  History,
+  Work,
+  ExitToApp,
+  Public,
+  Group,
+  Settings,
+} from "@mui/icons-material";
 import { HeaderUser } from "components/HeaderUser";
 import { Permission } from "components/Permission";
 
@@ -186,7 +187,7 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                       justifyContent: "center",
                     }}
                   >
-                    <AccessTimeIcon />
+                    <AccessTime />
                   </ListItemIcon>
                   <ListItemText
                     primary={"TimeSheet"}
@@ -198,39 +199,7 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
           </List>
           <Divider />
         </Permission>
-        <Permission roles={["CADASTRO_USUARIO"]}>
-          <List>
-            <Permission roles={["CADASTRO_USUARIO"]}>
-              <Link to="register-user">
-                <ListItem disablePadding>
-                  <ListItemButton
-                    sx={{
-                      minHeight: 48,
-                      justifyContent: open ? "initial" : "center",
-                      px: 2.5,
-                    }}
-                  >
-                    <ListItemIcon
-                      sx={{
-                        minWidth: 0,
-                        mr: open ? 3 : "auto",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <AssignmentIndIcon />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={"Cadastrar Usuário"}
-                      sx={{ opacity: open ? 1 : 0 }}
-                    />
-                  </ListItemButton>
-                </ListItem>
-              </Link>
-            </Permission>
-          </List>
 
-          <Divider />
-        </Permission>
         <Permission
           roles={[
             "VER_CLIENTES" ||
@@ -261,7 +230,7 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                         justifyContent: "center",
                       }}
                     >
-                      <PublicIcon />
+                      <Public />
                     </ListItemIcon>
                     <ListItemText
                       primary={"Ver Clientes"}
@@ -288,7 +257,7 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                         justifyContent: "center",
                       }}
                     >
-                      <LibraryBooksIcon />
+                      <LibraryBooks />
                     </ListItemIcon>
                     <ListItemText
                       primary={"Ver Projetos"}
@@ -315,7 +284,7 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                         justifyContent: "center",
                       }}
                     >
-                      <WorkIcon />
+                      <Work />
                     </ListItemIcon>
                     <ListItemText
                       primary={"Ver Atividades"}
@@ -342,7 +311,7 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                         justifyContent: "center",
                       }}
                     >
-                      <HailIcon />
+                      <Hail />
                     </ListItemIcon>
                     <ListItemText
                       primary={"Ver Usuários"}
@@ -369,7 +338,7 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                         justifyContent: "center",
                       }}
                     >
-                      <HistoryIcon />
+                      <History />
                     </ListItemIcon>
                     <ListItemText
                       primary={"Ver Logs"}
@@ -396,7 +365,7 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                         justifyContent: "center",
                       }}
                     >
-                      <GroupIcon />
+                      <Group />
                     </ListItemIcon>
                     <ListItemText
                       primary={"Perfis de Usuário"}
@@ -423,7 +392,7 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                         justifyContent: "center",
                       }}
                     >
-                      <SettingsIcon />
+                      <Settings />
                     </ListItemIcon>
                     <ListItemText
                       primary={"Configurações"}
@@ -450,7 +419,7 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                         justifyContent: "center",
                       }}
                     >
-                      <DashboardIcon />
+                      <Dashboard />
                     </ListItemIcon>
                     <ListItemText
                       primary={"Dashboard"}

@@ -6,7 +6,6 @@ import { LoginPage } from "pages/LoginPage";
 import { Dashboard } from "pages/Dashboard";
 import { Timesheet } from "pages/Dashboard/pages/Timesheet";
 import { DashboardView } from "pages/Dashboard/pages/DashboardView";
-import { RegisterUser } from "pages/Dashboard/pages/RegisterUser";
 import { ListClients } from "pages/Dashboard/pages/ListClients";
 import { ListProjects } from "pages/Dashboard/pages/ListProjects";
 import { ListActivities } from "pages/Dashboard/pages/ListActivities";
@@ -34,15 +33,6 @@ export function Router() {
               element={
                 <Permission roles={["TIMESHEET"]}>
                   <Timesheet />
-                </Permission>
-              }
-            />
-
-            <Route
-              path="register-user"
-              element={
-                <Permission roles={["CADASTRO_USUARIO"]}>
-                  <RegisterUser />
                 </Permission>
               }
             />
