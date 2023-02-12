@@ -18,6 +18,7 @@ import { ListLogs } from "pages/Dashboard/pages/ListLogs";
 import { UserProfiles } from "pages/Dashboard/pages/UserProfiles";
 import { SettingsAdmin } from "pages/Dashboard/pages/SettingsAdmin";
 import { Permission } from "components/Permission";
+import { Page404 } from "pages/Page404";
 
 export function Router() {
   return (
@@ -102,6 +103,7 @@ export function Router() {
             />
           </Route>
         </Route>
+        <Route path="*" element={<Page404 />} />
       </Routes>
     </BrowserRouter>
   );
