@@ -243,17 +243,16 @@ export function ListActivities() {
                   currentActivity={currentActivity}
                 />
               </Permission>
-
-              <Permission roles={["CADASTRO_ATIVIDADE"]}>
-                <ModalRegisterActivity
-                  isOpen={isAddingActivity}
-                  setIsOpen={setIsAddingActivity}
-                />
-              </Permission>
             </div>
           ) : (
             <EmptyList />
           )}
+          <Permission roles={["CADASTRO_ATIVIDADE"]}>
+            <ModalRegisterActivity
+              isOpen={isAddingActivity}
+              setIsOpen={setIsAddingActivity}
+            />
+          </Permission>
         </>
       )}
     </div>
