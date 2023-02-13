@@ -43,11 +43,13 @@ export function ListActivities() {
   const [currentActivity, setCurrentActivity] = useState("");
   const [isEditingActivity, setIsEditingActivity] = useState(false);
   const [isDeletingActivity, setIsDeletingActivity] = useState(false);
-  const { data: activities, isLoading } = useQuery(["activities"], () =>
-    getActivities()
+  const { data: activities, isLoading } = useQuery(
+    ["activities", currentActivity],
+    () => getActivities()
   );
 
   const disableActivity = (activityValidity: number, idActivity: string) => {
+    setCurrentActivity(idActivity);
     if (activityValidity >= Date.now()) {
       updateActivityValidity(idActivity, Date.now());
     } else {
@@ -56,6 +58,7 @@ export function ListActivities() {
       const validity = date.getTime();
       updateActivityValidity(idActivity, validity);
     }
+    setCurrentActivity("");
   };
 
   return (
