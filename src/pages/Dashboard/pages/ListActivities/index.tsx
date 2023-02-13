@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
-  deleteActivity,
   getActivities,
   updateActivityValidity,
 } from "services/activities.service";
@@ -32,6 +31,7 @@ import { Permission } from "components/Permission";
 import Chip from "@mui/material/Chip";
 import { SwitchIOS } from "components/SwitchIOS";
 import { ModalRegisterActivity } from "./components/ModalRegisterActivity";
+import { ModalDeleteActivity } from "./components/ModalDeleteActivity";
 
 interface ConsultantUsers {
   name: string;
@@ -42,17 +42,10 @@ export function ListActivities() {
   const [isAddingActivity, setIsAddingActivity] = useState(false);
   const [currentActivity, setCurrentActivity] = useState("");
   const [isEditingActivity, setIsEditingActivity] = useState(false);
-  const queryClient = useQueryClient();
+  const [isDeletingActivity, setIsDeletingActivity] = useState(false);
   const { data: activities, isLoading } = useQuery(["activities"], () =>
     getActivities()
   );
-
-  // Delete Activity Mutation
-  const { mutate } = useMutation((id: string) => deleteActivity(id), {
-    onSuccess: () => {
-      queryClient.invalidateQueries(["activities"]);
-    },
-  });
 
   const disableActivity = (activityValidity: number, idActivity: string) => {
     if (activityValidity >= Date.now()) {
@@ -250,7 +243,14 @@ export function ListActivities() {
                                     />
                                   </Permission>
                                   <Permission roles={["DELETAR_ATIVIDADE"]}>
-                                    <DeleteIcon onClick={() => mutate(_id)} />
+                                    <DeleteIcon
+                                      onClick={() => {
+                                        setCurrentActivity(_id);
+                                        setIsDeletingActivity(
+                                          (prevState) => !prevState
+                                        );
+                                      }}
+                                    />
                                   </Permission>
                                 </StyledTableCell>
                               </Permission>
@@ -266,6 +266,13 @@ export function ListActivities() {
                 <ModalEditActivity
                   isOpen={isEditingActivity}
                   setIsOpen={setIsEditingActivity}
+                  currentActivity={currentActivity}
+                />
+              </Permission>
+              <Permission roles={["DELETAR_ATIVIDADE"]}>
+                <ModalDeleteActivity
+                  isOpen={isDeletingActivity}
+                  setIsOpen={setIsDeletingActivity}
                   currentActivity={currentActivity}
                 />
               </Permission>

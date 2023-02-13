@@ -1,10 +1,6 @@
 import { useState } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import {
-  checkHours,
-  deleteHours,
-  getHoursFilters,
-} from "services/hours.service";
+import { checkHours, getHoursFilters } from "services/hours.service";
 import {
   Table,
   TableBody,
@@ -46,10 +42,12 @@ import { PatchActivities } from "interfaces/activities.interface";
 import { currencyMask } from "utils/masks";
 import { ModalEditReleasedCall } from "./components/ModalEditReleasedCall";
 import { useAuthStore } from "stores/userStore";
+import { ModalDeleteHours } from "./components/ModalDeleteHours";
 
 export function Timesheet() {
   const { user } = useAuthStore((state) => state);
   const queryClient = useQueryClient();
+  const [isDeletingHour, setIsDeletingHour] = useState(false);
   const [isEditingHour, setIsEditingHour] = useState(false);
   const [isEditingReleasedCall, setIsEditingReleasedCall] = useState(false);
   const [currentHour, setCurrentHour] = useState("");
@@ -67,15 +65,6 @@ export function Timesheet() {
           ? `${stringFilters}&relUser=${user._id}`
           : `relUser=${user._id}`
       )
-  );
-
-  const { mutate: deleteHour } = useMutation(
-    (_id: string) => deleteHours(_id),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["hours"]);
-      },
-    }
   );
 
   const { mutate: updateCheck, isLoading: updatingCheck } = useMutation(
@@ -651,7 +640,10 @@ export function Timesheet() {
                                     <Permission roles={["DELETAR_HORAS"]}>
                                       <DeleteIcon
                                         onClick={() => {
-                                          deleteHour(_id);
+                                          setCurrentHour(_id);
+                                          setIsDeletingHour(
+                                            (prevState) => !prevState
+                                          );
                                         }}
                                       />
                                     </Permission>
@@ -690,6 +682,13 @@ export function Timesheet() {
         <ModalEditReleasedCall
           isOpen={isEditingReleasedCall}
           setIsOpen={setIsEditingReleasedCall}
+          currentHour={currentHour}
+        />
+      </Permission>
+      <Permission roles={["DELETAR_HORAS"]}>
+        <ModalDeleteHours
+          isOpen={isDeletingHour}
+          setIsOpen={setIsDeletingHour}
           currentHour={currentHour}
         />
       </Permission>

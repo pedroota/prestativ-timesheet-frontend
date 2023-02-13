@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteProject, getProjects } from "services/project.service";
+import { useQuery } from "@tanstack/react-query";
+import { getProjects } from "services/project.service";
 import {
   Table,
   TableBody,
@@ -21,22 +21,16 @@ import { StyledTableCell } from "components/StyledTableCell";
 import { StyledTableRow } from "components/StyledTableRow";
 import { Permission } from "components/Permission";
 import { ModalRegisterProject } from "./components/ModalRegisterProjects";
+import { ModalDeleteProject } from "./components/ModalDeleteProject";
 
 export function ListProjects() {
   const [currentProject, setCurrentProject] = useState("");
   const [isEditingProject, setIsEditingProject] = useState(false);
+  const [isDeletingProject, setIsDeletingProject] = useState(false);
   const [isAddingProject, setIsAddingProject] = useState(false);
-  const queryClient = useQueryClient();
   const { data: projects, isLoading } = useQuery(["projects"], () =>
     getProjects()
   );
-
-  // Delete project mutation
-  const { mutate } = useMutation((id: string) => deleteProject(id), {
-    onSuccess: () => {
-      queryClient.invalidateQueries(["projects"]);
-    },
-  });
 
   return (
     <div>
@@ -166,7 +160,14 @@ export function ListProjects() {
                                     />
                                   </Permission>
                                   <Permission roles={["DELETAR_PROJETO"]}>
-                                    <Delete onClick={() => mutate(_id)} />
+                                    <Delete
+                                      onClick={() => {
+                                        setCurrentProject(_id);
+                                        setIsDeletingProject(
+                                          (prevState) => !prevState
+                                        );
+                                      }}
+                                    />
                                   </Permission>
                                 </StyledTableCell>
                               </Permission>
@@ -197,6 +198,13 @@ export function ListProjects() {
         <ModalRegisterProject
           isOpen={isAddingProject}
           setIsOpen={setIsAddingProject}
+        />
+      </Permission>
+      <Permission roles={["DELETAR_PROJETO"]}>
+        <ModalDeleteProject
+          isOpen={isDeletingProject}
+          setIsOpen={setIsDeletingProject}
+          currentProject={currentProject}
         />
       </Permission>
     </div>
