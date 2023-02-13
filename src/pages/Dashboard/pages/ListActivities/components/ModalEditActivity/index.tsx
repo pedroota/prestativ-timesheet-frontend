@@ -238,8 +238,8 @@ export function ModalEditActivity({
                 >
                   <MenuItem value="">Selecione uma opção</MenuItem>
                   {consultantList?.data.map(
-                    ({ name, surname }: UserRegister, index: number) => (
-                      <MenuItem key={index} value={`${name} ${surname}`}>
+                    ({ name, surname, _id }: UserRegister) => (
+                      <MenuItem key={_id} value={_id}>
                         {`${name} ${surname}`}
                       </MenuItem>
                     )
@@ -299,9 +299,9 @@ export function ModalEditActivity({
                     // {...register("activityValidity")}
                   />
                   <SwitchIOS
-                    // value={habilitar/desabilitar}
-                    {...register("closedScope")}
-                    // onChange={() => habilitar/desabilitar}
+                  // value={habilitar/desabilitar}
+                  // {...register("closedScope")}
+                  // onChange={() => habilitar/desabilitar}
                   />
                 </div>
               </FormLabel>
