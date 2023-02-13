@@ -282,28 +282,13 @@ export function ModalEditActivity({
                   {...register("activityValidity")}
                   // onChange={}
                 />
-              </FormLabel>
-              <FormLabel
-                sx={{
-                  gap: "0.2rem",
-                  width: "100%",
-                }}
-              >
-                Habilitar/Desabilitar
-                <div className="c-register-activity--input-container">
-                  <TextField
-                    type="time"
-                    color="warning"
-                    variant="outlined"
-                    required
-                    // {...register("activityValidity")}
-                  />
-                  <SwitchIOS
-                  // value={habilitar/desabilitar}
-                  // {...register("closedScope")}
-                  // onChange={() => habilitar/desabilitar}
-                  />
-                </div>
+                <TextField
+                  type="time"
+                  color="warning"
+                  variant="outlined"
+                  required
+                  // {...register("activityValidity")}
+                />
               </FormLabel>
             </div>
 

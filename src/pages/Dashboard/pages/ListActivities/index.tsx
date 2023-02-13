@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteActivity, getActivities } from "services/activities.service";
+import {
+  deleteActivity,
+  getActivities,
+  updateActivityValidity,
+} from "services/activities.service";
 import {
   Table,
   TableBody,
@@ -49,6 +53,17 @@ export function ListActivities() {
       queryClient.invalidateQueries(["activities"]);
     },
   });
+
+  const disableActivity = (activityValidity: number, idActivity: string) => {
+    if (activityValidity >= Date.now()) {
+      updateActivityValidity(idActivity, Date.now());
+    } else {
+      const date = new Date();
+      date.setMonth(date.getMonth() + 1);
+      const validity = date.getTime();
+      updateActivityValidity(idActivity, validity);
+    }
+  };
 
   return (
     <div>
@@ -120,6 +135,9 @@ export function ListActivities() {
                           </StyledTableCell>
                           <StyledTableCell align="center">
                             Validade da Atividade
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            Habilitar / Desabilitar
                           </StyledTableCell>
                           <Permission
                             roles={["EDITAR_ATIVIDADE" || "DELETAR_ATIVIDADE"]}
@@ -197,6 +215,14 @@ export function ListActivities() {
                                       activityValidity
                                     )}`
                                   : "não definido"}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                <SwitchIOS
+                                  checked={activityValidity >= Date.now()}
+                                  onChange={() =>
+                                    disableActivity(activityValidity, _id)
+                                  }
+                                />
                               </StyledTableCell>
                               <Permission
                                 roles={[
