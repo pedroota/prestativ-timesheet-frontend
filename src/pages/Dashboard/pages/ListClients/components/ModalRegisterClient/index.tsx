@@ -22,7 +22,6 @@ export function ModalRegisterClient({
   isOpen,
   setIsOpen,
 }: ModalRegisterClientProps) {
-  const [gpClient, setGpClient] = useState("");
   const [price, setPrice] = useState("");
   const [priceNumber, setPriceNumber] = useState(0);
   const [valueCep, setValueCep] = useState("");
@@ -30,10 +29,6 @@ export function ModalRegisterClient({
   const { data } = useQuery(["users-role", "Gerente de Projetos"], () =>
     getUserByRole("gerenteprojetos")
   );
-
-  function findGpId() {
-    setGpClient(data?.data[0]._id);
-  }
 
   useEffect(() => {
     if (valueCep && valueCep.length >= 8) {
@@ -72,6 +67,7 @@ export function ModalRegisterClient({
       periodUntil,
       billingLimit,
       payDay,
+      gpClient,
     }: Clients) =>
       createClients({
         code,
@@ -97,8 +93,9 @@ export function ModalRegisterClient({
         setValueCep("");
         setValues({ cnpj: "" });
         setPrice("");
-        setGpClient("");
+        // setGpClient("");
         toast.success("Cadastro de cliente efetuado com sucesso!");
+        setIsOpen((prevState) => !prevState);
       },
       onError: () => {
         toast.error("Ocorreu algum erro ao criar o cliente", {
@@ -131,9 +128,6 @@ export function ModalRegisterClient({
         console.log(validateCNPJ(cnpj));
         return toast.error("O CNPJ digitado é inválido", { autoClose: 1500 });
       }
-
-      findGpId();
-
       mutate({
         code,
         name,
@@ -313,9 +307,11 @@ export function ModalRegisterClient({
               label="Gerente de Projetos"
               select
               color="warning"
+              {...register("gpClient")}
               sx={{ width: "100%", display: "none" }}
-              value={gpClient}
-              onChange={(event) => setGpClient(event.target.value)}
+              value={data?.data[0]._id}
+              defaultValue={data?.data[0]._id}
+              // onChange={(event) => setGpClient(event.target.value)}
             >
               <MenuItem value="">Selecione uma opção</MenuItem>
               {data?.data.map(({ name, surname, _id }: UserRegister) => (

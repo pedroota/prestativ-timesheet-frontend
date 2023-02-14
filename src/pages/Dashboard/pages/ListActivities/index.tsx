@@ -44,7 +44,13 @@ export function ListActivities() {
   const [isEditingActivity, setIsEditingActivity] = useState(false);
   const [isDeletingActivity, setIsDeletingActivity] = useState(false);
   const { data: activities, isLoading } = useQuery(
-    ["activities", currentActivity],
+    [
+      "activities",
+      currentActivity,
+      isAddingActivity,
+      isEditingActivity,
+      isDeletingActivity,
+    ],
     () => getActivities()
   );
 

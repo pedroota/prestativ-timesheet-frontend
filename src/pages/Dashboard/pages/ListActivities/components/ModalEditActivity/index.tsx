@@ -82,10 +82,6 @@ export function ModalEditActivity({
     getUserByRole("gerenteprojetos")
   );
 
-  function findGpId() {
-    return listGps?.data[0]._id;
-  }
-
   const { data: consultantList } = useQuery(["users-gp", "Consultor"], () =>
     getUserByRole("consultor")
   );
@@ -204,7 +200,8 @@ export function ModalEditActivity({
                   select
                   {...register("gpActivity")}
                   sx={{ width: "100%", display: "none" }}
-                  defaultValue={() => findGpId()}
+                  value={listGps?.data[0]._id}
+                  defaultValue={listGps?.data[0]._id}
                 >
                   <MenuItem value="">Selecione uma opção</MenuItem>
                   {listGps?.data.map(

@@ -29,8 +29,15 @@ export function ListClients() {
   const [currentClient, setCurrentClient] = useState("");
   const [isEditingClient, setIsEditingClient] = useState(false);
   const [isDeletingClient, setIsDeletingClient] = useState(false);
-  const { data: clients, isLoading } = useQuery(["clients"], () =>
-    getClients()
+  const { data: clients, isLoading } = useQuery(
+    [
+      "clients",
+      currentClient,
+      isAddingClient,
+      isEditingClient,
+      isDeletingClient,
+    ],
+    () => getClients()
   );
 
   return (

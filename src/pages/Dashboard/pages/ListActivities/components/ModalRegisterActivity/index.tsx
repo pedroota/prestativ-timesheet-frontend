@@ -32,7 +32,6 @@ export function ModalRegisterActivity({
   isOpen,
   setIsOpen,
 }: ModalRegisterActivityProps) {
-  const [gpActivity, setGpActivity] = useState("");
   const [nameProject, setNameProject] = useState("");
   const [price, setPrice] = useState("");
   const [priceNumber, setPriceNumber] = useState(0);
@@ -45,10 +44,6 @@ export function ModalRegisterActivity({
   const { data: GPList } = useQuery(["users-role", "Gerente de Projetos"], () =>
     getUserByRole("gerenteprojetos")
   );
-
-  function findGpId() {
-    setGpActivity(GPList?.data[0]._id);
-  }
 
   const { data: consultantList } = useQuery(
     ["user-consultant", "Consultor"],
@@ -76,17 +71,19 @@ export function ModalRegisterActivity({
         closedScope,
         activityValidity,
       }),
+
     {
       onSuccess: () => {
         reset();
         setFieldClosedScope(false);
-        setGpActivity("");
+        // setGpActivity("");
         setNameProject("");
         setPrice("");
         setPriceNumber(0);
         setMultipleSelect([]);
         setChosenDay(oneMonthLater);
         toast.success("Atividade criada com sucesso.");
+        setIsOpen((prevState) => !prevState);
       },
       onError: () => {
         toast.error("Ocorreu algum erro ao criar a atividade", {
@@ -106,7 +103,6 @@ export function ModalRegisterActivity({
       closedScope,
       activityValidity,
     }) => {
-      findGpId();
       mutate({
         title,
         project,
@@ -204,8 +200,9 @@ export function ModalRegisterActivity({
               sx={{ width: "100%", display: "none" }}
               select
               label="Gerente de projetos"
-              value={gpActivity}
-              onChange={(event) => setGpActivity(event.target.value)}
+              value={GPList?.data[0]._id}
+              defaultValue={GPList?.data[0]._id}
+              // onChange={(event) => setGpActivity(event.target.value)}
             >
               <MenuItem selected disabled value="">
                 GP - Selecione uma opção

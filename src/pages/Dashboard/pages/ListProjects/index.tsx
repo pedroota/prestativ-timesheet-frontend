@@ -28,8 +28,15 @@ export function ListProjects() {
   const [isEditingProject, setIsEditingProject] = useState(false);
   const [isDeletingProject, setIsDeletingProject] = useState(false);
   const [isAddingProject, setIsAddingProject] = useState(false);
-  const { data: projects, isLoading } = useQuery(["projects"], () =>
-    getProjects()
+  const { data: projects, isLoading } = useQuery(
+    [
+      "projects",
+      currentProject,
+      isEditingProject,
+      isDeletingProject,
+      isAddingProject,
+    ],
+    () => getProjects()
   );
 
   return (
