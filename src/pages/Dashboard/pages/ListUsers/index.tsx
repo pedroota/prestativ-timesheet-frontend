@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteUser, getAllUsers } from "services/auth.service";
+import { useQuery } from "@tanstack/react-query";
+import { getAllUsers } from "services/auth.service";
 import {
   Table,
   TableBody,
@@ -21,20 +21,14 @@ import { StyledTableCell } from "components/StyledTableCell";
 import { StyledTableRow } from "components/StyledTableRow";
 import { Permission } from "components/Permission";
 import { ModalRegisterUser } from "./components/ModalRegisterUser";
+import { ModalDeleteUser } from "./components/ModalDeleteUser";
 
 export function ListUsers() {
   const [isAddingUser, setIsAddingUser] = useState(false);
   const [isEditingUser, setIsEditingUser] = useState(false);
+  const [isDeletingUser, setIsDeletingUser] = useState(false);
   const [currentUser, setCurrentUser] = useState("");
   const { data: users, isLoading } = useQuery(["users"], () => getAllUsers());
-  const queryClient = useQueryClient();
-
-  // Delete user Mutation
-  const { mutate } = useMutation((id: string) => deleteUser(id), {
-    onSuccess: () => {
-      queryClient.invalidateQueries(["users"]);
-    },
-  });
 
   return (
     <div>
@@ -150,7 +144,14 @@ export function ListUsers() {
                                     />
                                   </Permission>
                                   <Permission roles={["DELETAR_USUARIO"]}>
-                                    <DeleteIcon onClick={() => mutate(_id)} />
+                                    <DeleteIcon
+                                      onClick={() => {
+                                        setCurrentUser(_id);
+                                        setIsDeletingUser(
+                                          (prevState) => !prevState
+                                        );
+                                      }}
+                                    />
                                   </Permission>
                                 </StyledTableCell>
                               </Permission>
@@ -173,6 +174,13 @@ export function ListUsers() {
                 <ModalRegisterUser
                   isOpen={isAddingUser}
                   setIsOpen={setIsAddingUser}
+                />
+              </Permission>
+              <Permission roles={["DELETAR_USUARIO"]}>
+                <ModalDeleteUser
+                  isOpen={isDeletingUser}
+                  setIsOpen={setIsDeletingUser}
+                  currentUser={currentUser}
                 />
               </Permission>
             </div>

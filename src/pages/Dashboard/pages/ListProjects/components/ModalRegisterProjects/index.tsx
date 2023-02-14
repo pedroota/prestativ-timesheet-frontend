@@ -22,7 +22,6 @@ export function ModalRegisterProject({
   isOpen,
   setIsOpen,
 }: ModalRegisterProjectProps) {
-  const [gpProject, setGpProject] = useState("");
   const [nameClient, setNameClient] = useState("");
   const [price, setPrice] = useState("");
   const [priceNumber, setPriceNumber] = useState(0);
@@ -30,10 +29,6 @@ export function ModalRegisterProject({
   const { data: GPList } = useQuery(["users-role", "Gerente de Projetos"], () =>
     getUserByRole("gerenteprojetos")
   );
-
-  function findGpId() {
-    setGpProject(GPList?.data[0]._id);
-  }
 
   const { register, handleSubmit, reset } = useForm<Projects>({});
 
@@ -50,9 +45,10 @@ export function ModalRegisterProject({
       onSuccess: () => {
         reset();
         setPrice("");
-        setGpProject("");
+        // setGpProject("");
         setNameClient("");
         toast.success("Projeto criado com sucesso.");
+        setIsOpen((prevState) => !prevState);
       },
       onError: () => {
         toast.error("Erro ao criar o projeto.", {
@@ -64,8 +60,6 @@ export function ModalRegisterProject({
 
   const onSubmit = handleSubmit(
     ({ title, idClient, gpProject, description }) => {
-      findGpId();
-
       mutate({
         title,
         idClient,
@@ -121,9 +115,10 @@ export function ModalRegisterProject({
             {...register("gpProject")}
             label="Gerente de Projetos"
             select
-            value={gpProject}
+            value={GPList?.data[0]._id}
+            defaultValue={GPList?.data[0]._id}
             sx={{ display: "none" }}
-            onChange={(event) => setGpProject(event.target.value)}
+            // onChange={(event) => setGpProject(event.target.value)}
           >
             <MenuItem value="">Selecione uma opção</MenuItem>
             {GPList?.data.map(({ name, surname, _id }: UserRegister) => (

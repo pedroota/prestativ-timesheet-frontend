@@ -46,7 +46,7 @@ export interface ActivitiesInfo {
     }
   ];
   closedScope: boolean;
-  activityValidity?: number;
+  activityValidity: number;
 }
 
 export interface PatchActivities {

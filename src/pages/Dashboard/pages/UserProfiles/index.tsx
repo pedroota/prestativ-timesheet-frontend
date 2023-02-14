@@ -12,8 +12,8 @@ import {
   Chip,
 } from "@mui/material";
 import { StyledTableCell } from "components/StyledTableCell";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteRole, getRoles } from "services/roles.service";
+import { useQuery } from "@tanstack/react-query";
+import { getRoles } from "services/roles.service";
 import { EmptyList } from "components/EmptyList";
 import { StyledTableRow } from "components/StyledTableRow";
 import { Delete, Edit } from "@mui/icons-material";
@@ -21,19 +21,13 @@ import { Roles } from "interfaces/roles.interface";
 import { ModalCreateRole } from "./components/ModalCreateRole";
 import { ModalEditRole } from "./components/ModalEditRole";
 import { Permission } from "components/Permission";
+import { ModalDeleteRole } from "./components/ModalDeleteRole";
 export function UserProfiles() {
-  const queryClient = useQueryClient();
   const [isEditingRole, setIsEditingRole] = useState(false);
+  const [isDeletingRole, setIsDeletingRole] = useState(false);
   const [currentRole, setCurrentRole] = useState("");
   const [isAddingRole, setIsAddingRole] = useState(false);
   const { data: roles } = useQuery(["roles"], () => getRoles());
-
-  // Delete role mutation
-  const { mutate } = useMutation((_id: string) => deleteRole(_id), {
-    onSuccess: () => {
-      queryClient.invalidateQueries(["roles"]);
-    },
-  });
 
   return (
     <Permission roles={["PERFIS_USUARIO"]}>
@@ -124,7 +118,12 @@ export function UserProfiles() {
                               />
                             </Permission>
                             <Permission roles={["DELETAR_PERFIL"]}>
-                              <Delete onClick={() => mutate(_id)} />
+                              <Delete
+                                onClick={() => {
+                                  setIsDeletingRole((prevState) => !prevState);
+                                  setCurrentRole(_id);
+                                }}
+                              />
                             </Permission>
                           </StyledTableCell>
                         </Permission>
@@ -145,6 +144,13 @@ export function UserProfiles() {
             <ModalEditRole
               isOpen={isEditingRole}
               setIsOpen={setIsEditingRole}
+              currentRole={currentRole}
+            />
+          </Permission>
+          <Permission roles={["DELETAR_PERFIL"]}>
+            <ModalDeleteRole
+              isOpen={isDeletingRole}
+              setIsOpen={setIsDeletingRole}
               currentRole={currentRole}
             />
           </Permission>

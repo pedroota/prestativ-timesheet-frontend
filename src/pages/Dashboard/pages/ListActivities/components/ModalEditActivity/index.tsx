@@ -82,10 +82,6 @@ export function ModalEditActivity({
     getUserByRole("gerenteprojetos")
   );
 
-  function findGpId() {
-    return listGps?.data[0]._id;
-  }
-
   const { data: consultantList } = useQuery(["users-gp", "Consultor"], () =>
     getUserByRole("consultor")
   );
@@ -204,7 +200,8 @@ export function ModalEditActivity({
                   select
                   {...register("gpActivity")}
                   sx={{ width: "100%", display: "none" }}
-                  defaultValue={() => findGpId()}
+                  value={listGps?.data[0]._id}
+                  defaultValue={listGps?.data[0]._id}
                 >
                   <MenuItem value="">Selecione uma opção</MenuItem>
                   {listGps?.data.map(
@@ -238,8 +235,8 @@ export function ModalEditActivity({
                 >
                   <MenuItem value="">Selecione uma opção</MenuItem>
                   {consultantList?.data.map(
-                    ({ name, surname }: UserRegister, index: number) => (
-                      <MenuItem key={index} value={`${name} ${surname}`}>
+                    ({ name, surname, _id }: UserRegister) => (
+                      <MenuItem key={_id} value={_id}>
                         {`${name} ${surname}`}
                       </MenuItem>
                     )
@@ -282,28 +279,13 @@ export function ModalEditActivity({
                   {...register("activityValidity")}
                   // onChange={}
                 />
-              </FormLabel>
-              <FormLabel
-                sx={{
-                  gap: "0.2rem",
-                  width: "100%",
-                }}
-              >
-                Habilitar/Desabilitar
-                <div className="c-register-activity--input-container">
-                  <TextField
-                    type="time"
-                    color="warning"
-                    variant="outlined"
-                    required
-                    // {...register("activityValidity")}
-                  />
-                  <SwitchIOS
-                    // value={habilitar/desabilitar}
-                    {...register("closedScope")}
-                    // onChange={() => habilitar/desabilitar}
-                  />
-                </div>
+                <TextField
+                  type="time"
+                  color="warning"
+                  variant="outlined"
+                  required
+                  // {...register("activityValidity")}
+                />
               </FormLabel>
             </div>
 

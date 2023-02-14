@@ -33,7 +33,6 @@ export function ModalEditClient({
 }: ModalEditUserProps) {
   const [price, setPrice] = useState("");
   const [priceNumber, setPriceNumber] = useState(0);
-  const [gpClient, setGpClient] = useState("");
   const [valueCep, setValueCep] = useState("");
   useQuery(["clients", currentClient], () => getClientById(currentClient), {
     onSuccess: ({ data }) => reset(data.client),
@@ -55,6 +54,7 @@ export function ModalEditClient({
       periodUntil,
       billingLimit,
       payDay,
+      gpClient,
     }: RegisterClients) =>
       updateClient(currentClient, {
         code,
@@ -91,9 +91,6 @@ export function ModalEditClient({
     getUserByRole("gerenteprojetos")
   );
 
-  function findGpId() {
-    setGpClient(listGps?.data[0]._id);
-  }
   const { register, reset, handleSubmit, setValue } = useForm<Clients>();
 
   const onSubmit = handleSubmit(
@@ -113,8 +110,8 @@ export function ModalEditClient({
       billingLimit,
       payDay,
       valueClient,
+      gpClient,
     }) => {
-      findGpId();
       mutate({
         code,
         name,
@@ -330,8 +327,9 @@ export function ModalEditClient({
                 label="Gerente de Projetos"
                 color="warning"
                 sx={{ width: "100%" }}
-                value={gpClient}
-                onChange={(event) => setGpClient(event.target.value)}
+                {...register("gpClient")}
+                value={listGps?.data[0]}
+                // onChange={(event) => setGpClient(event.target.value)}
               >
                 <MenuItem value="">Selecione uma opção</MenuItem>
                 {listGps?.data.map(
