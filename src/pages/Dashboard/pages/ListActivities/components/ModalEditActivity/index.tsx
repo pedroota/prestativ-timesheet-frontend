@@ -23,6 +23,10 @@ import { Permission } from "components/Permission";
 import FormLabel from "@mui/material/FormLabel";
 import { SwitchIOS } from "components/SwitchIOS";
 import { toast } from "react-toastify";
+import {
+  generateTimeAndDateWithTimestamp,
+  generateTimestampWithDateAndTime,
+} from "utils/timeControl";
 
 interface ModalEditActivityProps {
   isOpen: boolean;
@@ -41,10 +45,17 @@ export function ModalEditActivity({
     {
       onSuccess: ({ data }) => {
         reset(data.activity);
+        const timestampFormated = generateTimeAndDateWithTimestamp(
+          data.activity.activityValidity
+        );
+        setDateField(timestampFormated[0]);
+        setTimeField(timestampFormated[1]);
       },
     }
   );
   const [multipleSelect, setMultipleSelect] = useState<string[]>([]);
+  const [dateField, setDateField] = useState("");
+  const [timeField, setTimeField] = useState("");
   const queryClient = useQueryClient();
   const { mutate, isLoading } = useMutation(
     ({
@@ -64,6 +75,10 @@ export function ModalEditActivity({
         users,
         closedScope,
         valueActivity,
+        activityValidity: generateTimestampWithDateAndTime(
+          dateField,
+          timeField
+        ),
       }),
     {
       onSuccess: () => {
@@ -275,16 +290,16 @@ export function ModalEditActivity({
                   color="warning"
                   variant="outlined"
                   required
-                  // value={}
-                  {...register("activityValidity")}
-                  // onChange={}
+                  value={dateField}
+                  onChange={(event) => setDateField(event.target.value)}
                 />
                 <TextField
                   type="time"
                   color="warning"
                   variant="outlined"
                   required
-                  // {...register("activityValidity")}
+                  value={timeField}
+                  onChange={(event) => setTimeField(event.target.value)}
                 />
               </FormLabel>
             </div>
