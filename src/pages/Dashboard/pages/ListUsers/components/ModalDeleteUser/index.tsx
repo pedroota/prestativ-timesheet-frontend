@@ -9,6 +9,7 @@ import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteUser } from "services/auth.service";
+import { toast } from "react-toastify";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -35,6 +36,11 @@ export function ModalDeleteUser({
   const { mutate } = useMutation((id: string) => deleteUser(id), {
     onSuccess: () => {
       queryClient.invalidateQueries(["users"]);
+      setIsOpen((prevState) => !prevState);
+      toast.success("Este usuário foi deletado!");
+    },
+    onError: () => {
+      toast.error("Ocorreu algum erro ao deletar este usuário!");
     },
   });
 
@@ -64,10 +70,7 @@ export function ModalDeleteUser({
           <Button
             variant="contained"
             color="warning"
-            onClick={() => {
-              mutate(currentUser);
-              setIsOpen((prevState) => !prevState);
-            }}
+            onClick={() => mutate(currentUser)}
           >
             Deletar
           </Button>

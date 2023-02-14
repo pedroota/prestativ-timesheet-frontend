@@ -9,6 +9,7 @@ import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteProject } from "services/project.service";
+import { toast } from "react-toastify";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -35,6 +36,11 @@ export function ModalDeleteProject({
   const { mutate } = useMutation((id: string) => deleteProject(id), {
     onSuccess: () => {
       queryClient.invalidateQueries(["projects"]);
+      setIsOpen((prevState) => !prevState);
+      toast.success("Este projeto foi deletado!");
+    },
+    onError: () => {
+      toast.error("Ocorreu algum erro ao deletar este projeto!");
     },
   });
 
@@ -64,10 +70,7 @@ export function ModalDeleteProject({
           <Button
             variant="contained"
             color="warning"
-            onClick={() => {
-              mutate(currentProject);
-              setIsOpen((prevState) => !prevState);
-            }}
+            onClick={() => mutate(currentProject)}
           >
             Deletar
           </Button>

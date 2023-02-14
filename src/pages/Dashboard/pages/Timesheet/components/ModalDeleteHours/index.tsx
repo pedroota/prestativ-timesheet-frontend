@@ -9,6 +9,7 @@ import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteHours } from "services/hours.service";
+import { toast } from "react-toastify";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -35,6 +36,11 @@ export function ModalDeleteHours({
   const { mutate } = useMutation((_id: string) => deleteHours(_id), {
     onSuccess: () => {
       queryClient.invalidateQueries(["hours"]);
+      setIsOpen((prevState) => !prevState);
+      toast.success("Este lançamento de horas foi deletado!");
+    },
+    onError: () => {
+      toast.error("Ocorreu algum erro ao deletar este lançamento de horas!");
     },
   });
 
@@ -66,10 +72,7 @@ export function ModalDeleteHours({
           <Button
             variant="contained"
             color="warning"
-            onClick={() => {
-              mutate(currentHour);
-              setIsOpen((prevState) => !prevState);
-            }}
+            onClick={() => mutate(currentHour)}
           >
             Deletar
           </Button>
