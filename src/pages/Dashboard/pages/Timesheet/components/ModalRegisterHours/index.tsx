@@ -18,6 +18,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { useAuthStore } from "stores/userStore";
 import { getUserById } from "services/auth.service";
+import { getActiveActivities } from "services/activities.service";
 
 interface ModalRegisterHoursProps {
   isOpen: boolean;
@@ -38,6 +39,16 @@ export function ModalRegisterHours({
   const queryClient = useQueryClient();
   const { register, handleSubmit } = useForm();
   const { data } = useQuery(["users", user._id], () => getUserById(user._id));
+  const { data: activeActivities } = useQuery(["activities"], () =>
+    getActiveActivities()
+  );
+
+  const validateUser = () => {
+    if (user.typeField == "nenhum") {
+      return true;
+    }
+    return false;
+  };
 
   const { mutate, isLoading } = useMutation(
     ({
@@ -222,30 +233,55 @@ export function ModalRegisterHours({
             </FormLabel>
           </Box>
 
-          <TextField
-            required
-            color="warning"
-            variant="outlined"
-            label="Atividade"
-            InputLabelProps={{ shrink: true }}
-            defaultValue=""
-            select
-            {...register("relActivity")}
-          >
-            <MenuItem value="" disabled>
-              Selecione uma opção
-            </MenuItem>
-            {data?.data?.user?.activities
-              .filter(
-                (activity: ActivityModalReturnProps) =>
-                  activity?.activityValidity > Date.now()
-              )
-              .map((activity: ActivityModalReturnProps) => (
-                <MenuItem value={activity._id} key={activity._id}>
-                  {activity.title}
-                </MenuItem>
-              ))}
-          </TextField>
+          {validateUser() ? (
+            <TextField
+              required
+              color="warning"
+              variant="outlined"
+              label="Atividade"
+              InputLabelProps={{ shrink: true }}
+              defaultValue=""
+              select
+              {...register("relActivity")}
+            >
+              <MenuItem value="" disabled>
+                Selecione uma opção
+              </MenuItem>
+              {activeActivities?.data.activity.map(
+                ({ _id, title }: ActivityModalReturnProps) => (
+                  <MenuItem value={_id} key={_id}>
+                    {title}
+                  </MenuItem>
+                )
+              )}
+            </TextField>
+          ) : (
+            <TextField
+              required
+              color="warning"
+              variant="outlined"
+              label="Atividade"
+              InputLabelProps={{ shrink: true }}
+              defaultValue=""
+              select
+              {...register("relActivity")}
+            >
+              <MenuItem value="" disabled>
+                Selecione uma opção
+              </MenuItem>
+              {data?.data?.user?.activities
+                .filter(
+                  (activity: ActivityModalReturnProps) =>
+                    activity?.activityValidity > Date.now()
+                )
+                .map((activity: ActivityModalReturnProps) => (
+                  <MenuItem value={activity._id} key={activity._id}>
+                    {activity.title}
+                  </MenuItem>
+                ))}
+            </TextField>
+          )}
+
           <TextField
             required
             color="warning"
