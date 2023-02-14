@@ -53,3 +53,8 @@ export interface PatchActivities {
   _id: string;
   value: boolean;
 }
+
+export interface PatchActivityValidity {
+  idActivity: string;
+  activityValidity: number;
+}

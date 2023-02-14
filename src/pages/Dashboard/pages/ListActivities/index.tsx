@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getActivities,
   updateActivityValidity,
+  updateClosedEscope,
 } from "services/activities.service";
 import {
   Table,
@@ -21,7 +22,11 @@ import {
 } from "utils/timeControl";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { ActivitiesInfo } from "interfaces/activities.interface";
+import {
+  ActivitiesInfo,
+  PatchActivities,
+  PatchActivityValidity,
+} from "interfaces/activities.interface";
 import { EmptyList } from "components/EmptyList";
 import { formatCurrency } from "utils/formatCurrency";
 import { ModalEditActivity } from "./components/ModalEditActivity";
@@ -32,6 +37,7 @@ import Chip from "@mui/material/Chip";
 import { SwitchIOS } from "components/SwitchIOS";
 import { ModalRegisterActivity } from "./components/ModalRegisterActivity";
 import { ModalDeleteActivity } from "./components/ModalDeleteActivity";
+import { toast } from "react-toastify";
 
 interface ConsultantUsers {
   name: string;
@@ -39,22 +45,49 @@ interface ConsultantUsers {
 }
 
 export function ListActivities() {
+  const queryClient = useQueryClient();
   const [isAddingActivity, setIsAddingActivity] = useState(false);
+  const [switchValidity, setSwitchValidity] = useState(false);
   const [currentActivity, setCurrentActivity] = useState("");
   const [isEditingActivity, setIsEditingActivity] = useState(false);
   const [isDeletingActivity, setIsDeletingActivity] = useState(false);
   const { data: activities, isLoading } = useQuery(
-    [
-      "activities",
-      currentActivity,
-      isAddingActivity,
-      isEditingActivity,
-      isDeletingActivity,
-    ],
+    ["activities", switchValidity],
     () => getActivities()
   );
 
-  const disableActivity = (activityValidity: number, idActivity: string) => {
+  const { mutate: updateEscope, isLoading: updatingEscope } = useMutation(
+    ({ _id, value }: PatchActivities) => updateClosedEscope(_id, value),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["activities"]);
+      },
+    }
+  );
+
+  const { mutate: disableActivity, isLoading: disablingActivity } = useMutation(
+    async ({ idActivity, activityValidity }: PatchActivityValidity) =>
+      validadeOrInvalidate(idActivity, activityValidity),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["activities"]);
+        setSwitchValidity(!switchValidity);
+        toast.success("Validade Atualizada.", {
+          autoClose: 500,
+        });
+      },
+      onError: () => {
+        toast.error("Erro ao tentar atualizar a Validade.", {
+          autoClose: 1000,
+        });
+      },
+    }
+  );
+
+  const validadeOrInvalidate = (
+    idActivity: string,
+    activityValidity: number
+  ) => {
     setCurrentActivity(idActivity);
     if (activityValidity >= Date.now()) {
       updateActivityValidity(idActivity, Date.now());
@@ -64,7 +97,6 @@ export function ListActivities() {
       const validity = date.getTime();
       updateActivityValidity(idActivity, validity);
     }
-    setCurrentActivity("");
   };
 
   return (
@@ -205,7 +237,13 @@ export function ListActivities() {
                                 <SwitchIOS
                                   color="warning"
                                   checked={closedScope}
-                                  disabled={false}
+                                  disabled={updatingEscope}
+                                  onChange={() =>
+                                    updateEscope({
+                                      _id: _id,
+                                      value: !closedScope,
+                                    })
+                                  }
                                   inputProps={{ "aria-label": "controlled" }}
                                 />
                               </StyledTableCell>
@@ -220,10 +258,16 @@ export function ListActivities() {
                               </StyledTableCell>
                               <StyledTableCell align="center">
                                 <SwitchIOS
+                                  color="warning"
                                   checked={activityValidity >= Date.now()}
+                                  disabled={disablingActivity}
                                   onChange={() =>
-                                    disableActivity(activityValidity, _id)
+                                    disableActivity({
+                                      idActivity: _id,
+                                      activityValidity: activityValidity,
+                                    })
                                   }
+                                  inputProps={{ "aria-label": "controlled" }}
                                 />
                               </StyledTableCell>
                               <Permission
