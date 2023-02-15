@@ -1,5 +1,5 @@
 import { Api } from "./api.service";
-import { Projects } from "interfaces/projects.interface";
+import { Projects, RegisterProject } from "interfaces/projects.interface";
 
 export const getProjects = async () => {
   const result = await Api.get("/projects");
@@ -33,7 +33,7 @@ export const getProjectById = async (_id: string) => {
 
 export const updateProjects = async (
   id: string,
-  { title, idClient, valueProject, gpProject, description }: Projects
+  { title, idClient, valueProject, gpProject, description }: RegisterProject
 ) => {
   const results = await Api.put(`/projects/${id}`, {
     title,

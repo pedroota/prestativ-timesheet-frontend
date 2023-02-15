@@ -34,9 +34,16 @@ export function ModalEditClient({
   const [price, setPrice] = useState("");
   const [priceNumber, setPriceNumber] = useState(0);
   const [valueCep, setValueCep] = useState("");
-  useQuery(["clients", currentClient], () => getClientById(currentClient), {
-    onSuccess: ({ data }) => reset(data.client),
-  });
+  const { data } = useQuery(
+    ["clients", currentClient],
+    () => getClientById(currentClient),
+    {
+      onSuccess: ({ data }) => {
+        data.client.valueClient && setPrice(`${data.client.valueClient}`);
+        reset(data.client);
+      },
+    }
+  );
   const queryClient = useQueryClient();
   const { mutate, isLoading } = useMutation(
     ({
@@ -98,7 +105,6 @@ export function ModalEditClient({
       code,
       name,
       cnpj,
-      cep,
       street,
       city,
       state,
@@ -116,7 +122,7 @@ export function ModalEditClient({
         code,
         name,
         cnpj,
-        cep,
+        cep: valueCep,
         street,
         city,
         state,
@@ -199,14 +205,13 @@ export function ModalEditClient({
             <p>Endereço do cliente</p>
             <div className="c-register-client--input-container">
               <TextField
+                value={data?.data.client && data?.data.client.cep}
                 required
                 color="warning"
                 sx={{ width: "100%" }}
                 label="CEP"
                 InputLabelProps={{ shrink: true }}
                 type="text"
-                {...register("cep")}
-                value={valueCep}
                 onChange={(event) => setValueCep(event.target.value)}
               />
               <TextField
