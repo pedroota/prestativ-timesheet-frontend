@@ -28,3 +28,11 @@ export interface ProjectsInfo {
   };
   description: string;
 }
+export interface RegisterProject {
+  _id?: string;
+  title: string;
+  idClient: string;
+  valueProject: number;
+  gpProject: string;
+  description: string;
+}
