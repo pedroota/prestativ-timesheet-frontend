@@ -47,7 +47,7 @@ export function ModalEditProject({
       data.project.idClient && setCurrentClient(data.project?.idClient._id);
       data.project.valueProject && setPrice(`${data.project.valueProject}`);
       data.project.description &&
-        setProjectDescription(data.project?.description);
+        setProjectDescription(data.project.description);
       reset(data.project);
       console.log(data);
     },
