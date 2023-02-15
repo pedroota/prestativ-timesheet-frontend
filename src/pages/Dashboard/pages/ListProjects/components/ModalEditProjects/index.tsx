@@ -45,8 +45,9 @@ export function ModalEditProject({
     onSuccess: ({ data }) => {
       data.project.title && setTitleProject(data.project?.title);
       data.project.idClient && setCurrentClient(data.project?.idClient._id);
-      data.client.valueProject && setPrice(`${data.client.valueProject}`);
-      data.project && setProjectDescription(data.project?.description);
+      data.project.valueProject && setPrice(`${data.project.valueProject}`);
+      data.project.description &&
+        setProjectDescription(data.project?.description);
       reset(data.project);
       console.log(data);
     },
@@ -130,7 +131,6 @@ export function ModalEditProject({
             label="Valor"
             type="text"
             value={currencyMask(price)}
-            {...register("valueProject")}
             InputLabelProps={{ shrink: true }}
             onChange={(event) => setNewPrice(event.target.value)}
           />
