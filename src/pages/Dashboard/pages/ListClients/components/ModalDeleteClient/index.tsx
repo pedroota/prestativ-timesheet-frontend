@@ -9,6 +9,7 @@ import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteClient } from "services/clients.service";
+import { toast } from "react-toastify";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -36,6 +37,11 @@ export function ModalDeleteClient({
   const { mutate } = useMutation((id: string) => deleteClient(id), {
     onSuccess: () => {
       queryClient.invalidateQueries(["clients"]);
+      setIsOpen((prevState) => !prevState);
+      toast.success("Este cliente foi deletado!");
+    },
+    onError: () => {
+      toast.error("Ocorreu algum erro ao deletar este cliente!");
     },
   });
 
@@ -65,10 +71,7 @@ export function ModalDeleteClient({
           <Button
             variant="contained"
             color="warning"
-            onClick={() => {
-              mutate(currentClient);
-              setIsOpen((prevState) => !prevState);
-            }}
+            onClick={() => mutate(currentClient)}
           >
             Deletar
           </Button>

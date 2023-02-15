@@ -313,7 +313,8 @@ export function ModalEditClient({
                 InputLabelProps={{ shrink: true }}
               />
             </div>
-            <p>Valor e Gerente de Projetos</p>
+            <p>Valor</p>
+            {/* <p>e Gerente de Projetos</p> */}
             <div className="c-register-client--input-container">
               <TextField
                 required
@@ -327,23 +328,21 @@ export function ModalEditClient({
                 onChange={(event) => setNewPrice(event.target.value)}
               />
               <TextField
-                required
-                select
-                label="Gerente de Projetos"
                 color="warning"
-                sx={{ width: "100%" }}
                 {...register("gpClient")}
-                value={listGps?.data[0]}
-                // onChange={(event) => setGpClient(event.target.value)}
+                label="Gerente de Projetos"
+                select
+                value={listGps?.data[0]._id}
+                defaultValue={listGps?.data[0]._id}
+                sx={{ display: "none" }}
+                // onChange={(event) => setGpProject(event.target.value)}
               >
                 <MenuItem value="">Selecione uma opção</MenuItem>
-                {listGps?.data.map(
-                  ({ name, surname, _id }: UserRegister, index: number) => (
-                    <MenuItem value={_id} key={index}>
-                      {`${name} ${surname}`}
-                    </MenuItem>
-                  )
-                )}
+                {listGps?.data.map(({ name, surname, _id }: UserRegister) => (
+                  <MenuItem value={_id} key={_id}>
+                    {`${name} ${surname}`}
+                  </MenuItem>
+                ))}
               </TextField>
             </div>
 
