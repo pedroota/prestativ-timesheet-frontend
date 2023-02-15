@@ -46,10 +46,15 @@ export interface ActivitiesInfo {
     }
   ];
   closedScope: boolean;
-  activityValidity?: number;
+  activityValidity: number;
 }
 
 export interface PatchActivities {
   _id: string;
   value: boolean;
+}
+
+export interface PatchActivityValidity {
+  idActivity: string;
+  activityValidity: number;
 }

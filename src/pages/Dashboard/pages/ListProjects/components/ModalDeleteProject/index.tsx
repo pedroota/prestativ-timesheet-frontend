@@ -7,6 +7,8 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteProject } from "services/project.service";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -17,17 +19,27 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export function DialogDeleting() {
-  const [isOpen, setIsOpen] = React.useState(false);
+interface ModalDeleteProjectProps {
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  currentProject: string;
+}
+
+export function ModalDeleteProject({
+  isOpen,
+  setIsOpen,
+  currentProject,
+}: ModalDeleteProjectProps) {
+  const queryClient = useQueryClient();
+  // Delete user Mutation
+  const { mutate } = useMutation((id: string) => deleteProject(id), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["projects"]);
+    },
+  });
 
   return (
     <div>
-      <Button
-        variant="outlined"
-        onClick={() => setIsOpen((prevState) => !prevState)}
-      >
-        Slide in alert dialog
-      </Button>
       <Dialog
         open={isOpen}
         TransitionComponent={Transition}
@@ -35,18 +47,29 @@ export function DialogDeleting() {
         onClose={() => setIsOpen((prevState) => !prevState)}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>Você realmente deseja deletar esses dados?</DialogTitle>
+        <DialogTitle>Você realmente deseja deletar este Projeto?</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
             Esta operação não poderá ser desfeita!
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setIsOpen((prevState) => !prevState)}>
-            Disagree
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => setIsOpen((prevState) => !prevState)}
+          >
+            Cancelar
           </Button>
-          <Button onClick={() => setIsOpen((prevState) => !prevState)}>
-            Agree
+          <Button
+            variant="contained"
+            color="warning"
+            onClick={() => {
+              mutate(currentProject);
+              setIsOpen((prevState) => !prevState);
+            }}
+          >
+            Deletar
           </Button>
         </DialogActions>
       </Dialog>

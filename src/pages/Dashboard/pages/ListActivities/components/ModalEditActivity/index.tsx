@@ -23,6 +23,10 @@ import { Permission } from "components/Permission";
 import FormLabel from "@mui/material/FormLabel";
 import { SwitchIOS } from "components/SwitchIOS";
 import { toast } from "react-toastify";
+import {
+  generateTimeAndDateWithTimestamp,
+  generateTimestampWithDateAndTime,
+} from "utils/timeControl";
 
 interface ModalEditActivityProps {
   isOpen: boolean;
@@ -41,10 +45,17 @@ export function ModalEditActivity({
     {
       onSuccess: ({ data }) => {
         reset(data.activity);
+        const timestampFormated = generateTimeAndDateWithTimestamp(
+          data.activity.activityValidity
+        );
+        setDateField(timestampFormated[0]);
+        setTimeField(timestampFormated[1]);
       },
     }
   );
   const [multipleSelect, setMultipleSelect] = useState<string[]>([]);
+  const [dateField, setDateField] = useState("");
+  const [timeField, setTimeField] = useState("");
   const queryClient = useQueryClient();
   const { mutate, isLoading } = useMutation(
     ({
@@ -64,6 +75,10 @@ export function ModalEditActivity({
         users,
         closedScope,
         valueActivity,
+        activityValidity: generateTimestampWithDateAndTime(
+          dateField,
+          timeField
+        ),
       }),
     {
       onSuccess: () => {
@@ -81,10 +96,6 @@ export function ModalEditActivity({
   const { data: listGps } = useQuery(["users-gp", "Gerente de Projetos"], () =>
     getUserByRole("gerenteprojetos")
   );
-
-  function findGpId() {
-    return listGps?.data[0]._id;
-  }
 
   const { data: consultantList } = useQuery(["users-gp", "Consultor"], () =>
     getUserByRole("consultor")
@@ -204,7 +215,8 @@ export function ModalEditActivity({
                   select
                   {...register("gpActivity")}
                   sx={{ width: "100%", display: "none" }}
-                  defaultValue={() => findGpId()}
+                  value={listGps?.data[0]._id}
+                  defaultValue={listGps?.data[0]._id}
                 >
                   <MenuItem value="">Selecione uma opção</MenuItem>
                   {listGps?.data.map(
@@ -238,8 +250,8 @@ export function ModalEditActivity({
                 >
                   <MenuItem value="">Selecione uma opção</MenuItem>
                   {consultantList?.data.map(
-                    ({ name, surname }: UserRegister, index: number) => (
-                      <MenuItem key={index} value={`${name} ${surname}`}>
+                    ({ name, surname, _id }: UserRegister) => (
+                      <MenuItem key={_id} value={_id}>
                         {`${name} ${surname}`}
                       </MenuItem>
                     )
@@ -278,32 +290,17 @@ export function ModalEditActivity({
                   color="warning"
                   variant="outlined"
                   required
-                  // value={}
-                  {...register("activityValidity")}
-                  // onChange={}
+                  value={dateField}
+                  onChange={(event) => setDateField(event.target.value)}
                 />
-              </FormLabel>
-              <FormLabel
-                sx={{
-                  gap: "0.2rem",
-                  width: "100%",
-                }}
-              >
-                Habilitar/Desabilitar
-                <div className="c-register-activity--input-container">
-                  <TextField
-                    type="time"
-                    color="warning"
-                    variant="outlined"
-                    required
-                    // {...register("activityValidity")}
-                  />
-                  <SwitchIOS
-                    // value={habilitar/desabilitar}
-                    {...register("closedScope")}
-                    // onChange={() => habilitar/desabilitar}
-                  />
-                </div>
+                <TextField
+                  type="time"
+                  color="warning"
+                  variant="outlined"
+                  required
+                  value={timeField}
+                  onChange={(event) => setTimeField(event.target.value)}
+                />
               </FormLabel>
             </div>
 

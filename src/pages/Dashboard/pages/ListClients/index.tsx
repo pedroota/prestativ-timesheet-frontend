@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteClient, getClients } from "services/clients.service";
+import { useQuery } from "@tanstack/react-query";
+import { getClients } from "services/clients.service";
 import {
   Table,
   TableBody,
@@ -22,22 +22,23 @@ import { StyledTableCell } from "components/StyledTableCell";
 import { StyledTableRow } from "components/StyledTableRow";
 import { Permission } from "components/Permission";
 import { ModalRegisterClient } from "./components/ModalRegisterClient";
+import { ModalDeleteClient } from "./components/ModalDeleteClient";
 
 export function ListClients() {
   const [isAddingClient, setIsAddingClient] = useState(false);
   const [currentClient, setCurrentClient] = useState("");
   const [isEditingClient, setIsEditingClient] = useState(false);
-  const { data: clients, isLoading } = useQuery(["clients"], () =>
-    getClients()
+  const [isDeletingClient, setIsDeletingClient] = useState(false);
+  const { data: clients, isLoading } = useQuery(
+    [
+      "clients",
+      currentClient,
+      isAddingClient,
+      isEditingClient,
+      isDeletingClient,
+    ],
+    () => getClients()
   );
-  const queryClient = useQueryClient();
-
-  // Delete client Mutation
-  const { mutate } = useMutation((id: string) => deleteClient(id), {
-    onSuccess: () => {
-      queryClient.invalidateQueries(["clients"]);
-    },
-  });
 
   return (
     <div>
@@ -182,7 +183,14 @@ export function ListClients() {
                                     />
                                   </Permission>
                                   <Permission roles={["DELETAR_CLIENTE"]}>
-                                    <DeleteIcon onClick={() => mutate(_id)} />
+                                    <DeleteIcon
+                                      onClick={() => {
+                                        setCurrentClient(_id);
+                                        setIsDeletingClient(
+                                          (prevState) => !prevState
+                                        );
+                                      }}
+                                    />
                                   </Permission>
                                 </StyledTableCell>
                               </Permission>
@@ -205,6 +213,13 @@ export function ListClients() {
                 <ModalRegisterClient
                   isOpen={isAddingClient}
                   setIsOpen={setIsAddingClient}
+                />
+              </Permission>
+              <Permission roles={["DELETAR_CLIENTE"]}>
+                <ModalDeleteClient
+                  isOpen={isDeletingClient}
+                  setIsOpen={setIsDeletingClient}
+                  currentClient={currentClient}
                 />
               </Permission>
             </div>

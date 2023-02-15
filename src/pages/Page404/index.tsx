@@ -23,7 +23,12 @@ export function Page404() {
         <Typography variant="h5">
           Ops! Parece que a página que você está procurando não existe.
         </Typography>
-        <Link to="/dashboard">Voltar para página inicial</Link>
+        <Link
+          style={{ color: "orange", textDecoration: "underline" }}
+          to="/dashboard"
+        >
+          Voltar para página inicial
+        </Link>
       </Box>
     </Container>
   );

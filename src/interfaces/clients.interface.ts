@@ -37,7 +37,11 @@ export interface RegisterClients {
   billingLimit: string;
   payDay: number;
   valueClient: number;
-  gpClient: string;
+  gpClient: {
+    _id: string;
+    name: string;
+    surname: string;
+  };
 }
 
 export interface ClientsInfo {
