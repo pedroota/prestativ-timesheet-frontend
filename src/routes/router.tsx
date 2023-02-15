@@ -19,6 +19,7 @@ import { UserProfiles } from "pages/Dashboard/pages/UserProfiles";
 import { SettingsAdmin } from "pages/Dashboard/pages/SettingsAdmin";
 import { Permission } from "components/Permission";
 import { Page404 } from "pages/Page404";
+import { AccessDenied } from "pages/AccessDenied";
 
 export function Router() {
   return (
@@ -103,6 +104,7 @@ export function Router() {
             />
           </Route>
         </Route>
+        <Route path="/access-denied" element={<AccessDenied />} />
         <Route path="*" element={<Page404 />} />
       </Routes>
     </BrowserRouter>
