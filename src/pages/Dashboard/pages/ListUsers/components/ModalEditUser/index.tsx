@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Button,
   MenuItem,
@@ -39,11 +40,15 @@ export function ModalEditUser({
   setIsOpen,
   currentUser,
 }: ModalEditUserProps) {
+  const [currentProfile, setCurrentProfile] = useState("");
+  const [currentTypefield, setCurrentTypefield] = useState("");
   useQuery(["users", currentUser], () => getUserById(currentUser), {
     onSuccess: ({ data }) => {
       const userData: UserRegister = data.user;
       userData.password = "";
       reset(userData);
+      data?.user.role && setCurrentProfile(data.user.role._id);
+      data?.user.typeField && setCurrentTypefield(data.user.typeField);
     },
   });
   const queryClient = useQueryClient();
@@ -136,6 +141,8 @@ export function ModalEditUser({
               label="Campo Cadastral"
               type="typeField"
               {...register("typeField")}
+              value={currentTypefield}
+              onChange={(event) => setCurrentTypefield(event.target.value)}
             >
               <MenuItem value={"nenhum"} key={0}>
                 Não se aplica
@@ -152,6 +159,8 @@ export function ModalEditUser({
               label="Perfil"
               select
               color="warning"
+              value={currentProfile}
+              onChange={(event) => setCurrentProfile(event.target.value)}
             >
               <MenuItem value="">Selecione uma opção</MenuItem>
               {data?.data.map((role: Roles) => (
