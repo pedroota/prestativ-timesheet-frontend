@@ -60,9 +60,11 @@ export function ModalEditActivity({
         setMultipleSelect(consultants);
         setProject(data.activity.project);
         setPrice(`${data.activity.valueActivity}`);
+        setFieldClosedScope(data.activity.closedScope);
       },
     }
   );
+  const [fieldClosedScope, setFieldClosedScope] = useState(false);
   const [price, setPrice] = useState("");
   const [priceNumber, setPriceNumber] = useState(0);
   const [multipleSelect, setMultipleSelect] = useState<string[]>([]);
@@ -78,21 +80,14 @@ export function ModalEditActivity({
   };
 
   const { mutate, isLoading } = useMutation(
-    ({
-      title,
-      project,
-      description,
-      gpActivity,
-      users,
-      closedScope,
-    }: RegisterActivity) =>
+    ({ title, project, description, gpActivity, users }: RegisterActivity) =>
       updateActivity(currentActivity, {
         title,
         project,
         description,
         gpActivity,
         users,
-        closedScope,
+        closedScope: fieldClosedScope,
         valueActivity: priceNumber,
         activityValidity: generateTimestampWithDateAndTime(
           dateField,
@@ -251,7 +246,7 @@ export function ModalEditActivity({
                   color="warning"
                   labelId="select-label-helper"
                   {...register("users")}
-                  sx={{ width: "100%" }}
+                  sx={{ width: "100%", maxWidth: "200px" }}
                   value={multipleSelect}
                   onChange={multipleSelectChange}
                   multiple
@@ -277,9 +272,11 @@ export function ModalEditActivity({
               >
                 Escopo-Fechado
                 <SwitchIOS
-                  // value={fieldClosedScope}
+                  checked={fieldClosedScope}
                   {...register("closedScope")}
-                  // onChange={() => setFieldClosedScope(!fieldClosedScope)}
+                  onChange={() =>
+                    setFieldClosedScope((prevState) => !prevState)
+                  }
                 />
               </FormLabel>
             </div>
