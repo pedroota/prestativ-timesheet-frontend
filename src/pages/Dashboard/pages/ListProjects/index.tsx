@@ -92,10 +92,7 @@ export function ListProjects() {
                           <StyledTableCell align="center">
                             Valor Projeto
                           </StyledTableCell>
-                          <StyledTableCell
-                            sx={{ display: "none" }}
-                            align="center"
-                          >
+                          <StyledTableCell align="center">
                             Gerente de Projetos
                           </StyledTableCell>
                           <StyledTableCell align="center">
@@ -132,10 +129,7 @@ export function ListProjects() {
                                   ? formatCurrency(valueProject)
                                   : "Sem Valor"}
                               </StyledTableCell>
-                              <StyledTableCell
-                                sx={{ display: "none" }}
-                                align="center"
-                              >
+                              <StyledTableCell align="center">
                                 {gpProject
                                   ? `${gpProject?.name} ${gpProject?.surname}`
                                   : "nenhum"}

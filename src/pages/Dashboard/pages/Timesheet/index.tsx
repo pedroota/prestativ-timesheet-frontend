@@ -132,11 +132,11 @@ export function Timesheet() {
               : relClient.valueClient
             ).toString()
           ),
-          // GerenteProjetos: relActivity
-          //   ? `${relActivity.gpActivity.name} ${relActivity.gpActivity.surname}`
-          //   : relProject
-          //   ? `${relProject.gpProject.name} ${relProject.gpProject.surname}`
-          //   : `${relClient.gpClient.name} ${relClient.gpClient.surname}`,
+          GerenteProjetos: relActivity
+            ? `${relActivity.gpActivity.name} ${relActivity.gpActivity.surname}`
+            : relProject
+            ? `${relProject.gpProject.name} ${relProject.gpProject.surname}`
+            : `${relClient.gpClient.name} ${relClient.gpClient.surname}`,
           Consultor: `${relUser?.name} ${relUser?.surname}`,
           EscopoFechado: relActivity?.closedScope ? "sim" : "não",
           AprovadoGP: approvedGP ? "sim" : "não",
@@ -299,10 +299,7 @@ export function Timesheet() {
                           </StyledTableCell>
                         </Permission>
                         <Permission roles={["GERENTE_DE_PROJETOS"]}>
-                          <StyledTableCell
-                            sx={{ display: "none" }}
-                            align="center"
-                          >
+                          <StyledTableCell align="center">
                             Gerente de Projetos
                           </StyledTableCell>
                         </Permission>
@@ -456,10 +453,7 @@ export function Timesheet() {
                               </StyledTableCell>
                             </Permission>
                             <Permission roles={["GERENTE_DE_PROJETOS"]}>
-                              <StyledTableCell
-                                sx={{ display: "none" }}
-                                align="center"
-                              >
+                              <StyledTableCell align="center">
                                 {relActivity
                                   ? `${relActivity.gpActivity.name} ${relActivity.gpActivity.surname}`
                                   : relProject

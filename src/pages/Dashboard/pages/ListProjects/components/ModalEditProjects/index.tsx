@@ -141,7 +141,6 @@ export function ModalEditProject({
             select
             value={listGps?.data[0]._id}
             defaultValue={listGps?.data[0]._id}
-            sx={{ display: "none" }}
             // onChange={(event) => setGpProject(event.target.value)}
           >
             <MenuItem value="">Selecione uma opção</MenuItem>

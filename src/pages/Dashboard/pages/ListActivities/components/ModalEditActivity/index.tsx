@@ -204,7 +204,7 @@ export function ModalEditActivity({
               <FormLabel
                 sx={{
                   width: "100%",
-                  display: "none",
+                  display: "flex",
                   flexDirection: "column",
                   gap: "0.2rem",
                 }}
@@ -214,7 +214,7 @@ export function ModalEditActivity({
                   color="warning"
                   select
                   {...register("gpActivity")}
-                  sx={{ width: "100%", display: "none" }}
+                  sx={{ width: "100%" }}
                   value={listGps?.data[0]._id}
                   defaultValue={listGps?.data[0]._id}
                 >

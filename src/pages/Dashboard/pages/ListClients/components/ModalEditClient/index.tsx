@@ -313,8 +313,7 @@ export function ModalEditClient({
                 InputLabelProps={{ shrink: true }}
               />
             </div>
-            <p>Valor</p>
-            {/* <p>e Gerente de Projetos</p> */}
+            <p>Valor e Gerente de Projetos</p>
             <div className="c-register-client--input-container">
               <TextField
                 required
@@ -334,7 +333,6 @@ export function ModalEditClient({
                 select
                 value={listGps?.data[0]._id}
                 defaultValue={listGps?.data[0]._id}
-                sx={{ display: "none" }}
                 // onChange={(event) => setGpProject(event.target.value)}
               >
                 <MenuItem value="">Selecione uma opção</MenuItem>
