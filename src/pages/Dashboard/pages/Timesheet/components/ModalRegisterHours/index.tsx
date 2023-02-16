@@ -37,7 +37,7 @@ export function ModalRegisterHours({
 }: ModalRegisterHoursProps) {
   const { user } = useAuthStore((state) => state);
   const queryClient = useQueryClient();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm();
   const { data } = useQuery(["users", user._id], () => getUserById(user._id));
   const { data: activeActivities } = useQuery(["activities"], () =>
     getActiveActivities()
@@ -116,6 +116,8 @@ export function ModalRegisterHours({
         relUser: user._id,
         activityDesc,
       });
+      reset();
+      setChosenDay("");
     }
   );
 
