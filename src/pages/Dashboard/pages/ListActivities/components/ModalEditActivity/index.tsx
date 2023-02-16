@@ -56,6 +56,7 @@ export function ModalEditActivity({
   const [multipleSelect, setMultipleSelect] = useState<string[]>([]);
   const [dateField, setDateField] = useState("");
   const [timeField, setTimeField] = useState("");
+  const [gpActivity, setGpActivity] = useState("");
   const queryClient = useQueryClient();
   const { mutate, isLoading } = useMutation(
     ({
@@ -215,8 +216,8 @@ export function ModalEditActivity({
                   select
                   {...register("gpActivity")}
                   sx={{ width: "100%" }}
-                  value={listGps?.data[0]._id}
-                  defaultValue={listGps?.data[0]._id}
+                  value={gpActivity}
+                  onChange={(event) => setGpActivity(event.target.value)}
                 >
                   <MenuItem value="">Selecione uma opção</MenuItem>
                   {listGps?.data.map(

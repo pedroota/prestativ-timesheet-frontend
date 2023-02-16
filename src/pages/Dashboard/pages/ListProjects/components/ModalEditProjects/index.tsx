@@ -28,6 +28,7 @@ export function ModalEditProject({
   const [priceNumber, setPriceNumber] = useState(0);
   const [currentClient, setCurrentClient] = useState("");
   const [titleProject, setTitleProject] = useState("");
+  const [gpProject, setGpProject] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
   const queryClient = useQueryClient();
   const { data: clientsList } = useQuery(["clients"], () => getClients(), {
@@ -139,9 +140,8 @@ export function ModalEditProject({
             {...register("gpProject")}
             label="Gerente de Projetos"
             select
-            value={listGps?.data[0]._id}
-            defaultValue={listGps?.data[0]._id}
-            // onChange={(event) => setGpProject(event.target.value)}
+            value={gpProject}
+            onChange={(event) => setGpProject(event.target.value)}
           >
             <MenuItem value="">Selecione uma opção</MenuItem>
             {listGps?.data.map(({ name, surname, _id }: UserRegister) => (
