@@ -99,10 +99,7 @@ export function ListClients() {
                           <StyledTableCell align="center">
                             Valor
                           </StyledTableCell>
-                          <StyledTableCell
-                            sx={{ display: "none" }}
-                            align="center"
-                          >
+                          <StyledTableCell align="center">
                             Gerente de Projetos
                           </StyledTableCell>
                           <Permission
@@ -153,10 +150,7 @@ export function ListClients() {
                               <StyledTableCell align="center">
                                 {formatCurrency(valueClient)}
                               </StyledTableCell>
-                              <StyledTableCell
-                                sx={{ display: "none" }}
-                                align="center"
-                              >
+                              <StyledTableCell align="center">
                                 {`${gpClient.name} ${gpClient.surname}`}
                               </StyledTableCell>
                               <Permission
