@@ -9,6 +9,7 @@ import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteActivity } from "services/activities.service";
+import { toast } from "react-toastify";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -35,6 +36,11 @@ export function ModalDeleteActivity({
   const { mutate } = useMutation((id: string) => deleteActivity(id), {
     onSuccess: () => {
       queryClient.invalidateQueries(["activities"]);
+      setIsOpen((prevState) => !prevState);
+      toast.success("Esta atividade foi deletada!");
+    },
+    onError: () => {
+      toast.error("Ocorreu algum erro ao deletar esta atividade!");
     },
   });
 
@@ -64,10 +70,7 @@ export function ModalDeleteActivity({
           <Button
             variant="contained"
             color="warning"
-            onClick={() => {
-              mutate(currentActivity);
-              setIsOpen((prevState) => !prevState);
-            }}
+            onClick={() => mutate(currentActivity)}
           >
             Deletar
           </Button>

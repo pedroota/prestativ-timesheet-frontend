@@ -9,6 +9,7 @@ import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteRole } from "services/roles.service";
+import { toast } from "react-toastify";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -35,6 +36,11 @@ export function ModalDeleteRole({
   const { mutate } = useMutation((_id: string) => deleteRole(_id), {
     onSuccess: () => {
       queryClient.invalidateQueries(["roles"]);
+      setIsOpen((prevState) => !prevState);
+      toast.success("Este perfil foi deletado!");
+    },
+    onError: () => {
+      toast.error("Ocorreu algum erro ao deletar este perfil!");
     },
   });
 
@@ -64,10 +70,7 @@ export function ModalDeleteRole({
           <Button
             variant="contained"
             color="warning"
-            onClick={() => {
-              mutate(currentRole);
-              setIsOpen((prevState) => !prevState);
-            }}
+            onClick={() => mutate(currentRole)}
           >
             Deletar
           </Button>

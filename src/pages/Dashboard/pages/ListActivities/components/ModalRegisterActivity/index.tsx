@@ -59,7 +59,6 @@ export function ModalRegisterActivity({
       gpActivity,
       description,
       users,
-      closedScope,
       activityValidity,
     }: Activities) =>
       createActivities({
@@ -69,7 +68,7 @@ export function ModalRegisterActivity({
         gpActivity,
         description,
         users,
-        closedScope,
+        closedScope: fieldClosedScope,
         activityValidity,
       }),
 
@@ -96,15 +95,7 @@ export function ModalRegisterActivity({
   );
 
   const onSubmit = handleSubmit(
-    ({
-      title,
-      project,
-      gpActivity,
-      description,
-      users,
-      closedScope,
-      activityValidity,
-    }) => {
+    ({ title, project, gpActivity, description, users, activityValidity }) => {
       mutate({
         title,
         project,
@@ -112,7 +103,7 @@ export function ModalRegisterActivity({
         gpActivity,
         description,
         users,
-        closedScope,
+        closedScope: fieldClosedScope,
         activityValidity,
       });
     }
@@ -273,7 +264,6 @@ export function ModalRegisterActivity({
               control={
                 <SwitchIOS
                   value={fieldClosedScope}
-                  {...register("closedScope")}
                   onChange={() => setFieldClosedScope(!fieldClosedScope)}
                 />
               }

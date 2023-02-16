@@ -33,6 +33,10 @@ export interface RegisterProject {
   title: string;
   idClient: string;
   valueProject: number;
-  gpProject: string;
+  gpProject: {
+    _id: string;
+    name: string;
+    surname: string;
+  };
   description: string;
 }

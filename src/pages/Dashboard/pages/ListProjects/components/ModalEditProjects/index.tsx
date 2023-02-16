@@ -10,6 +10,8 @@ import { toast } from "react-toastify";
 import { Modal } from "components/ModalGeneral";
 import { ClientsInfo } from "interfaces/clients.interface";
 import { currencyMask } from "utils/masks";
+import { getUserByRole } from "services/auth.service";
+import { UserRegister } from "interfaces/users.interface";
 
 interface ModalEditUserProps {
   isOpen: boolean;
@@ -25,7 +27,8 @@ export function ModalEditProject({
   const [price, setPrice] = useState("");
   const [priceNumber, setPriceNumber] = useState(0);
   const [currentClient, setCurrentClient] = useState("");
-  const [currentGp, setCurrentGp] = useState("");
+  const [titleProject, setTitleProject] = useState("");
+  const [projectDescription, setProjectDescription] = useState("");
   const queryClient = useQueryClient();
   const { data: clientsList } = useQuery(["clients"], () => getClients(), {
     onSuccess(data) {
@@ -40,16 +43,18 @@ export function ModalEditProject({
 
   useQuery(["projects", currentProject], () => getProjectById(currentProject), {
     onSuccess: ({ data }) => {
+      data.project.title && setTitleProject(data.project?.title);
       data.project.idClient && setCurrentClient(data.project?.idClient._id);
-      data.project.gpProject && setCurrentGp(data.project.gpProject._id);
-      data.client.valueProject && setPrice(`${data.client.valueProject}`);
+      data.project.valueProject && setPrice(`${data.project.valueProject}`);
+      data.project.description &&
+        setProjectDescription(data.project.description);
       reset(data.project);
       console.log(data);
     },
   });
-  // const { data: listGps } = useQuery(["users-gp", "Gerente de Projetos"], () =>
-  //   getUserByRole("gerenteprojetos")
-  // );
+  const { data: listGps } = useQuery(["users-gp", "Gerente de Projetos"], () =>
+    getUserByRole("gerenteprojetos")
+  );
 
   const { mutate, isLoading } = useMutation(
     ({ title, idClient, gpProject, description }: RegisterProject) =>
@@ -76,15 +81,17 @@ export function ModalEditProject({
 
   const { register, reset, handleSubmit } = useForm<Projects>();
 
-  const onSubmit = handleSubmit(({ title, valueProject, description }) => {
+  const onSubmit = handleSubmit(({ valueProject, description, gpProject }) => {
     mutate({
-      title,
+      title: titleProject,
       idClient: currentClient,
       valueProject,
       description,
-      gpProject: currentGp,
+      gpProject,
     });
     setCurrentClient("");
+    setTitleProject("");
+    setProjectDescription("");
     reset();
   });
 
@@ -95,10 +102,11 @@ export function ModalEditProject({
           <p>Informações do projeto</p>
           <TextField
             label="Nome do Projeto"
-            {...register("title")}
             color="warning"
             InputLabelProps={{ shrink: true }}
             variant="outlined"
+            value={titleProject}
+            onChange={(event) => setTitleProject(event.target.value)}
           />
           <TextField
             color="warning"
@@ -116,36 +124,41 @@ export function ModalEditProject({
             ))}
           </TextField>
           <TextField
-            label="Valor"
-            {...register("valueProject")}
-            InputLabelProps={{ shrink: true }}
-            value={price && currencyMask(price)}
+            required
             color="warning"
             variant="outlined"
+            sx={{ width: "100%" }}
+            label="Valor"
+            type="text"
+            value={currencyMask(price)}
+            InputLabelProps={{ shrink: true }}
             onChange={(event) => setNewPrice(event.target.value)}
           />
-          {/* <Select
+          <TextField
             color="warning"
-            labelId="select-label-helper"
+            {...register("gpProject")}
             label="Gerente de Projetos"
-            value={currentGp}
-            onChange={(event) => setCurrentGp(event.target.value)}
+            select
+            value={listGps?.data[0]._id}
+            defaultValue={listGps?.data[0]._id}
+            sx={{ display: "none" }}
+            // onChange={(event) => setGpProject(event.target.value)}
           >
             <MenuItem value="">Selecione uma opção</MenuItem>
-            {listGps?.data.map(
-              ({ name, surname, _id }: UserRegister, index: number) => (
-                <MenuItem value={_id} key={index}>
-                  {`${name} ${surname}`}
-                </MenuItem>
-              )
-            )}
-          </Select> */}
+            {listGps?.data.map(({ name, surname, _id }: UserRegister) => (
+              <MenuItem value={_id} key={_id}>
+                {`${name} ${surname}`}
+              </MenuItem>
+            ))}
+          </TextField>
           <TextField
             label="Descrição do Projeto"
             {...register("description")}
             InputLabelProps={{ shrink: true }}
             color="warning"
             variant="outlined"
+            value={projectDescription}
+            onChange={(event) => setProjectDescription(event.target.value)}
           />
           <Button
             sx={{ paddingBlock: "1rem" }}
