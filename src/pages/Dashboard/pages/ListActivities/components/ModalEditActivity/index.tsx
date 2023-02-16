@@ -14,7 +14,7 @@ import { UserRegister } from "interfaces/users.interface";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { updateActivity, getActivityById } from "services/activities.service";
-import { Activities } from "interfaces/activities.interface";
+import { RegisterActivity } from "interfaces/activities.interface";
 import { getUserByRole } from "services/auth.service";
 import { getProjects } from "services/project.service";
 import { ProjectsInfo } from "interfaces/projects.interface";
@@ -27,6 +27,8 @@ import {
   generateTimeAndDateWithTimestamp,
   generateTimestampWithDateAndTime,
 } from "utils/timeControl";
+import { UserInfo } from "interfaces/users.interface";
+import { currencyMask } from "utils/masks";
 
 interface ModalEditActivityProps {
   isOpen: boolean;
@@ -39,7 +41,7 @@ export function ModalEditActivity({
   setIsOpen,
   currentActivity,
 }: ModalEditActivityProps) {
-  const { data: singleActivity } = useQuery(
+  useQuery(
     ["activity", currentActivity],
     () => getActivityById(currentActivity),
     {
@@ -50,13 +52,32 @@ export function ModalEditActivity({
         );
         setDateField(timestampFormated[0]);
         setTimeField(timestampFormated[1]);
+        const consultants: string[] =
+          data.activity.users &&
+          data.activity.users.map((element: UserInfo) => {
+            return element._id;
+          });
+        setMultipleSelect(consultants);
+        setProject(data.activity.project);
+        setPrice(`${data.activity.valueActivity}`);
+        console.log(data);
       },
     }
   );
+  const [price, setPrice] = useState("");
+  const [priceNumber, setPriceNumber] = useState(0);
   const [multipleSelect, setMultipleSelect] = useState<string[]>([]);
+  const [project, setProject] = useState("");
   const [dateField, setDateField] = useState("");
   const [timeField, setTimeField] = useState("");
   const queryClient = useQueryClient();
+
+  const setNewPrice = (e: { target: { value: string } }) => {
+    const stringValue = e.target.value;
+    setPrice(stringValue);
+    setPriceNumber(Number(stringValue.slice(2)));
+  };
+
   const { mutate, isLoading } = useMutation(
     ({
       title,
@@ -65,8 +86,7 @@ export function ModalEditActivity({
       gpActivity,
       users,
       closedScope,
-      valueActivity,
-    }: Activities) =>
+    }: RegisterActivity) =>
       updateActivity(currentActivity, {
         title,
         project,
@@ -74,7 +94,7 @@ export function ModalEditActivity({
         gpActivity,
         users,
         closedScope,
-        valueActivity,
+        valueActivity: priceNumber,
         activityValidity: generateTimestampWithDateAndTime(
           dateField,
           timeField
@@ -101,20 +121,10 @@ export function ModalEditActivity({
     getUserByRole("consultor")
   );
   const { data: projectList } = useQuery(["projects"], getProjects);
-  const { register, reset, handleSubmit } = useForm<Activities>({
-    defaultValues: singleActivity?.data.activity,
-  });
+  const { register, reset, handleSubmit } = useForm();
 
   const onSubmit = handleSubmit(
-    ({
-      title,
-      project,
-      description,
-      gpActivity,
-      users,
-      valueActivity,
-      closedScope,
-    }) => {
+    ({ title, description, gpActivity, users, valueActivity, closedScope }) => {
       mutate({
         title,
         project,
@@ -171,10 +181,10 @@ export function ModalEditActivity({
             <TextField
               color="warning"
               select
-              {...register("project")}
               required
               label="Projeto"
-              defaultValue=""
+              value={project}
+              onChange={(event) => setProject(event.target.value)}
             >
               <MenuItem value="">Selecione uma opção</MenuItem>
               {projectList?.data.map(
@@ -188,9 +198,9 @@ export function ModalEditActivity({
             <TextField
               color="warning"
               label="Valor da atividade"
-              type="number"
               InputLabelProps={{ shrink: true }}
-              {...register("valueActivity")}
+              value={price && currencyMask(price)}
+              onChange={(event) => setNewPrice(event)}
             />
             <TextField
               required

@@ -16,7 +16,7 @@ import { ProjectsInfo } from "interfaces/projects.interface";
 import { currencyMask } from "utils/masks";
 import { UserRegister } from "interfaces/users.interface";
 import { SwitchIOS } from "components/SwitchIOS";
-import { Activities } from "interfaces/activities.interface";
+import { RegisterActivity } from "interfaces/activities.interface";
 import { createActivities } from "services/activities.service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserByRole } from "services/auth.service";
@@ -50,7 +50,7 @@ export function ModalRegisterActivity({
     ["user-consultant", "Consultor"],
     () => getUserByRole("consultor")
   );
-  const { register, handleSubmit, reset } = useForm<Activities>({});
+  const { register, handleSubmit, reset } = useForm();
 
   const { mutate, isLoading } = useMutation(
     ({
@@ -60,7 +60,7 @@ export function ModalRegisterActivity({
       description,
       users,
       activityValidity,
-    }: Activities) =>
+    }: RegisterActivity) =>
       createActivities({
         title,
         project,

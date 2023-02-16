@@ -1,5 +1,5 @@
 import { Api } from "./api.service";
-import { Activities } from "interfaces/activities.interface";
+import { RegisterActivity } from "interfaces/activities.interface";
 
 export const getActivities = async () => {
   const result = await Api.get("/activities");
@@ -27,7 +27,7 @@ export const createActivities = async ({
   description,
   users,
   closedScope,
-}: Activities) => {
+}: RegisterActivity) => {
   const result = await Api.post("/activities", {
     title,
     project,
@@ -57,7 +57,7 @@ export const updateActivity = async (
     users,
     closedScope,
     valueActivity,
-  }: Activities
+  }: RegisterActivity
 ) => {
   const result = await Api.put(`/activities/${id}`, {
     title,

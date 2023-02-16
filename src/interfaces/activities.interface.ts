@@ -58,3 +58,14 @@ export interface PatchActivityValidity {
   idActivity: string;
   activityValidity: number;
 }
+
+export interface RegisterActivity {
+  title: string;
+  project: string;
+  valueActivity: number;
+  gpActivity: string[];
+  description: string;
+  users: string[];
+  closedScope: boolean;
+  activityValidity?: number;
+}
