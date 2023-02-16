@@ -36,6 +36,7 @@ export function ModalRegisterActivity({
   const [nameProject, setNameProject] = useState("");
   const [price, setPrice] = useState("");
   const [priceNumber, setPriceNumber] = useState(0);
+  const [gpActivity, setGpActivity] = useState("");
   const [fieldClosedScope, setFieldClosedScope] = useState(false);
   const [multipleSelect, setMultipleSelect] = useState<string[]>([]);
 
@@ -193,9 +194,8 @@ export function ModalRegisterActivity({
               sx={{ width: "100%" }}
               select
               label="Gerente de projetos"
-              value={GPList?.data[0]._id}
-              defaultValue={GPList?.data[0]._id}
-              // onChange={(event) => setGpActivity(event.target.value)}
+              value={gpActivity}
+              onChange={(event) => setGpActivity(event.target.value)}
             >
               <MenuItem selected disabled value="">
                 GP - Selecione uma opção
