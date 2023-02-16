@@ -290,7 +290,7 @@ export function ModalRegisterClient({
               {...register("payDay")}
             />
           </div>
-          {/* <p>Valor e Gerente de Projetos</p> */}
+          <p>Valor e Gerente de Projetos</p>
           <div className="c-register-client--input-container">
             <TextField
               required
@@ -308,7 +308,7 @@ export function ModalRegisterClient({
               select
               color="warning"
               {...register("gpClient")}
-              sx={{ width: "100%", display: "none" }}
+              sx={{ width: "100%" }}
               value={data?.data[0]._id}
               defaultValue={data?.data[0]._id}
               // onChange={(event) => setGpClient(event.target.value)}

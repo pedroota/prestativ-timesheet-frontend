@@ -188,7 +188,7 @@ export function ModalRegisterActivity({
             <TextField
               color="warning"
               {...register("gpActivity")}
-              sx={{ width: "100%", display: "none" }}
+              sx={{ width: "100%" }}
               select
               label="Gerente de projetos"
               value={GPList?.data[0]._id}

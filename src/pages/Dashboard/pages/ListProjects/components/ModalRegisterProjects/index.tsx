@@ -117,7 +117,6 @@ export function ModalRegisterProject({
             select
             value={GPList?.data[0]._id}
             defaultValue={GPList?.data[0]._id}
-            sx={{ display: "none" }}
             // onChange={(event) => setGpProject(event.target.value)}
           >
             <MenuItem value="">Selecione uma opção</MenuItem>
