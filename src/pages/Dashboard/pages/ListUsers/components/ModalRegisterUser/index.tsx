@@ -56,7 +56,6 @@ export function ModalRegisterUser({
   const onSubmit = handleSubmit(
     ({ name, surname, email, password, role, typeField }) => {
       if (!validateEmail(email)) {
-        console.log(validateEmail(email));
         return toast.error("O Email digitado é inválido", { autoClose: 1500 });
       }
       mutate({ name, surname, email, password, role, typeField });

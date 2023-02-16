@@ -30,11 +30,7 @@ export function ModalEditProject({
   const [titleProject, setTitleProject] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
   const queryClient = useQueryClient();
-  const { data: clientsList } = useQuery(["clients"], () => getClients(), {
-    onSuccess(data) {
-      console.log(data, "<<< clientes");
-    },
-  });
+  const { data: clientsList } = useQuery(["clients"], () => getClients());
 
   const setNewPrice = (value: string) => {
     setPrice(value);
@@ -49,7 +45,6 @@ export function ModalEditProject({
       data.project.description &&
         setProjectDescription(data.project.description);
       reset(data.project);
-      console.log(data);
     },
   });
   const { data: listGps } = useQuery(["users-gp", "Gerente de Projetos"], () =>

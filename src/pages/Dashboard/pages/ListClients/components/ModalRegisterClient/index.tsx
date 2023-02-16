@@ -125,7 +125,6 @@ export function ModalRegisterClient({
     }) => {
       // Validates CNPJ
       if (!validateCNPJ(cnpj)) {
-        console.log(validateCNPJ(cnpj));
         return toast.error("O CNPJ digitado é inválido", { autoClose: 1500 });
       }
       mutate({

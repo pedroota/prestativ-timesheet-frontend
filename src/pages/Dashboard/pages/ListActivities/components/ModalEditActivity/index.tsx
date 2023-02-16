@@ -60,7 +60,6 @@ export function ModalEditActivity({
         setMultipleSelect(consultants);
         setProject(data.activity.project);
         setPrice(`${data.activity.valueActivity}`);
-        console.log(data);
       },
     }
   );

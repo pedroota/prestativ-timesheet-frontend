@@ -39,14 +39,8 @@ export function ModalRegisterHours({
   const queryClient = useQueryClient();
   const { register, handleSubmit, reset } = useForm();
   const { data } = useQuery(["users", user._id], () => getUserById(user._id));
-  const { data: activeActivities } = useQuery(
-    ["activities"],
-    () => getActiveActivities(),
-    {
-      onSuccess(data) {
-        console.log(data);
-      },
-    }
+  const { data: activeActivities } = useQuery(["activities"], () =>
+    getActiveActivities()
   );
 
   const validateUser = () => {
