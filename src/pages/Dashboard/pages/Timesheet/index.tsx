@@ -442,7 +442,7 @@ export function Timesheet() {
                               <StyledTableCell align="center">
                                 {relActivity || relProject || relClient
                                   ? currencyMask(
-                                      (relActivity.valueActivity
+                                      (relActivity?.valueActivity
                                         ? relActivity.valueActivity
                                         : relProject.valueProject
                                         ? relProject.valueProject
