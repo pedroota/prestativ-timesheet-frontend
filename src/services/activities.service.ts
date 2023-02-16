@@ -57,6 +57,7 @@ export const updateActivity = async (
     users,
     closedScope,
     valueActivity,
+    activityValidity,
   }: RegisterActivity
 ) => {
   const result = await Api.put(`/activities/${id}`, {
@@ -67,6 +68,7 @@ export const updateActivity = async (
     users,
     closedScope,
     valueActivity,
+    activityValidity,
   });
 
   return result;
