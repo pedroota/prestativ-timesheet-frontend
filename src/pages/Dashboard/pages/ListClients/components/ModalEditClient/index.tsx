@@ -33,6 +33,7 @@ export function ModalEditClient({
 }: ModalEditUserProps) {
   const [price, setPrice] = useState("");
   const [priceNumber, setPriceNumber] = useState(0);
+  const [gpClient, setGpClient] = useState("");
   const [valueCep, setValueCep] = useState("");
   const { data } = useQuery(
     ["clients", currentClient],
@@ -331,9 +332,8 @@ export function ModalEditClient({
                 {...register("gpClient")}
                 label="Gerente de Projetos"
                 select
-                value={listGps?.data[0]._id}
-                defaultValue={listGps?.data[0]._id}
-                // onChange={(event) => setGpProject(event.target.value)}
+                value={gpClient}
+                onChange={(event) => setGpClient(event.target.value)}
               >
                 <MenuItem value="">Selecione uma opção</MenuItem>
                 {listGps?.data.map(({ name, surname, _id }: UserRegister) => (

@@ -25,6 +25,7 @@ export function ModalRegisterClient({
   const [price, setPrice] = useState("");
   const [priceNumber, setPriceNumber] = useState(0);
   const [valueCep, setValueCep] = useState("");
+  const [gpClient, setGpClient] = useState("");
   const { register, handleSubmit, reset, setValue } = useForm<Clients>({});
   const { data } = useQuery(["users-role", "Gerente de Projetos"], () =>
     getUserByRole("gerenteprojetos")
@@ -308,9 +309,8 @@ export function ModalRegisterClient({
               color="warning"
               {...register("gpClient")}
               sx={{ width: "100%" }}
-              value={data?.data[0]._id}
-              defaultValue={data?.data[0]._id}
-              // onChange={(event) => setGpClient(event.target.value)}
+              value={gpClient}
+              onChange={(event) => setGpClient(event.target.value)}
             >
               <MenuItem value="">Selecione uma opção</MenuItem>
               {data?.data.map(({ name, surname, _id }: UserRegister) => (

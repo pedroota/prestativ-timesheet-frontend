@@ -25,6 +25,7 @@ export function ModalRegisterProject({
   const [nameClient, setNameClient] = useState("");
   const [price, setPrice] = useState("");
   const [priceNumber, setPriceNumber] = useState(0);
+  const [gpProject, setGpProject] = useState("");
   const { data: clientList } = useQuery([], () => getClients());
   const { data: GPList } = useQuery(["users-role", "Gerente de Projetos"], () =>
     getUserByRole("gerenteprojetos")
@@ -115,9 +116,8 @@ export function ModalRegisterProject({
             {...register("gpProject")}
             label="Gerente de Projetos"
             select
-            value={GPList?.data[0]._id}
-            defaultValue={GPList?.data[0]._id}
-            // onChange={(event) => setGpProject(event.target.value)}
+            value={gpProject}
+            onChange={(event) => setGpProject(event.target.value)}
           >
             <MenuItem value="">Selecione uma opção</MenuItem>
             {GPList?.data.map(({ name, surname, _id }: UserRegister) => (
