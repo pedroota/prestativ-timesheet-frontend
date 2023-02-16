@@ -39,8 +39,14 @@ export function ModalRegisterHours({
   const queryClient = useQueryClient();
   const { register, handleSubmit } = useForm();
   const { data } = useQuery(["users", user._id], () => getUserById(user._id));
-  const { data: activeActivities } = useQuery(["activities"], () =>
-    getActiveActivities()
+  const { data: activeActivities } = useQuery(
+    ["activities"],
+    () => getActiveActivities(),
+    {
+      onSuccess(data) {
+        console.log(data);
+      },
+    }
   );
 
   const validateUser = () => {
@@ -247,13 +253,14 @@ export function ModalRegisterHours({
               <MenuItem value="" disabled>
                 Selecione uma opção
               </MenuItem>
-              {activeActivities?.data.activity.map(
-                ({ _id, title }: ActivityModalReturnProps) => (
-                  <MenuItem value={_id} key={_id}>
-                    {title}
-                  </MenuItem>
-                )
-              )}
+              {activeActivities?.data.activity &&
+                activeActivities?.data.activity.map(
+                  ({ _id, title }: ActivityModalReturnProps) => (
+                    <MenuItem value={_id} key={_id}>
+                      {title}
+                    </MenuItem>
+                  )
+                )}
             </TextField>
           ) : (
             <TextField
