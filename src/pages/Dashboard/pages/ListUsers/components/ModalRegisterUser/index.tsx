@@ -90,12 +90,14 @@ export function ModalRegisterUser({
             color="warning"
             label="E-mail"
             type="email"
+            autoComplete="new-mail"
             {...register("email")}
           />
           <TextField
             required
             color="warning"
             label="Password"
+            autoComplete="new-password"
             type={isPasswordVisible ? "text" : "password"}
             {...register("password")}
             InputProps={{

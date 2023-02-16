@@ -18,7 +18,7 @@ import { UserRegister } from "interfaces/users.interface";
 import { SwitchIOS } from "components/SwitchIOS";
 import { Activities } from "interfaces/activities.interface";
 import { createActivities } from "services/activities.service";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserByRole } from "services/auth.service";
 import { useForm } from "react-hook-form";
 import { getProjects } from "services/project.service";
@@ -32,6 +32,7 @@ export function ModalRegisterActivity({
   isOpen,
   setIsOpen,
 }: ModalRegisterActivityProps) {
+  const queryClient = useQueryClient();
   const [nameProject, setNameProject] = useState("");
   const [price, setPrice] = useState("");
   const [priceNumber, setPriceNumber] = useState(0);
@@ -83,6 +84,7 @@ export function ModalRegisterActivity({
         setChosenDay(oneMonthLater);
         toast.success("Atividade criada com sucesso.");
         setIsOpen((prevState) => !prevState);
+        queryClient.invalidateQueries(["activities"]);
       },
       onError: () => {
         toast.error("Ocorreu algum erro ao criar a atividade", {

@@ -196,30 +196,30 @@ export function ListClients() {
                   </div>
                 </div>
               </Paper>
-              <Permission roles={["EDITAR_CLIENTE"]}>
-                <ModalEditClient
-                  isOpen={isEditingClient}
-                  setIsOpen={setIsEditingClient}
-                  currentClient={currentClient}
-                />
-              </Permission>
-              <Permission roles={["CADASTRO_CLIENTE"]}>
-                <ModalRegisterClient
-                  isOpen={isAddingClient}
-                  setIsOpen={setIsAddingClient}
-                />
-              </Permission>
-              <Permission roles={["DELETAR_CLIENTE"]}>
-                <ModalDeleteClient
-                  isOpen={isDeletingClient}
-                  setIsOpen={setIsDeletingClient}
-                  currentClient={currentClient}
-                />
-              </Permission>
             </div>
           ) : (
             <EmptyList />
           )}
+          <Permission roles={["EDITAR_CLIENTE"]}>
+            <ModalEditClient
+              isOpen={isEditingClient}
+              setIsOpen={setIsEditingClient}
+              currentClient={currentClient}
+            />
+          </Permission>
+          <Permission roles={["CADASTRO_CLIENTE"]}>
+            <ModalRegisterClient
+              isOpen={isAddingClient}
+              setIsOpen={setIsAddingClient}
+            />
+          </Permission>
+          <Permission roles={["DELETAR_CLIENTE"]}>
+            <ModalDeleteClient
+              isOpen={isDeletingClient}
+              setIsOpen={setIsDeletingClient}
+              currentClient={currentClient}
+            />
+          </Permission>
         </>
       )}
     </div>
