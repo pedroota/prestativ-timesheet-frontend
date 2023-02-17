@@ -14,11 +14,13 @@ export interface Clients {
   billingLimit: string;
   payDay: number;
   valueClient: number;
-  gpClient: {
-    _id: string;
-    name: string;
-    surname: string;
-  };
+  gpClient: [
+    {
+      _id: string;
+      name: string;
+      surname: string;
+    }
+  ];
 }
 
 export interface RegisterClients {
@@ -37,11 +39,13 @@ export interface RegisterClients {
   billingLimit: string;
   payDay: number;
   valueClient: number;
-  gpClient: {
-    _id: string;
-    name: string;
-    surname: string;
-  };
+  gpClient: [
+    {
+      _id: string;
+      name: string;
+      surname: string;
+    }
+  ];
 }
 
 export interface ClientsInfo {
@@ -63,9 +67,11 @@ export interface ClientsInfo {
   billingLimit: string;
   payDay: number;
   valueClient: number;
-  gpClient: {
-    _id: string;
-    name: string;
-    surname: string;
-  };
+  gpClient: [
+    {
+      _id: string;
+      name: string;
+      surname: string;
+    }
+  ];
 }

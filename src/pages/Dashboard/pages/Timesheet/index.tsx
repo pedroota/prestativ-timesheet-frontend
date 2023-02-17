@@ -43,6 +43,7 @@ import { currencyMask } from "utils/masks";
 import { ModalEditReleasedCall } from "./components/ModalEditReleasedCall";
 import { useAuthStore } from "stores/userStore";
 import { ModalDeleteHours } from "./components/ModalDeleteHours";
+import Chip from "@mui/material/Chip";
 
 export function Timesheet() {
   const { user } = useAuthStore((state) => state);
@@ -132,11 +133,19 @@ export function Timesheet() {
               : relClient.valueClient
             ).toString()
           ),
-          GerenteProjetos: relActivity
-            ? `${relActivity.gpActivity.name} ${relActivity.gpActivity.surname}`
-            : relProject
-            ? `${relProject.gpProject.name} ${relProject.gpProject.surname}`
-            : `${relClient.gpClient.name} ${relClient.gpClient.surname}`,
+          GerenteProjetos: relActivity.gpActivity.length
+            ? relActivity.gpActivity.map(
+                ({ name, surname }) => `${name} ${surname} `
+              )
+            : relProject.gpProject.length
+            ? relProject.gpProject.map(
+                ({ name, surname }) => `${name} ${surname}`
+              )
+            : relClient.gpClient.length
+            ? relClient.gpClient.map(
+                ({ name, surname }) => `${name} ${surname}`
+              )
+            : "Nenhum usuário foi vinculado",
           Consultor: `${relUser?.name} ${relUser?.surname}`,
           EscopoFechado: relActivity?.closedScope ? "sim" : "não",
           AprovadoGP: approvedGP ? "sim" : "não",
@@ -454,18 +463,48 @@ export function Timesheet() {
                             </Permission>
                             <Permission roles={["GERENTE_DE_PROJETOS"]}>
                               <StyledTableCell align="center">
-                                {relActivity
-                                  ? `${relActivity.gpActivity.name} ${relActivity.gpActivity.surname}`
-                                  : relProject
-                                  ? `${relProject.gpProject.name} ${relProject.gpProject.surname}`
-                                  : relClient
-                                  ? `${relClient.gpClient.name} ${relClient.gpClient.surname}`
-                                  : "Sem registro especificado"}
+                                {relActivity.gpActivity.length ? (
+                                  relActivity.gpActivity.map(
+                                    ({ name, surname }) => (
+                                      <Chip
+                                        key={name}
+                                        label={`${name} ${surname}`}
+                                        sx={{ margin: "0.25rem" }}
+                                      />
+                                    )
+                                  )
+                                ) : relProject.gpProject.length ? (
+                                  relProject.gpProject.map(
+                                    ({ name, surname }) => (
+                                      <Chip
+                                        key={name}
+                                        label={`${name} ${surname}`}
+                                        sx={{ margin: "0.25rem" }}
+                                      />
+                                    )
+                                  )
+                                ) : relClient.gpClient.length ? (
+                                  relClient.gpClient.map(
+                                    ({ name, surname }) => (
+                                      <Chip
+                                        key={name}
+                                        label={`${name} ${surname}`}
+                                        sx={{ margin: "0.25rem" }}
+                                      />
+                                    )
+                                  )
+                                ) : (
+                                  <p>Nenhum usuário foi vinculado</p>
+                                )}
                               </StyledTableCell>
                             </Permission>
                             <Permission roles={["CONSULTOR"]}>
                               <StyledTableCell align="center">
-                                {`${relUser?.name} ${relUser?.surname}`}
+                                <Chip
+                                  key={relUser?.name}
+                                  label={`${relUser?.name} ${relUser?.surname}`}
+                                  sx={{ margin: "0.25rem" }}
+                                />
                               </StyledTableCell>
                             </Permission>
                             <Permission roles={["ESCOPO_FECHADO"]}>

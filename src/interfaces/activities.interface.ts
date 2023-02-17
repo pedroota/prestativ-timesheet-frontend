@@ -5,14 +5,17 @@ export interface Activities {
     title: string;
   };
   valueActivity: number;
-  gpActivity: {
-    _id: string;
-    name: string;
-    surname: string;
-  };
+  gpActivity: [
+    {
+      _id: string;
+      name: string;
+      surname: string;
+    }
+  ];
   description: string;
   users: [
     {
+      _id: string;
       name: string;
       surname: string;
     }
@@ -33,14 +36,17 @@ export interface ActivitiesInfo {
     };
   };
   valueActivity: number;
-  gpActivity: {
-    _id: string;
-    name: string;
-    surname: string;
-  };
+  gpActivity: [
+    {
+      _id: string;
+      name: string;
+      surname: string;
+    }
+  ];
   description: string;
   users: [
     {
+      _id: string;
       name: string;
       surname: string;
     }

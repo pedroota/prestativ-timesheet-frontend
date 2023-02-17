@@ -1,4 +1,6 @@
 import { Button, CircularProgress, MenuItem, TextField } from "@mui/material";
+import FormLabel from "@mui/material/FormLabel/FormLabel";
+import Select, { SelectChangeEvent } from "@mui/material/Select/Select";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import cep from "cep-promise";
 import { Modal } from "components/ModalGeneral";
@@ -25,7 +27,7 @@ export function ModalRegisterClient({
   const [price, setPrice] = useState("");
   const [priceNumber, setPriceNumber] = useState(0);
   const [valueCep, setValueCep] = useState("");
-  const [gpClient, setGpClient] = useState("");
+  const [gpClient, setGpClient] = useState<string[]>([]);
   const { register, handleSubmit, reset, setValue } = useForm<Clients>({});
   const { data } = useQuery(["users-role", "Gerente de Projetos"], () =>
     getUserByRole("gerenteprojetos")
@@ -151,8 +153,19 @@ export function ModalRegisterClient({
 
   const setNewPrice = (e: { target: { value: string } }) => {
     const stringValue = e.target.value;
-    setPrice(stringValue);
-    setPriceNumber(Number(stringValue.slice(2)));
+    const stringValueWithoutDots = stringValue.replaceAll(".", "");
+    setPrice(stringValueWithoutDots);
+    setPriceNumber(Number(stringValueWithoutDots.slice(2)));
+  };
+
+  const multipleSelectGPChange = (
+    event: SelectChangeEvent<typeof gpClient>
+  ) => {
+    setGpClient(
+      typeof event.target.value === "string"
+        ? event.target.value.split(",")
+        : event.target.value
+    );
   };
 
   return (
@@ -302,23 +315,36 @@ export function ModalRegisterClient({
               {...register("valueClient")}
               onChange={(event) => setNewPrice(event)}
             />
-            <TextField
-              required
-              label="Gerente de Projetos"
-              select
-              color="warning"
-              {...register("gpClient")}
-              sx={{ width: "100%" }}
-              value={gpClient}
-              onChange={(event) => setGpClient(event.target.value)}
+          </div>
+          <div className="c-register-activity--input-container">
+            <FormLabel
+              sx={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.2rem",
+              }}
             >
-              <MenuItem value="">Selecione uma opção</MenuItem>
-              {data?.data.map(({ name, surname, _id }: UserRegister) => (
-                <MenuItem value={_id} key={_id}>
-                  {`${name} ${surname}`}
+              Gerentes De Projetos (Selecione no mínimo uma opção)
+              <Select
+                color="warning"
+                variant="outlined"
+                {...register("gpClient")}
+                sx={{ width: "100%" }} // maxWidth: "14rem"
+                value={gpClient}
+                onChange={multipleSelectGPChange}
+                multiple
+              >
+                <MenuItem value="" disabled>
+                  Selecione no mínimo uma opção
                 </MenuItem>
-              ))}
-            </TextField>
+                {data?.data.map(({ name, surname, _id }: UserRegister) => (
+                  <MenuItem value={_id} key={_id}>
+                    {`${name} ${surname}`}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormLabel>
           </div>
           <Button
             type="submit"

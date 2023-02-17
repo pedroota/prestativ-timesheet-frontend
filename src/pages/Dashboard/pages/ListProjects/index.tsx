@@ -22,6 +22,7 @@ import { StyledTableRow } from "components/StyledTableRow";
 import { Permission } from "components/Permission";
 import { ModalRegisterProject } from "./components/ModalRegisterProjects";
 import { ModalDeleteProject } from "./components/ModalDeleteProject";
+import Chip from "@mui/material/Chip";
 
 export function ListProjects() {
   const [currentProject, setCurrentProject] = useState("");
@@ -130,9 +131,17 @@ export function ListProjects() {
                                   : "Sem Valor"}
                               </StyledTableCell>
                               <StyledTableCell align="center">
-                                {gpProject
-                                  ? `${gpProject?.name} ${gpProject?.surname}`
-                                  : "nenhum"}
+                                {gpProject.length ? (
+                                  gpProject.map(({ name, surname }) => (
+                                    <Chip
+                                      key={name}
+                                      label={`${name} ${surname}`}
+                                      sx={{ margin: "0.25rem" }}
+                                    />
+                                  ))
+                                ) : (
+                                  <p>Nenhum usuário foi vinculado</p>
+                                )}
                               </StyledTableCell>
                               <StyledTableCell align="center">
                                 {description}

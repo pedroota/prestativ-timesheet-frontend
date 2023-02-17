@@ -57,6 +57,12 @@ export function ModalEditActivity({
           data.activity.users.map((element: UserInfo) => {
             return element._id;
           });
+        const gps: string[] =
+          data.activity.gpActivity &&
+          data.activity.gpActivity.map((element: UserInfo) => {
+            return element._id;
+          });
+        setGpActivity(gps);
         setMultipleSelect(consultants);
         setProject(data.activity.project);
         setPrice(`${data.activity.valueActivity}`);
@@ -71,13 +77,14 @@ export function ModalEditActivity({
   const [project, setProject] = useState("");
   const [dateField, setDateField] = useState("");
   const [timeField, setTimeField] = useState("");
-  const [gpActivity, setGpActivity] = useState("");
+  const [gpActivity, setGpActivity] = useState<string[]>([]);
   const queryClient = useQueryClient();
 
   const setNewPrice = (e: { target: { value: string } }) => {
     const stringValue = e.target.value;
-    setPrice(stringValue);
-    setPriceNumber(Number(stringValue.slice(2)));
+    const stringValueWithoutDots = stringValue.replaceAll(".", "");
+    setPrice(stringValueWithoutDots);
+    setPriceNumber(Number(stringValueWithoutDots.slice(2)));
   };
 
   const { mutate, isLoading } = useMutation(
@@ -137,6 +144,16 @@ export function ModalEditActivity({
     event: SelectChangeEvent<typeof multipleSelect>
   ) => {
     setMultipleSelect(
+      typeof event.target.value === "string"
+        ? event.target.value.split(",")
+        : event.target.value
+    );
+  };
+
+  const multipleSelectGPChange = (
+    event: SelectChangeEvent<typeof gpActivity>
+  ) => {
+    setGpActivity(
       typeof event.target.value === "string"
         ? event.target.value.split(",")
         : event.target.value
@@ -214,26 +231,28 @@ export function ModalEditActivity({
                   gap: "0.2rem",
                 }}
               >
-                Gerente-Projetos
-                <TextField
+                Gerentes De Projetos (Selecione no mínimo uma opção)
+                <Select
                   color="warning"
-                  select
+                  variant="outlined"
                   {...register("gpActivity")}
-                  sx={{ width: "100%" }}
+                  sx={{ width: "100%" }} // maxWidth: "14rem"
                   value={gpActivity}
-                  onChange={(event) => setGpActivity(event.target.value)}
+                  onChange={multipleSelectGPChange}
+                  multiple
                 >
-                  <MenuItem value="">Selecione uma opção</MenuItem>
-                  {listGps?.data.map(
-                    ({ name, surname, _id }: UserRegister, index: number) => (
-                      <MenuItem key={index} value={_id}>
-                        {`${name} ${surname}`}
-                      </MenuItem>
-                    )
-                  )}
-                </TextField>
+                  <MenuItem value="" disabled>
+                    Selecione no mínimo uma opção
+                  </MenuItem>
+                  {listGps?.data.map(({ name, surname, _id }: UserRegister) => (
+                    <MenuItem key={_id} value={_id}>
+                      {`${name} ${surname}`}
+                    </MenuItem>
+                  ))}
+                </Select>
               </FormLabel>
-
+            </div>
+            <div className="c-register-activity--input-container">
               <FormLabel
                 sx={{
                   width: "100%",

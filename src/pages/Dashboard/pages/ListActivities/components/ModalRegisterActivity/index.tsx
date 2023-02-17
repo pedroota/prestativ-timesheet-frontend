@@ -22,6 +22,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserByRole } from "services/auth.service";
 import { useForm } from "react-hook-form";
 import { getProjects } from "services/project.service";
+import { generateTimestampWithDateAndTime } from "utils/timeControl";
 
 interface ModalRegisterActivityProps {
   isOpen: boolean;
@@ -36,7 +37,7 @@ export function ModalRegisterActivity({
   const [nameProject, setNameProject] = useState("");
   const [price, setPrice] = useState("");
   const [priceNumber, setPriceNumber] = useState(0);
-  const [gpActivity, setGpActivity] = useState("");
+  const [gpActivity, setGpActivity] = useState<string[]>([]);
   const [fieldClosedScope, setFieldClosedScope] = useState(false);
   const [multipleSelect, setMultipleSelect] = useState<string[]>([]);
 
@@ -54,14 +55,7 @@ export function ModalRegisterActivity({
   const { register, handleSubmit, reset } = useForm();
 
   const { mutate, isLoading } = useMutation(
-    ({
-      title,
-      project,
-      gpActivity,
-      description,
-      users,
-      activityValidity,
-    }: RegisterActivity) =>
+    ({ title, project, gpActivity, description, users }: RegisterActivity) =>
       createActivities({
         title,
         project,
@@ -70,7 +64,7 @@ export function ModalRegisterActivity({
         description,
         users,
         closedScope: fieldClosedScope,
-        activityValidity,
+        activityValidity: generateTimestampWithDateAndTime(chosenDay, "00:00"),
       }),
 
     {
@@ -96,7 +90,7 @@ export function ModalRegisterActivity({
   );
 
   const onSubmit = handleSubmit(
-    ({ title, project, gpActivity, description, users, activityValidity }) => {
+    ({ title, project, gpActivity, description, users }) => {
       mutate({
         title,
         project,
@@ -105,7 +99,7 @@ export function ModalRegisterActivity({
         description,
         users,
         closedScope: fieldClosedScope,
-        activityValidity,
+        activityValidity: generateTimestampWithDateAndTime(chosenDay, "00:00"),
       });
     }
   );
@@ -120,10 +114,21 @@ export function ModalRegisterActivity({
     );
   };
 
+  const multipleSelectGPChange = (
+    event: SelectChangeEvent<typeof gpActivity>
+  ) => {
+    setGpActivity(
+      typeof event.target.value === "string"
+        ? event.target.value.split(",")
+        : event.target.value
+    );
+  };
+
   const setNewPrice = (e: { target: { value: string } }) => {
     const stringValue = e.target.value;
-    setPrice(stringValue);
-    setPriceNumber(Number(stringValue.slice(2)));
+    const stringValueWithoutDots = stringValue.replaceAll(".", "");
+    setPrice(stringValueWithoutDots);
+    setPriceNumber(Number(stringValueWithoutDots.slice(2)));
   };
 
   // Validade Data
@@ -177,7 +182,6 @@ export function ModalRegisterActivity({
             label="Valor da atividade"
             type="text"
             value={price && currencyMask(price)}
-            {...register("valueActivity")}
             onChange={(event) => setNewPrice(event)}
           />
           <TextField
@@ -188,24 +192,36 @@ export function ModalRegisterActivity({
             {...register("description")}
           />
           <div className="c-register-activity--input-container">
-            <TextField
-              color="warning"
-              {...register("gpActivity")}
-              sx={{ width: "100%" }}
-              select
-              label="Gerente de projetos"
-              value={gpActivity}
-              onChange={(event) => setGpActivity(event.target.value)}
+            <FormLabel
+              sx={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.2rem",
+              }}
             >
-              <MenuItem selected disabled value="">
-                GP - Selecione uma opção
-              </MenuItem>
-              {GPList?.data.map(({ name, surname, _id }: UserRegister) => (
-                <MenuItem key={_id} value={_id}>
-                  {`${name} ${surname}`}
+              Gerentes De Projetos (Selecione no mínimo uma opção)
+              <Select
+                color="warning"
+                variant="outlined"
+                {...register("gpActivity")}
+                sx={{ width: "100%" }} // maxWidth: "14rem"
+                value={gpActivity}
+                onChange={multipleSelectGPChange}
+                multiple
+              >
+                <MenuItem value="" disabled>
+                  Selecione no mínimo uma opção
                 </MenuItem>
-              ))}
-            </TextField>
+                {GPList?.data.map(({ name, surname, _id }: UserRegister) => (
+                  <MenuItem key={_id} value={_id}>
+                    {`${name} ${surname}`}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormLabel>
+          </div>
+          <div className="c-register-activity--input-container">
             <FormLabel
               sx={{
                 width: "100%",
@@ -253,7 +269,6 @@ export function ModalRegisterActivity({
                 variant="outlined"
                 required
                 value={chosenDay}
-                {...register("activityValidity")}
                 onChange={setDay}
                 sx={{
                   marginRight: "2rem",

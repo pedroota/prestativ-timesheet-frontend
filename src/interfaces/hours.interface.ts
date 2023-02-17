@@ -7,31 +7,37 @@ export interface Hours {
     _id: string;
     name: string;
     valueClient: number;
-    gpClient: {
-      _id: string;
-      name: string;
-      surname: string;
-    };
+    gpClient: [
+      {
+        _id: string;
+        name: string;
+        surname: string;
+      }
+    ];
   };
   relProject: {
     _id: string;
     title: string;
     valueProject: number;
-    gpProject: {
-      _id: string;
-      name: string;
-      surname: string;
-    };
+    gpProject: [
+      {
+        _id: string;
+        name: string;
+        surname: string;
+      }
+    ];
   };
   relActivity: {
     _id: string;
     title: string;
     valueActivity: number;
-    gpActivity: {
-      _id: string;
-      name: string;
-      surname: string;
-    };
+    gpActivity: [
+      {
+        _id: string;
+        name: string;
+        surname: string;
+      }
+    ];
     closedScope: boolean;
   };
   relUser: {
