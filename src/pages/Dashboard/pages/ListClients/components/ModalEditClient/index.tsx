@@ -142,8 +142,9 @@ export function ModalEditClient({
   );
 
   const setNewPrice = (value: string) => {
-    setPrice(value);
-    setPriceNumber(Number(value.slice(2)));
+    const stringValueWithoutDots = value.replaceAll(".", "");
+    setPrice(stringValueWithoutDots);
+    setPriceNumber(Number(stringValueWithoutDots.slice(2)));
   };
 
   useEffect(() => {

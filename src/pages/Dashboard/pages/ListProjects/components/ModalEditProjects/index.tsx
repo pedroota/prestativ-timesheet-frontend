@@ -34,8 +34,9 @@ export function ModalEditProject({
   const { data: clientsList } = useQuery(["clients"], () => getClients());
 
   const setNewPrice = (value: string) => {
-    setPrice(value);
-    setPriceNumber(Number(value.slice(2)));
+    const stringValueWithoutDots = value.replaceAll(".", "");
+    setPrice(stringValueWithoutDots);
+    setPriceNumber(Number(stringValueWithoutDots.slice(2)));
   };
 
   useQuery(["projects", currentProject], () => getProjectById(currentProject), {

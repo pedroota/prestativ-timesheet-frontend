@@ -151,8 +151,9 @@ export function ModalRegisterClient({
 
   const setNewPrice = (e: { target: { value: string } }) => {
     const stringValue = e.target.value;
-    setPrice(stringValue);
-    setPriceNumber(Number(stringValue.slice(2)));
+    const stringValueWithoutDots = stringValue.replaceAll(".", "");
+    setPrice(stringValueWithoutDots);
+    setPriceNumber(Number(stringValueWithoutDots.slice(2)));
   };
 
   return (
