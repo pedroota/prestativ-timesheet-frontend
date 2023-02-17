@@ -171,7 +171,6 @@ export function ModalRegisterActivity({
             label="Valor da atividade"
             type="text"
             value={price && currencyMask(price)}
-            {...register("valueActivity")}
             onChange={(event) => setNewPrice(event)}
           />
           <TextField

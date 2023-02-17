@@ -249,8 +249,8 @@ export function ModalRegisterHours({
               <MenuItem value="" disabled>
                 Selecione uma opção
               </MenuItem>
-              {activeActivities?.data.activity &&
-                activeActivities?.data.activity.map(
+              {activeActivities?.data &&
+                activeActivities?.data.map(
                   ({ _id, title }: ActivityModalReturnProps) => (
                     <MenuItem value={_id} key={_id}>
                       {title}
