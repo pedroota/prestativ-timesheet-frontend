@@ -12,6 +12,8 @@ import { Projects } from "interfaces/projects.interface";
 import { useForm } from "react-hook-form";
 import { getUserByRole } from "services/auth.service";
 import { getClients } from "services/clients.service";
+import FormLabel from "@mui/material/FormLabel";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 interface ModalRegisterProjectProps {
   isOpen: boolean;
@@ -25,7 +27,7 @@ export function ModalRegisterProject({
   const [nameClient, setNameClient] = useState("");
   const [price, setPrice] = useState("");
   const [priceNumber, setPriceNumber] = useState(0);
-  const [gpProject, setGpProject] = useState("");
+  const [gpProject, setGpProject] = useState<string[]>([]);
   const { data: clientList } = useQuery([], () => getClients());
   const { data: GPList } = useQuery(["users-role", "Gerente de Projetos"], () =>
     getUserByRole("gerenteprojetos")
@@ -78,6 +80,16 @@ export function ModalRegisterProject({
     setPriceNumber(Number(stringValueWithoutDots.slice(2)));
   };
 
+  const multipleSelectGPChange = (
+    event: SelectChangeEvent<typeof gpProject>
+  ) => {
+    setGpProject(
+      typeof event.target.value === "string"
+        ? event.target.value.split(",")
+        : event.target.value
+    );
+  };
+
   return (
     <Modal isOpen={isOpen} setIsOpen={setIsOpen} title="Cadastrar projeto">
       <Permission roles={["CADASTRO_PROJETO"]}>
@@ -112,21 +124,36 @@ export function ModalRegisterProject({
             {...register("valueProject")}
             onChange={(event) => setNewPrice(event)}
           />
-          <TextField
-            color="warning"
-            {...register("gpProject")}
-            label="Gerente de Projetos"
-            select
-            value={gpProject}
-            onChange={(event) => setGpProject(event.target.value)}
-          >
-            <MenuItem value="">Selecione uma opção</MenuItem>
-            {GPList?.data.map(({ name, surname, _id }: UserRegister) => (
-              <MenuItem value={_id} key={_id}>
-                {`${name} ${surname}`}
-              </MenuItem>
-            ))}
-          </TextField>
+          <div className="c-register-activity--input-container">
+            <FormLabel
+              sx={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.2rem",
+              }}
+            >
+              Gerentes De Projetos (Selecione no mínimo uma opção)
+              <Select
+                color="warning"
+                variant="outlined"
+                {...register("gpProject")}
+                sx={{ width: "100%" }} // maxWidth: "14rem"
+                value={gpProject}
+                onChange={multipleSelectGPChange}
+                multiple
+              >
+                <MenuItem value="" disabled>
+                  Selecione no mínimo uma opção
+                </MenuItem>
+                {GPList?.data.map(({ name, surname, _id }: UserRegister) => (
+                  <MenuItem value={_id} key={_id}>
+                    {`${name} ${surname}`}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormLabel>
+          </div>
           <TextField
             label="Descrição do Projeto"
             {...register("description")}

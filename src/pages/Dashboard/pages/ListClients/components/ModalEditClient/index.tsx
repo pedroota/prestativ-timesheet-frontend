@@ -19,6 +19,8 @@ import cep from "cep-promise";
 import { Permission } from "components/Permission";
 import { currencyMask } from "utils/masks";
 import { toast } from "react-toastify";
+import FormLabel from "@mui/material/FormLabel";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 interface ModalEditUserProps {
   isOpen: boolean;
@@ -33,7 +35,7 @@ export function ModalEditClient({
 }: ModalEditUserProps) {
   const [price, setPrice] = useState("");
   const [priceNumber, setPriceNumber] = useState(0);
-  const [gpClient, setGpClient] = useState("");
+  const [gpClient, setGpClient] = useState<string[]>([]);
   const [valueCep, setValueCep] = useState("");
   const { data } = useQuery(
     ["clients", currentClient],
@@ -157,6 +159,16 @@ export function ModalEditClient({
       });
     }
   }, [valueCep]);
+
+  const multipleSelectGPChange = (
+    event: SelectChangeEvent<typeof gpClient>
+  ) => {
+    setGpClient(
+      typeof event.target.value === "string"
+        ? event.target.value.split(",")
+        : event.target.value
+    );
+  };
 
   return (
     <Permission roles={["EDITAR_CLIENTE"]}>
@@ -328,21 +340,36 @@ export function ModalEditClient({
                 InputLabelProps={{ shrink: true }}
                 onChange={(event) => setNewPrice(event.target.value)}
               />
-              <TextField
-                color="warning"
-                {...register("gpClient")}
-                label="Gerente de Projetos"
-                select
-                value={gpClient}
-                onChange={(event) => setGpClient(event.target.value)}
+            </div>
+            <div className="c-register-activity--input-container">
+              <FormLabel
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.2rem",
+                }}
               >
-                <MenuItem value="">Selecione uma opção</MenuItem>
-                {listGps?.data.map(({ name, surname, _id }: UserRegister) => (
-                  <MenuItem value={_id} key={_id}>
-                    {`${name} ${surname}`}
+                Gerentes De Projetos (Selecione no mínimo uma opção)
+                <Select
+                  color="warning"
+                  variant="outlined"
+                  {...register("gpClient")}
+                  sx={{ width: "100%" }} // maxWidth: "14rem"
+                  value={gpClient}
+                  onChange={multipleSelectGPChange}
+                  multiple
+                >
+                  <MenuItem value="" disabled>
+                    Selecione no mínimo uma opção
                   </MenuItem>
-                ))}
-              </TextField>
+                  {listGps?.data.map(({ name, surname, _id }: UserRegister) => (
+                    <MenuItem value={_id} key={_id}>
+                      {`${name} ${surname}`}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormLabel>
             </div>
 
             <Button

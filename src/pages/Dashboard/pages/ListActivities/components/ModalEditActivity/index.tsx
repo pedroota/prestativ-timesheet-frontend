@@ -71,7 +71,7 @@ export function ModalEditActivity({
   const [project, setProject] = useState("");
   const [dateField, setDateField] = useState("");
   const [timeField, setTimeField] = useState("");
-  const [gpActivity, setGpActivity] = useState("");
+  const [gpActivity, setGpActivity] = useState<string[]>([]);
   const queryClient = useQueryClient();
 
   const setNewPrice = (e: { target: { value: string } }) => {
@@ -138,6 +138,16 @@ export function ModalEditActivity({
     event: SelectChangeEvent<typeof multipleSelect>
   ) => {
     setMultipleSelect(
+      typeof event.target.value === "string"
+        ? event.target.value.split(",")
+        : event.target.value
+    );
+  };
+
+  const multipleSelectGPChange = (
+    event: SelectChangeEvent<typeof gpActivity>
+  ) => {
+    setGpActivity(
       typeof event.target.value === "string"
         ? event.target.value.split(",")
         : event.target.value
@@ -215,16 +225,19 @@ export function ModalEditActivity({
                   gap: "0.2rem",
                 }}
               >
-                Gerente-Projetos
-                <TextField
+                Gerentes De Projetos (Selecione no mínimo uma opção)
+                <Select
                   color="warning"
-                  select
+                  variant="outlined"
                   {...register("gpActivity")}
-                  sx={{ width: "100%" }}
+                  sx={{ width: "100%" }} // maxWidth: "14rem"
                   value={gpActivity}
-                  onChange={(event) => setGpActivity(event.target.value)}
+                  onChange={multipleSelectGPChange}
+                  multiple
                 >
-                  <MenuItem value="">Selecione uma opção</MenuItem>
+                  <MenuItem value="" disabled>
+                    Selecione no mínimo uma opção
+                  </MenuItem>
                   {listGps?.data.map(
                     ({ name, surname, _id }: UserRegister, index: number) => (
                       <MenuItem key={index} value={_id}>
@@ -232,9 +245,10 @@ export function ModalEditActivity({
                       </MenuItem>
                     )
                   )}
-                </TextField>
+                </Select>
               </FormLabel>
-
+            </div>
+            <div className="c-register-activity--input-container">
               <FormLabel
                 sx={{
                   width: "100%",
