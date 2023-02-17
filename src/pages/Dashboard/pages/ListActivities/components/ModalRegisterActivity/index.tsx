@@ -22,6 +22,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserByRole } from "services/auth.service";
 import { useForm } from "react-hook-form";
 import { getProjects } from "services/project.service";
+import { generateTimestampWithDateAndTime } from "utils/timeControl";
 
 interface ModalRegisterActivityProps {
   isOpen: boolean;
@@ -54,14 +55,7 @@ export function ModalRegisterActivity({
   const { register, handleSubmit, reset } = useForm();
 
   const { mutate, isLoading } = useMutation(
-    ({
-      title,
-      project,
-      gpActivity,
-      description,
-      users,
-      activityValidity,
-    }: RegisterActivity) =>
+    ({ title, project, gpActivity, description, users }: RegisterActivity) =>
       createActivities({
         title,
         project,
@@ -70,7 +64,7 @@ export function ModalRegisterActivity({
         description,
         users,
         closedScope: fieldClosedScope,
-        activityValidity,
+        activityValidity: generateTimestampWithDateAndTime(chosenDay, "00:00"),
       }),
 
     {
@@ -96,7 +90,7 @@ export function ModalRegisterActivity({
   );
 
   const onSubmit = handleSubmit(
-    ({ title, project, gpActivity, description, users, activityValidity }) => {
+    ({ title, project, gpActivity, description, users }) => {
       mutate({
         title,
         project,
@@ -105,7 +99,7 @@ export function ModalRegisterActivity({
         description,
         users,
         closedScope: fieldClosedScope,
-        activityValidity,
+        activityValidity: generateTimestampWithDateAndTime(chosenDay, "00:00"),
       });
     }
   );
@@ -253,7 +247,6 @@ export function ModalRegisterActivity({
                 variant="outlined"
                 required
                 value={chosenDay}
-                {...register("activityValidity")}
                 onChange={setDay}
                 sx={{
                   marginRight: "2rem",
