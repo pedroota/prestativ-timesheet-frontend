@@ -5,11 +5,13 @@ export interface Projects {
     name: string;
   };
   valueProject: number;
-  gpProject: {
-    _id: string;
-    name: string;
-    surname: string;
-  };
+  gpProject: [
+    {
+      _id: string;
+      name: string;
+      surname: string;
+    }
+  ];
   description: string;
 }
 
@@ -21,11 +23,13 @@ export interface ProjectsInfo {
     name: string;
   };
   valueProject: number;
-  gpProject: {
-    _id: string;
-    name: string;
-    surname: string;
-  };
+  gpProject: [
+    {
+      _id: string;
+      name: string;
+      surname: string;
+    }
+  ];
   description: string;
 }
 export interface RegisterProject {
@@ -33,10 +37,12 @@ export interface RegisterProject {
   title: string;
   idClient: string;
   valueProject: number;
-  gpProject: {
-    _id: string;
-    name: string;
-    surname: string;
-  };
+  gpProject: [
+    {
+      _id: string;
+      name: string;
+      surname: string;
+    }
+  ];
   description: string;
 }

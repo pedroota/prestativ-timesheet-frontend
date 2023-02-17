@@ -205,9 +205,19 @@ export function ListActivities() {
                                   : "Sem Valor"}
                               </StyledTableCell>
                               <StyledTableCell align="center">
-                                {gpActivity
-                                  ? `${gpActivity?.name} ${gpActivity?.surname}`
-                                  : "nenhum"}
+                                {gpActivity.length ? (
+                                  gpActivity.map(
+                                    ({ name, surname }: ConsultantUsers) => (
+                                      <Chip
+                                        key={name}
+                                        label={`${name} ${surname}`}
+                                        sx={{ margin: "0.25rem" }}
+                                      />
+                                    )
+                                  )
+                                ) : (
+                                  <p>Nenhum usuário foi vinculado</p>
+                                )}
                               </StyledTableCell>
                               <StyledTableCell align="center">
                                 {description}

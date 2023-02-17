@@ -23,6 +23,7 @@ import { StyledTableRow } from "components/StyledTableRow";
 import { Permission } from "components/Permission";
 import { ModalRegisterClient } from "./components/ModalRegisterClient";
 import { ModalDeleteClient } from "./components/ModalDeleteClient";
+import Chip from "@mui/material/Chip";
 
 export function ListClients() {
   const [isAddingClient, setIsAddingClient] = useState(false);
@@ -151,7 +152,17 @@ export function ListClients() {
                                 {formatCurrency(valueClient)}
                               </StyledTableCell>
                               <StyledTableCell align="center">
-                                {`${gpClient.name} ${gpClient.surname}`}
+                                {gpClient.length ? (
+                                  gpClient.map(({ name, surname }) => (
+                                    <Chip
+                                      key={name}
+                                      label={`${name} ${surname}`}
+                                      sx={{ margin: "0.25rem" }}
+                                    />
+                                  ))
+                                ) : (
+                                  <p>Nenhum usuário foi vinculado</p>
+                                )}
                               </StyledTableCell>
                               <Permission
                                 roles={["EDITAR_CLIENTE" || "DELETAR_CLIENTE"]}
