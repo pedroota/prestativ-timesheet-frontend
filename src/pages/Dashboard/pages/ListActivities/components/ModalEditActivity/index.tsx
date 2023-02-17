@@ -57,6 +57,12 @@ export function ModalEditActivity({
           data.activity.users.map((element: UserInfo) => {
             return element._id;
           });
+        const gps: string[] =
+          data.activity.gpActivity &&
+          data.activity.gpActivity.map((element: UserInfo) => {
+            return element._id;
+          });
+        setGpActivity(gps);
         setMultipleSelect(consultants);
         setProject(data.activity.project);
         setPrice(`${data.activity.valueActivity}`);
@@ -238,13 +244,11 @@ export function ModalEditActivity({
                   <MenuItem value="" disabled>
                     Selecione no mínimo uma opção
                   </MenuItem>
-                  {listGps?.data.map(
-                    ({ name, surname, _id }: UserRegister, index: number) => (
-                      <MenuItem key={index} value={_id}>
-                        {`${name} ${surname}`}
-                      </MenuItem>
-                    )
-                  )}
+                  {listGps?.data.map(({ name, surname, _id }: UserRegister) => (
+                    <MenuItem key={_id} value={_id}>
+                      {`${name} ${surname}`}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormLabel>
             </div>

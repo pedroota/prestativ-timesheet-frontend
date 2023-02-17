@@ -11,7 +11,7 @@ import { Modal } from "components/ModalGeneral";
 import { ClientsInfo } from "interfaces/clients.interface";
 import { currencyMask } from "utils/masks";
 import { getUserByRole } from "services/auth.service";
-import { UserRegister } from "interfaces/users.interface";
+import { UserInfo, UserRegister } from "interfaces/users.interface";
 import FormLabel from "@mui/material/FormLabel";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 
@@ -49,6 +49,12 @@ export function ModalEditProject({
       data.project.description &&
         setProjectDescription(data.project.description);
       reset(data.project);
+      const gps: string[] =
+        data.project.gpProject &&
+        data.project.gpProject.map((element: UserInfo) => {
+          return element._id;
+        });
+      setGpProject(gps);
     },
   });
   const { data: listGps } = useQuery(["users-gp", "Gerente de Projetos"], () =>

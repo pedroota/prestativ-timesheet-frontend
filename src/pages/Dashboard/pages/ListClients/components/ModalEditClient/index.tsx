@@ -13,7 +13,7 @@ import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserByRole } from "services/auth.service";
 import { Clients, RegisterClients } from "interfaces/clients.interface";
-import { UserRegister } from "interfaces/users.interface";
+import { UserInfo, UserRegister } from "interfaces/users.interface";
 import { getClientById, updateClient } from "services/clients.service";
 import cep from "cep-promise";
 import { Permission } from "components/Permission";
@@ -44,6 +44,12 @@ export function ModalEditClient({
       onSuccess: ({ data }) => {
         data.client.valueClient && setPrice(`${data.client.valueClient}`);
         reset(data.client);
+        const gps: string[] =
+          data.client.gpClient &&
+          data.client.gpClient.map((element: UserInfo) => {
+            return element._id;
+          });
+        setGpClient(gps);
       },
     }
   );
