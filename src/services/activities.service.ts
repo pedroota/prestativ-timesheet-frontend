@@ -27,6 +27,7 @@ export const createActivities = async ({
   description,
   users,
   closedScope,
+  activityValidity,
 }: RegisterActivity) => {
   const result = await Api.post("/activities", {
     title,
@@ -36,6 +37,7 @@ export const createActivities = async ({
     description,
     users,
     closedScope,
+    activityValidity,
   });
 
   return result;
