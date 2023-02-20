@@ -98,8 +98,18 @@ export function ModalRegisterHours({
       const maxDaysCanRelease = 4; // Periodo máximo para lançar horas - editando essa variável, o sistema irá permitir que datas mais antigas sejam possiveis lançar
       const daysInMiliseconds = maxDaysCanRelease * 1000 * 60 * 60 * 24;
       const today = Date.now();
+      const todayDate = new Date();
+      const todayDay = todayDate.getDate();
+      const todayMonth = todayDate.getMonth() + 1;
+      const todayYear = todayDate.getFullYear();
+      const todayMaxRelease = generateTimestampWithDateAndTime(
+        `${todayYear}-${todayMonth < 10 ? `0${todayMonth}` : todayMonth}-${
+          todayDay < 10 ? `0${todayDay}` : todayDay
+        }`,
+        "23:59"
+      );
       const adjustment = 0; // Presets the adjusment property to 0, just ADMs can change it
-      if (initial > today + daysInMiliseconds / maxDaysCanRelease) {
+      if (final > todayMaxRelease) {
         toast.error("A data informada ainda não está disponível");
         return;
       }
