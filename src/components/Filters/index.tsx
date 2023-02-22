@@ -87,8 +87,8 @@ export function Filters({ receiveDataURI }: FiltersProps) {
             onChange={(event) => setSelectedClient(event.target.value)}
           >
             <MenuItem value="">Selecione uma opção</MenuItem>
-            {clients?.data.map(({ code, name, _id }: ClientsInfo) => (
-              <MenuItem key={code} value={_id}>
+            {clients?.data.map(({ name, _id }: ClientsInfo) => (
+              <MenuItem key={_id} value={_id}>
                 {name}
               </MenuItem>
             ))}
