@@ -77,6 +77,13 @@ function generateMilisecondsWithTime(minutes: number) {
   return minutes * 60 * 60 * 1000;
 }
 
+function generateMilisecondsWithHoursAndMinutes(timeString: string) {
+  const timeFormated = timeString.split(":");
+  const minutesOfHours = Number(timeFormated[0]) * 60;
+  const minutes = minutesOfHours + Number(timeFormated[1]);
+  return minutes * 60 * 60 * 1000;
+}
+
 function generateTotalHoursWithAdjustment(
   initial: number,
   final: number,
@@ -103,6 +110,7 @@ export {
   generateTotalHours,
   generateAdjustmentWithNumberInMilliseconds,
   generateMilisecondsWithTime,
+  generateMilisecondsWithHoursAndMinutes,
   generateTotalHoursWithAdjustment,
   convertDate,
 };
