@@ -88,7 +88,6 @@ export function ListClients() {
                         <TableRow className="c-table--reset-head">
                           <StyledTableCell align="center">
                             Razão Social
-                            {/* campo alterado - delete esse comentário */}
                           </StyledTableCell>
                           <StyledTableCell align="center">
                             Nome Fantasia
