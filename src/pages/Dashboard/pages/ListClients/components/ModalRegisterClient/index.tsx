@@ -56,7 +56,7 @@ export function ModalRegisterClient({
 
   const { mutate, isLoading } = useMutation(
     ({
-      code,
+      corporateName,
       name,
       cnpj,
       cep,
@@ -73,7 +73,7 @@ export function ModalRegisterClient({
       gpClient,
     }: Clients) =>
       createClients({
-        code,
+        corporateName,
         name,
         cnpj,
         cep,
@@ -110,7 +110,7 @@ export function ModalRegisterClient({
 
   const onSubmit = handleSubmit(
     ({
-      code,
+      corporateName,
       name,
       cnpj,
       cep,
@@ -131,7 +131,7 @@ export function ModalRegisterClient({
         return toast.error("O CNPJ digitado é inválido", { autoClose: 1500 });
       }
       mutate({
-        code,
+        corporateName,
         name,
         cnpj,
         cep,
@@ -176,14 +176,14 @@ export function ModalRegisterClient({
           <TextField
             required
             color="warning"
-            label="Código do cliente"
+            label="Razão Social"
             type="text"
-            {...register("code")}
+            {...register("corporateName")}
           />
           <TextField
             required
             color="warning"
-            label="Nome / Razão Social"
+            label="Nome Fantasia"
             type="text"
             {...register("name")}
           />

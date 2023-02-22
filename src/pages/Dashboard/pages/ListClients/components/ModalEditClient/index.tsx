@@ -56,7 +56,7 @@ export function ModalEditClient({
   const queryClient = useQueryClient();
   const { mutate, isLoading } = useMutation(
     ({
-      code,
+      corporateName,
       name,
       cnpj,
       cep,
@@ -73,7 +73,7 @@ export function ModalEditClient({
       gpClient,
     }: RegisterClients) =>
       updateClient(currentClient, {
-        code,
+        corporateName,
         name,
         cnpj,
         cep,
@@ -111,7 +111,7 @@ export function ModalEditClient({
 
   const onSubmit = handleSubmit(
     ({
-      code,
+      corporateName,
       name,
       cnpj,
       street,
@@ -128,7 +128,7 @@ export function ModalEditClient({
       gpClient,
     }) => {
       mutate({
-        code,
+        corporateName,
         name,
         cnpj,
         cep: valueCep,
@@ -201,15 +201,15 @@ export function ModalEditClient({
             <TextField
               required
               color="warning"
-              label="Código do cliente"
+              label="Razão Social"
               type="text"
               InputLabelProps={{ shrink: true }}
-              {...register("code")}
+              {...register("corporateName")}
             />
             <TextField
               required
               color="warning"
-              label="Nome / Razão Social"
+              label="Nome Fantasia"
               type="text"
               InputLabelProps={{ shrink: true }}
               {...register("name")}

@@ -1,5 +1,5 @@
 export interface Clients {
-  code: string;
+  corporateName: string;
   name: string;
   cnpj: string;
   cep: string;
@@ -24,7 +24,7 @@ export interface Clients {
 }
 
 export interface RegisterClients {
-  code: string;
+  corporateName: string;
   name: string;
   cnpj: string;
   cep: string;
@@ -50,7 +50,7 @@ export interface RegisterClients {
 
 export interface ClientsInfo {
   _id: string;
-  code: string;
+  corporateName: string;
   name: string;
   cnpj: string;
   cep: string;

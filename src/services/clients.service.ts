@@ -8,7 +8,7 @@ export const getClients = async () => {
 };
 
 export const createClients = async ({
-  code,
+  corporateName,
   name,
   cnpj,
   cep,
@@ -26,7 +26,7 @@ export const createClients = async ({
   gpClient,
 }: RegisterClients) => {
   const result = await Api.post("/clients", {
-    code,
+    corporateName,
     name,
     cnpj,
     cep,
@@ -50,7 +50,7 @@ export const createClients = async ({
 export const updateClient = async (
   id: string,
   {
-    code,
+    corporateName,
     name,
     cnpj,
     cep,
@@ -69,7 +69,7 @@ export const updateClient = async (
   }: RegisterClients
 ) => {
   const results = await Api.put(`/clients/${id}`, {
-    code,
+    corporateName,
     name,
     cnpj,
     cep,
