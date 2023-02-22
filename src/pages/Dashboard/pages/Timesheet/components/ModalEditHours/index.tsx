@@ -190,7 +190,7 @@ export function ModalEditHours({
                       gap: "0.2rem",
                     }}
                   >
-                    Ajuste em Minutos
+                    Ajuste
                     <TextField
                       type="time"
                       color="warning"
