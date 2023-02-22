@@ -110,8 +110,8 @@ export function ModalRegisterProject({
             onChange={(event) => setNameClient(event.target.value)}
           >
             <MenuItem value="">Selecione uma opção</MenuItem>
-            {clientList?.data.map(({ code, name, _id }: ClientsInfo) => (
-              <MenuItem key={code} value={_id}>
+            {clientList?.data.map(({ name, _id }: ClientsInfo) => (
+              <MenuItem key={_id} value={_id}>
                 {name}
               </MenuItem>
             ))}

@@ -86,7 +86,12 @@ export function ListClients() {
                     <Table aria-label="customized table">
                       <TableHead>
                         <TableRow className="c-table--reset-head">
-                          <StyledTableCell align="center">Nome</StyledTableCell>
+                          <StyledTableCell align="center">
+                            Razão Social
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            Nome Fantasia
+                          </StyledTableCell>
                           <StyledTableCell align="center">CNPJ</StyledTableCell>
                           <StyledTableCell align="center">
                             Endereço
@@ -116,6 +121,7 @@ export function ListClients() {
                         {clients?.data.map(
                           ({
                             _id,
+                            corporateName,
                             name,
                             cnpj,
                             cep,
@@ -133,6 +139,9 @@ export function ListClients() {
                             gpClient,
                           }: ClientsInfo) => (
                             <StyledTableRow key={_id}>
+                              <StyledTableCell align="center">
+                                {corporateName}
+                              </StyledTableCell>
                               <StyledTableCell align="center">
                                 {name}
                               </StyledTableCell>
