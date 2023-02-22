@@ -24,7 +24,6 @@ import {
 import { UpdateHoursProps } from "interfaces/hours.interface";
 import { toast } from "react-toastify";
 import { useAuthStore } from "stores/userStore";
-import { getUserById } from "services/auth.service";
 
 interface ModalEditHoursProps {
   isOpen: boolean;
@@ -41,11 +40,11 @@ interface FormData {
   releasedCall: string;
 }
 
-interface ActivityModalReturnProps {
-  _id: string;
-  title: string;
-  activityValidity: number;
-}
+// interface ActivityModalReturnProps {
+//   _id: string;
+//   title: string;
+//   activityValidity: number;
+// }
 
 export function ModalEditHours({
   isOpen,
@@ -55,28 +54,27 @@ export function ModalEditHours({
   const queryClient = useQueryClient();
   const user = useAuthStore((state) => state.user);
   const [selectedActivity, setSelectedActivity] = useState("");
+  const [nameActivity, setNameActivity] = useState("");
   const { register, handleSubmit, setValue } = useForm<FormData>();
-  const { data } = useQuery(["users", user._id], () => getUserById(user._id));
 
   // Get current hour data
   useQuery(["hours", currentHour], () => getHoursById(currentHour), {
     onSuccess({ data }) {
-      setValue(
-        "initialDate",
+      setChosenDay(
         convertDate(generateDateWithTimestamp(data?.hours?.initial))
       );
-
       setValue("initialHour", generateTimeWithTimestamp(data?.hours?.initial));
       setValue("finalHour", generateTimeWithTimestamp(data?.hours?.final));
-      data.hours &&
-        data?.hours.adjustment !== 0 &&
-        setValue(
-          "adjustment",
-          Number(generateTimeWithTimestamp(data?.hours?.adjustment))
-        );
+      setValue(
+        "adjustment",
+        data?.hours?.adjustment
+          ? Number(generateTimeWithTimestamp(data?.hours?.adjustment))
+          : 0
+      );
       setValue("activityDesc", data?.hours?.activityDesc);
       setValue("releasedCall", data?.hours?.releasedCall);
-      setSelectedActivity(data.hours && data.hours.relActivity._id);
+      setSelectedActivity(data?.hours?.relActivity._id);
+      setNameActivity(data?.hours?.relActivity.title);
     },
     enabled: isOpen,
     staleTime: 5000000,
@@ -114,28 +112,14 @@ export function ModalEditHours({
   );
 
   const onSubmit = handleSubmit(
-    ({ activityDesc, adjustment, finalHour, initialDate, initialHour }) => {
-      const initial = generateTimestampWithDateAndTime(
-        initialDate,
-        initialHour
-      );
-      const final = generateTimestampWithDateAndTime(initialDate, finalHour);
+    ({ activityDesc, adjustment, finalHour, initialHour }) => {
+      const initial = generateTimestampWithDateAndTime(chosenDay, initialHour);
+      const final = generateTimestampWithDateAndTime(chosenDay, finalHour);
       if (initial > final) {
         toast.error("A hora final não pode ser anterior a hora inicial!");
         return;
       }
       const adjusted = generateMilisecondsWithTime(adjustment);
-      const maxDaysCanRelease = 4; // Periodo máximo para lançar horas - editando essa variável, o sistema irá permitir que datas mais antigas sejam possiveis lançar
-      const daysInMiliseconds = maxDaysCanRelease * 1000 * 60 * 60 * 24;
-      const today = Date.now();
-      if (initial > today + daysInMiliseconds / maxDaysCanRelease) {
-        toast.error("A data informada não é permitida");
-        return;
-      }
-      if (initial < today - daysInMiliseconds) {
-        toast.error("A data informada não é permitida");
-        return;
-      }
       mutate({
         initial,
         final,
@@ -151,8 +135,8 @@ export function ModalEditHours({
   // botão DIA DE HOJE
   const [chosenDay, setChosenDay] = useState("");
 
-  const setDay = (e: { target: { value: SetStateAction<string> } }) => {
-    setChosenDay(e.target.value);
+  const setDay = (value: SetStateAction<string>) => {
+    setChosenDay(value);
   };
 
   return (
@@ -198,10 +182,10 @@ export function ModalEditHours({
                       type="date"
                       color="warning"
                       variant="outlined"
+                      disabled
                       required
                       value={chosenDay}
-                      {...register("initialDate")}
-                      onChange={setDay}
+                      onChange={(event) => setDay(event.target.value)}
                     />
                   </FormLabel>
                 </Permission>
@@ -267,27 +251,22 @@ export function ModalEditHours({
             <Permission roles={["EDITAR_CAMPOS_HORAS_LANCADAS"]}>
               <TextField
                 required
+                contentEditable={false}
+                disabled={true}
                 color="warning"
                 variant="outlined"
                 label="Atividade"
                 InputLabelProps={{ shrink: true }}
-                value={selectedActivity}
-                select
-                onChange={(event) => setSelectedActivity(event.target.value)}
+                value={nameActivity}
+                defaultValue={selectedActivity}
               >
-                <MenuItem value="" disabled>
-                  Selecione uma opção
+                <MenuItem
+                  selected={true}
+                  value={selectedActivity}
+                  key={selectedActivity}
+                >
+                  {nameActivity}
                 </MenuItem>
-                {data?.data?.user?.activities
-                  .filter(
-                    (activity: ActivityModalReturnProps) =>
-                      activity?.activityValidity > Date.now()
-                  )
-                  .map((activity: ActivityModalReturnProps) => (
-                    <MenuItem value={activity._id} key={activity._id}>
-                      {activity.title}
-                    </MenuItem>
-                  ))}
               </TextField>
               <TextField
                 required
