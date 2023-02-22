@@ -258,19 +258,15 @@ export function Timesheet() {
                           <StyledTableCell align="center">Data</StyledTableCell>
                         </Permission>
                         <Permission roles={["DIA_DA_SEMANA"]}>
-                          <StyledTableCell align="center">
-                            Dia da Semana
-                          </StyledTableCell>
+                          <StyledTableCell align="center">Dia</StyledTableCell>
                         </Permission>
                         <Permission roles={["HORA_INICIAL"]}>
                           <StyledTableCell align="center">
-                            Hora Inicial
+                            Inicio
                           </StyledTableCell>
                         </Permission>
                         <Permission roles={["HORA_FINAL"]}>
-                          <StyledTableCell align="center">
-                            Hora Final
-                          </StyledTableCell>
+                          <StyledTableCell align="center">Fim</StyledTableCell>
                         </Permission>
                         <Permission roles={["TOTAL"]}>
                           <StyledTableCell align="center">
