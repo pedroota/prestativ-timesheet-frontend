@@ -219,6 +219,7 @@ export function ModalEditHours({
                     type="time"
                     color="warning"
                     variant="outlined"
+                    disabled
                     required
                     {...register("initialHour")}
                   />
@@ -236,6 +237,7 @@ export function ModalEditHours({
                     type="time"
                     color="warning"
                     variant="outlined"
+                    disabled
                     required
                     {...register("finalHour")}
                   />
