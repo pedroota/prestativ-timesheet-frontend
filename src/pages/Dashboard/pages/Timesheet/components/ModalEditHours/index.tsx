@@ -24,7 +24,6 @@ import {
 } from "utils/timeControl";
 import { UpdateHoursProps } from "interfaces/hours.interface";
 import { toast } from "react-toastify";
-import { useAuthStore } from "stores/userStore";
 
 interface ModalEditHoursProps {
   isOpen: boolean;
@@ -47,10 +46,10 @@ export function ModalEditHours({
   currentHour,
 }: ModalEditHoursProps) {
   const queryClient = useQueryClient();
-  const user = useAuthStore((state) => state.user);
   const [selectedActivity, setSelectedActivity] = useState("");
   const [nameActivity, setNameActivity] = useState("");
   const [adjustmentString, setAdjustmentString] = useState("");
+  const [actualUser, setActualUser] = useState("");
   const { register, handleSubmit, setValue } = useForm<FormData>();
 
   // Get current hour data
@@ -64,6 +63,7 @@ export function ModalEditHours({
       const adjustment = generateAdjustmentWithNumberInMilliseconds(
         data?.hours?.adjustment
       );
+      setActualUser(data?.hours?.relUser._id);
       setAdjustmentString(adjustment);
       setValue("activityDesc", data?.hours?.activityDesc);
       setValue("releasedCall", data?.hours?.releasedCall);
@@ -119,7 +119,7 @@ export function ModalEditHours({
       activityDesc,
       adjustment: adjusted,
       relActivity: selectedActivity,
-      relUser: user._id,
+      relUser: actualUser,
     });
     toast.success("Lançamento alterado com sucesso");
   });
