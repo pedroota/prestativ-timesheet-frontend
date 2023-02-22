@@ -19,7 +19,8 @@ import {
   generateTimeWithTimestamp,
   convertDate,
   generateTimestampWithDateAndTime,
-  generateMilisecondsWithTime,
+  generateAdjustmentWithNumberInMilliseconds,
+  generateMilisecondsWithHoursAndMinutes,
 } from "utils/timeControl";
 import { UpdateHoursProps } from "interfaces/hours.interface";
 import { toast } from "react-toastify";
@@ -40,12 +41,6 @@ interface FormData {
   releasedCall: string;
 }
 
-// interface ActivityModalReturnProps {
-//   _id: string;
-//   title: string;
-//   activityValidity: number;
-// }
-
 export function ModalEditHours({
   isOpen,
   setIsOpen,
@@ -55,6 +50,7 @@ export function ModalEditHours({
   const user = useAuthStore((state) => state.user);
   const [selectedActivity, setSelectedActivity] = useState("");
   const [nameActivity, setNameActivity] = useState("");
+  const [adjustmentString, setAdjustmentString] = useState("");
   const { register, handleSubmit, setValue } = useForm<FormData>();
 
   // Get current hour data
@@ -65,12 +61,10 @@ export function ModalEditHours({
       );
       setValue("initialHour", generateTimeWithTimestamp(data?.hours?.initial));
       setValue("finalHour", generateTimeWithTimestamp(data?.hours?.final));
-      setValue(
-        "adjustment",
+      const adjustment = generateAdjustmentWithNumberInMilliseconds(
         data?.hours?.adjustment
-          ? Number(generateTimeWithTimestamp(data?.hours?.adjustment))
-          : 0
       );
+      setAdjustmentString(adjustment);
       setValue("activityDesc", data?.hours?.activityDesc);
       setValue("releasedCall", data?.hours?.releasedCall);
       setSelectedActivity(data?.hours?.relActivity._id);
@@ -111,26 +105,24 @@ export function ModalEditHours({
     }
   );
 
-  const onSubmit = handleSubmit(
-    ({ activityDesc, adjustment, finalHour, initialHour }) => {
-      const initial = generateTimestampWithDateAndTime(chosenDay, initialHour);
-      const final = generateTimestampWithDateAndTime(chosenDay, finalHour);
-      if (initial > final) {
-        toast.error("A hora final não pode ser anterior a hora inicial!");
-        return;
-      }
-      const adjusted = generateMilisecondsWithTime(adjustment);
-      mutate({
-        initial,
-        final,
-        activityDesc,
-        adjustment: adjusted,
-        relActivity: selectedActivity,
-        relUser: user._id,
-      });
-      toast.success("Lançamento alterado com sucesso");
+  const onSubmit = handleSubmit(({ activityDesc, finalHour, initialHour }) => {
+    const initial = generateTimestampWithDateAndTime(chosenDay, initialHour);
+    const final = generateTimestampWithDateAndTime(chosenDay, finalHour);
+    if (initial > final) {
+      toast.error("A hora final não pode ser anterior a hora inicial!");
+      return;
     }
-  );
+    const adjusted = generateMilisecondsWithHoursAndMinutes(adjustmentString);
+    mutate({
+      initial,
+      final,
+      activityDesc,
+      adjustment: adjusted,
+      relActivity: selectedActivity,
+      relUser: user._id,
+    });
+    toast.success("Lançamento alterado com sucesso");
+  });
 
   // botão DIA DE HOJE
   const [chosenDay, setChosenDay] = useState("");
@@ -200,10 +192,13 @@ export function ModalEditHours({
                   >
                     Ajuste em Minutos
                     <TextField
-                      type="text"
+                      type="time"
                       color="warning"
                       variant="outlined"
-                      {...register("adjustment")}
+                      value={adjustmentString}
+                      onChange={(event) =>
+                        setAdjustmentString(event.target.value)
+                      }
                     />
                   </FormLabel>
                 </Permission>
