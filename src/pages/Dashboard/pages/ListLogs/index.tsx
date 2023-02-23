@@ -27,7 +27,7 @@ export function ListLogs() {
   return (
     <Permission roles={["VER_LOGS"]}>
       <Typography variant="h4" sx={{ marginBlock: "1.3rem" }}>
-        Listagem de Logs
+        Logs
       </Typography>
       {isLoading ? (
         <Box

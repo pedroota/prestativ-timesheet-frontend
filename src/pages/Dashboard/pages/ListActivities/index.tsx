@@ -109,7 +109,7 @@ export function ListActivities() {
         }}
       >
         <Typography variant="h4" sx={{ marginBlock: "1.3rem" }}>
-          Listagem de Atividades
+          Atividades
         </Typography>
         <Permission roles={["CADASTRO_ATIVIDADE"]}>
           <Button

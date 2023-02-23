@@ -1,45 +1,46 @@
+import Cookies from "js-cookie";
 import { useState } from "react";
+import Logo from "assets/logo.png";
+import MuiDrawer from "@mui/material/Drawer";
+import { Link, useNavigate } from "react-router-dom";
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
+import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import {
   Box,
-  Toolbar,
-  List,
   CssBaseline,
-  Typography,
   Divider,
+  List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Toolbar,
+  Typography,
 } from "@mui/material";
-import MuiDrawer from "@mui/material/Drawer";
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import Logo from "assets/logo.png";
-import { Link, useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
 
 // Icons
+import IconButton from "@mui/material/IconButton";
 import {
   AccessTime,
+  ChevronLeft,
+  ChevronRight,
   Dashboard,
-  LibraryBooks,
+  ExitToApp,
   Hail,
   History,
-  Work,
-  ExitToApp,
-  Public,
-  Group,
+  Menu,
+  Person,
+  PersonAdd,
   Settings,
+  Source,
+  Task,
 } from "@mui/icons-material";
+
+// Components
 import { HeaderUser } from "components/HeaderUser";
 import { Permission } from "components/Permission";
 
 const drawerWidth = 240;
-
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
   transition: theme.transitions.create("width", {
@@ -139,7 +140,7 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
               ...(open && { display: "none" }),
             }}
           >
-            <MenuIcon />
+            <Menu />
           </IconButton>
           <Box
             className="mobile"
@@ -161,11 +162,7 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
             Menu de Opções
           </Typography>
           <IconButton onClick={() => setOpen((prevState) => !prevState)}>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
+            {theme.direction === "rtl" ? <ChevronRight /> : <ChevronLeft />}
           </IconButton>
         </DrawerHeader>
         <Divider />
@@ -230,10 +227,10 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                         justifyContent: "center",
                       }}
                     >
-                      <Public />
+                      <Hail />
                     </ListItemIcon>
                     <ListItemText
-                      primary={"Ver Clientes"}
+                      primary={"Clientes"}
                       sx={{ opacity: open ? 1 : 0 }}
                     />
                   </ListItemButton>
@@ -257,10 +254,10 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                         justifyContent: "center",
                       }}
                     >
-                      <LibraryBooks />
+                      <Source />
                     </ListItemIcon>
                     <ListItemText
-                      primary={"Ver Projetos"}
+                      primary={"Projetos"}
                       sx={{ opacity: open ? 1 : 0 }}
                     />
                   </ListItemButton>
@@ -284,10 +281,10 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                         justifyContent: "center",
                       }}
                     >
-                      <Work />
+                      <Task />
                     </ListItemIcon>
                     <ListItemText
-                      primary={"Ver Atividades"}
+                      primary={"Atividades"}
                       sx={{ opacity: open ? 1 : 0 }}
                     />
                   </ListItemButton>
@@ -311,10 +308,10 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                         justifyContent: "center",
                       }}
                     >
-                      <Hail />
+                      <Person />
                     </ListItemIcon>
                     <ListItemText
-                      primary={"Ver Usuários"}
+                      primary={"Usuários"}
                       sx={{ opacity: open ? 1 : 0 }}
                     />
                   </ListItemButton>
@@ -341,7 +338,7 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                       <History />
                     </ListItemIcon>
                     <ListItemText
-                      primary={"Ver Logs"}
+                      primary={"Logs"}
                       sx={{ opacity: open ? 1 : 0 }}
                     />
                   </ListItemButton>
@@ -365,7 +362,7 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                         justifyContent: "center",
                       }}
                     >
-                      <Group />
+                      <PersonAdd />
                     </ListItemIcon>
                     <ListItemText
                       primary={"Perfis de Usuário"}
