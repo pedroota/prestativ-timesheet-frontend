@@ -29,7 +29,7 @@ export function UserProfiles() {
   const [isAddingRole, setIsAddingRole] = useState(false);
   const { data: roles } = useQuery(["roles"], () => getRoles());
   const { data: users } = useQuery(["users"], () => getAllUsers());
-  console.log(users);
+
   return (
     <Permission roles={["PERFIS_USUARIO"]}>
       <Box
