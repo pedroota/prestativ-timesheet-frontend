@@ -46,4 +46,13 @@ export const MaterialUISwitch = styled(Switch)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#8796A5" : "#aab4be",
     borderRadius: 20 / 2,
   },
+  "&::-webkit-scrollbar": {
+    width: 8,
+    height: 8,
+    backgroundColor: theme.palette.mode === "dark" ? "#1f1f1f" : "#f5f5f5",
+  },
+  "&::-webkit-scrollbar-thumb": {
+    borderRadius: 8,
+    backgroundColor: theme.palette.mode === "dark" ? "#5a5a5a" : "#9e9e9e",
+  },
 }));
