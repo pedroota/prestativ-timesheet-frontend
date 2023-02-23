@@ -105,11 +105,11 @@ export function UserProfiles() {
                         </StyledTableCell>
                         <StyledTableCell align="center">
                           {users?.data.filter(
-                            (user: { data: { role: { name: string } } }) =>
+                            (user: { role: { name: string } }) =>
                               user.role.name === name
                           ).length ? (
                             users?.data.filter(
-                              (user: { data: { role: { name: string } } }) =>
+                              (user: { role: { name: string } }) =>
                                 user.role.name === name
                             ).length === 1 ? (
                               <p>Este perfil possui 1 usuário vinculado</p>
@@ -118,9 +118,8 @@ export function UserProfiles() {
                                 Este perfil possui{" "}
                                 {
                                   users?.data.filter(
-                                    (user: {
-                                      data: { role: { name: string } };
-                                    }) => user.role.name === name
+                                    (user: { role: { name: string } }) =>
+                                      user.role.name === name
                                   ).length
                                 }{" "}
                                 usuários vinculados
