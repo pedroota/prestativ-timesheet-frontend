@@ -134,17 +134,21 @@ export function Timesheet() {
             ).toString()
           ),
           GerenteProjetos: relActivity.gpActivity.length
-            ? relActivity.gpActivity.map(
-                ({ name, surname }) => `${name} ${surname} `
+            ? relActivity.gpActivity
+                .map(({ name, surname }) => `${name} ${surname}`)
+                .join(", ")
+            : relProject.gpProject && relProject.gpProject.length
+            ? relProject.gpProject.reduce(
+                (accumulator, { name, surname }) =>
+                  `${accumulator}${
+                    accumulator.length > 0 ? ", " : ""
+                  }${name} ${surname}`,
+                ""
               )
-            : relProject.gpProject.length
-            ? relProject.gpProject.map(
-                ({ name, surname }) => `${name} ${surname}`
-              )
-            : relClient.gpClient.length
-            ? relClient.gpClient.map(
-                ({ name, surname }) => `${name} ${surname}`
-              )
+            : relClient.gpClient && relClient.gpClient.length
+            ? relClient.gpClient
+                .map(({ name, surname }) => `${name} ${surname}`)
+                .join(", ")
             : "Nenhum usuário foi vinculado",
           Consultor: `${relUser?.name} ${relUser?.surname}`,
           EscopoFechado: relActivity?.closedScope ? "sim" : "não",
