@@ -96,7 +96,7 @@ export function ModalRegisterClient({
         setValueCep("");
         setValues({ cnpj: "" });
         setPrice("");
-        // setGpClient("");
+        setGpClient([]);
         toast.success("Cadastro de cliente efetuado com sucesso!");
         setIsOpen((prevState) => !prevState);
       },
