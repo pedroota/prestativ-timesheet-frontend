@@ -71,11 +71,11 @@ export function ModalRegisterActivity({
       onSuccess: () => {
         reset();
         setFieldClosedScope(false);
-        // setGpActivity("");
         setNameProject("");
         setPrice("");
         setPriceNumber(0);
         setMultipleSelect([]);
+        setGpActivity([]);
         setChosenDay(oneMonthLater);
         toast.success("Atividade criada com sucesso.");
         setIsOpen((prevState) => !prevState);
