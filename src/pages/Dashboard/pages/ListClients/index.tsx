@@ -51,7 +51,7 @@ export function ListClients() {
         }}
       >
         <Typography variant="h4" sx={{ marginBlock: "1.3rem" }}>
-          Listagem de Clientes
+          Clientes
         </Typography>
 
         <Permission roles={["CADASTRO_CLIENTE"]}>

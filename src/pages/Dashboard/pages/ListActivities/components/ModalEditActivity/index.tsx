@@ -64,7 +64,7 @@ export function ModalEditActivity({
           });
         setGpActivity(gps);
         setMultipleSelect(consultants);
-        setProject(data.activity.project);
+        setProject(data.activity.project._id);
         setPrice(`${data.activity.valueActivity}`);
         setFieldClosedScope(data.activity.closedScope);
       },
@@ -137,6 +137,7 @@ export function ModalEditActivity({
         closedScope,
       });
       reset();
+      setGpActivity([]);
     }
   );
 

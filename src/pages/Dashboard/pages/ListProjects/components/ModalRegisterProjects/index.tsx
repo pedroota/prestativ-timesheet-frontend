@@ -48,7 +48,7 @@ export function ModalRegisterProject({
       onSuccess: () => {
         reset();
         setPrice("");
-        // setGpProject("");
+        setGpProject([]);
         setNameClient("");
         toast.success("Projeto criado com sucesso.");
         setIsOpen((prevState) => !prevState);

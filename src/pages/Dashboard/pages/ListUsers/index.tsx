@@ -40,7 +40,7 @@ export function ListUsers() {
         }}
       >
         <Typography variant="h4" sx={{ marginBlock: "1.3rem" }}>
-          Listagem de Usuários
+          Usuários
         </Typography>
         <Permission roles={["CADASTRO_USUARIO"]}>
           <Button

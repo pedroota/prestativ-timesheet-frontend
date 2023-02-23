@@ -50,7 +50,7 @@ export function ListProjects() {
         }}
       >
         <Typography variant="h4" sx={{ marginBlock: "1.3rem" }}>
-          Listagem de Projetos
+          Projetos
         </Typography>
         <Permission roles={["CADASTRO_PROJETO"]}>
           <Button

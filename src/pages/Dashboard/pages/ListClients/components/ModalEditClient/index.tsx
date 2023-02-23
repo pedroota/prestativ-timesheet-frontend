@@ -17,7 +17,7 @@ import { UserInfo, UserRegister } from "interfaces/users.interface";
 import { getClientById, updateClient } from "services/clients.service";
 import cep from "cep-promise";
 import { Permission } from "components/Permission";
-import { currencyMask } from "utils/masks";
+import { cepMask, currencyMask } from "utils/masks";
 import { toast } from "react-toastify";
 import FormLabel from "@mui/material/FormLabel";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
@@ -37,6 +37,7 @@ export function ModalEditClient({
   const [priceNumber, setPriceNumber] = useState(0);
   const [gpClient, setGpClient] = useState<string[]>([]);
   const [valueCep, setValueCep] = useState("");
+
   const { data } = useQuery(
     ["clients", currentClient],
     () => getClientById(currentClient),
@@ -50,6 +51,8 @@ export function ModalEditClient({
             return element._id;
           });
         setGpClient(gps);
+        setValueCep(data.client.cep);
+        setFormattedCep(cepMask(data.client.cep));
       },
     }
   );
@@ -93,6 +96,7 @@ export function ModalEditClient({
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["clients"]);
+        reset();
         setIsOpen((prevState) => !prevState);
         toast.success("Cliente foi atualizado com sucesso!");
       },
@@ -106,6 +110,15 @@ export function ModalEditClient({
   const { data: listGps } = useQuery(["users-gp", "gpClient"], () =>
     getUserByRole("gerenteprojetos")
   );
+  const [formattedCep, setFormattedCep] = useState<string>(
+    data?.data.client && cepMask(data?.data.client.cep)
+  );
+
+  const handleCepChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setValueCep(value);
+    setFormattedCep(cepMask(value));
+  };
 
   const { register, reset, handleSubmit, setValue } = useForm<Clients>();
 
@@ -225,14 +238,14 @@ export function ModalEditClient({
             <p>Endereço do cliente</p>
             <div className="c-register-client--input-container">
               <TextField
-                value={data?.data.client && data?.data.client.cep}
+                value={formattedCep}
                 required
                 color="warning"
                 sx={{ width: "100%" }}
                 label="CEP"
                 InputLabelProps={{ shrink: true }}
                 type="text"
-                onChange={(event) => setValueCep(event.target.value)}
+                onChange={handleCepChange}
               />
               <TextField
                 required
