@@ -120,11 +120,12 @@
     - Data de Criação;
     - Data de Edição;
 19. Validade da Atividade:
-   - Botão para desabilitar a atividade e reativar novamente (auto-declara validade para 1 mes depois)
-   - ao editar deve ser possível declarar validade específica
-   - caso a validade esteja vencida, com uma data que já passou não é mais possivel lançar horas nela
-   - usuarios com o campo cadastral nulo poderão lançar em TODAS as atividades ativas caso tenham a permissão
-   - usuarios com o campo cadastral consultor verão só as atividades vinculadas a eles e que estiverem ativas;
+
+- Botão para desabilitar a atividade e reativar novamente (auto-declara validade para 1 mes depois)
+- ao editar deve ser possível declarar validade específica
+- caso a validade esteja vencida, com uma data que já passou não é mais possivel lançar horas nela
+- usuarios com o campo cadastral nulo poderão lançar em TODAS as atividades ativas caso tenham a permissão
+- usuarios com o campo cadastral consultor verão só as atividades vinculadas a eles e que estiverem ativas;
 
 ---
 
@@ -190,20 +191,23 @@
 9. Logs de sistema
    - ainda precisa ser verificado os requisitos para implementação.
 10. Configurações
-   - por enquanto nessa tela temos apenas o campo do `Prazo máximo para Lançar Horas`, mas ainda não foi implementado, está pre configurado para 4 dias no sistema;
+
+- por enquanto nessa tela temos apenas o campo do `Prazo máximo para Lançar Horas`, mas ainda não foi implementado, está pre configurado para 4 dias no sistema;
 
 ---
 
 ## Níveis de Usuários
 
 `> Existem atualmente no sistema 4 níveis de Usuários, sendo eles:`
+
 > DESCARTADO: PERMISSÕES ADICIONADAS, esses níveis agora estão apenas o 1, 2, 4 no CAMPO CADASTRAL
+
 1.  Administrador:
     - Consegue efetuar todas as operações no sistema;
     - Consegue visualizar todas as informações;
     - Aprovação das horas (ultimo campo de check "APROVADO")
-    - Único Usuário capaz 
-    de visualizar Dashboard
+    - Único Usuário capaz
+      de visualizar Dashboard
 2.  Consultores (colaboradores / funcionários):
     - Responsáveis por efetuar o lançamento de horas no timesheet;
     - Não visualizam todos os campos do timesheet;
