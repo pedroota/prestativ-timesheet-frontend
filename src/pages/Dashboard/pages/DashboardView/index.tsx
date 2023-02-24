@@ -11,7 +11,7 @@ export function DashboardView() {
   const { data: hoursThisMonth } = useQuery(["hours"], () => getHoursLatest());
 
   // adiciona o valor total de horas para cada objeto do array
-  const updatedHoursThisMonth = hoursThisMonth?.data.map(
+  const updatedHoursThisMonth = hoursThisMonth?.data?.map(
     (entry: { initial: number; final: number }) => {
       const totalHours = generateTotalHours(entry.initial, entry.final);
       return {
@@ -90,7 +90,7 @@ export function DashboardView() {
           {Object.keys(grouped).map((clientId) => (
             <>
               <StyledTableRow key={clientId}>
-                <StyledTableCell component="th" scope="row">
+                <StyledTableCell component="th" scope="row" align="center">
                   {grouped[clientId].clientName}
                 </StyledTableCell>
                 <StyledTableCell />
@@ -101,7 +101,7 @@ export function DashboardView() {
                 <>
                   <StyledTableRow key={projectId}>
                     <StyledTableCell />
-                    <StyledTableCell component="th" scope="row">
+                    <StyledTableCell component="th" scope="row" align="center">
                       {grouped[clientId].projects[projectId].projectName}
                     </StyledTableCell>
                     <StyledTableCell />
@@ -113,10 +113,14 @@ export function DashboardView() {
                     <StyledTableRow key={activityTitle}>
                       <StyledTableCell />
                       <StyledTableCell />
-                      <StyledTableCell component="th" scope="row">
+                      <StyledTableCell
+                        component="th"
+                        scope="row"
+                        align="center"
+                      >
                         {activityTitle}
                       </StyledTableCell>
-                      <StyledTableCell>
+                      <StyledTableCell align="center">
                         {
                           grouped[clientId].projects[projectId].activities[
                             activityTitle
