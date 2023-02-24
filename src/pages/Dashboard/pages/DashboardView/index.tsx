@@ -8,7 +8,11 @@ import { getHoursLatest } from "services/hours.service";
 import { generateTotalHours } from "utils/timeControl";
 
 export function DashboardView() {
-  const { data: hoursThisMonth } = useQuery(["hours"], () => getHoursLatest());
+  const { data: hoursThisMonth } = useQuery(
+    ["hours"],
+    async () => await getHoursLatest()
+  );
+  console.log(hoursThisMonth);
 
   // adiciona o valor total de horas para cada objeto do array
   const updatedHoursThisMonth = hoursThisMonth?.data?.map(
@@ -20,7 +24,7 @@ export function DashboardView() {
       };
     }
   );
-
+  console.log(updatedHoursThisMonth);
   // cria um novo array com objetos formatados = clientes -> projetos dele -> atividades dele -> soma de todos os lançamentos de horas
   const grouped = updatedHoursThisMonth.reduce(
     (
@@ -110,24 +114,26 @@ export function DashboardView() {
                   {Object.keys(
                     grouped[clientId].projects[projectId].activities
                   ).map((activityTitle) => (
-                    <StyledTableRow key={activityTitle}>
-                      <StyledTableCell />
-                      <StyledTableCell />
-                      <StyledTableCell
-                        component="th"
-                        scope="row"
-                        align="center"
-                      >
-                        {activityTitle}
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        {
-                          grouped[clientId].projects[projectId].activities[
-                            activityTitle
-                          ].totalHours
-                        }
-                      </StyledTableCell>
-                    </StyledTableRow>
+                    <>
+                      <StyledTableRow key={activityTitle}>
+                        <StyledTableCell />
+                        <StyledTableCell />
+                        <StyledTableCell
+                          component="th"
+                          scope="row"
+                          align="center"
+                        >
+                          {activityTitle}
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          {
+                            grouped[clientId].projects[projectId].activities[
+                              activityTitle
+                            ].totalHours
+                          }
+                        </StyledTableCell>
+                      </StyledTableRow>
+                    </>
                   ))}
                 </>
               ))}
