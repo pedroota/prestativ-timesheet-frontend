@@ -44,6 +44,7 @@ import { ModalEditReleasedCall } from "./components/ModalEditReleasedCall";
 import { useAuthStore } from "stores/userStore";
 import { ModalDeleteHours } from "./components/ModalDeleteHours";
 import Chip from "@mui/material/Chip";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
 export function Timesheet() {
   const { user } = useAuthStore((state) => state);
@@ -179,6 +180,289 @@ export function Timesheet() {
     }
     return hours;
   };
+
+  const columns: GridColDef[] = [
+    {
+      field: "data",
+      headerName: "Data",
+      width: 100,
+      sortable: false,
+      filterable: false,
+      hideable: false,
+      disableColumnMenu: true,
+    },
+    {
+      field: "dia",
+      headerName: "Dia",
+      sortable: false,
+      filterable: false,
+      hideable: false,
+      disableColumnMenu: true,
+      width: 55,
+    },
+    {
+      field: "hora_inicial",
+      headerName: "Inicio",
+      sortable: false,
+      filterable: false,
+      hideable: false,
+      disableColumnMenu: true,
+      width: 60,
+    },
+    {
+      field: "hora_final",
+      headerName: "Final",
+      sortable: false,
+      filterable: false,
+      hideable: false,
+      disableColumnMenu: true,
+      width: 60,
+    },
+    {
+      field: "total",
+      headerName: "Total",
+      sortable: false,
+      filterable: false,
+      hideable: false,
+      disableColumnMenu: true,
+      width: 60,
+    },
+    {
+      field: "ajuste",
+      headerName: "Ajuste",
+      sortable: false,
+      filterable: false,
+      hideable: false,
+      disableColumnMenu: true,
+      width: 60,
+      editable: true,
+    },
+    {
+      field: "total_com_ajuste",
+      headerName: "Total c/ Ajuste",
+      sortable: false,
+      filterable: false,
+      hideable: false,
+      disableColumnMenu: true,
+      width: 90,
+    },
+    {
+      field: "cliente",
+      headerName: "Cliente",
+      sortable: false,
+      filterable: false,
+      hideable: false,
+      disableColumnMenu: true,
+      width: 100,
+    },
+    {
+      field: "projeto",
+      headerName: "Projeto",
+      sortable: false,
+      filterable: false,
+      hideable: false,
+      disableColumnMenu: true,
+      width: 100,
+    },
+    {
+      field: "atividade",
+      headerName: "Atividade",
+      sortable: false,
+      filterable: false,
+      hideable: false,
+      disableColumnMenu: true,
+      width: 200,
+    },
+    {
+      field: "valor",
+      headerName: "Valor",
+      sortable: false,
+      filterable: false,
+      hideable: false,
+      disableColumnMenu: true,
+      width: 90,
+    },
+    {
+      field: "gerente_de_projetos",
+      headerName: "Gerente de Projetos",
+      sortable: false,
+      filterable: false,
+      hideable: false,
+      disableColumnMenu: true,
+      width: 130,
+    },
+    {
+      field: "consultor",
+      headerName: "Consultor",
+      sortable: false,
+      filterable: false,
+      hideable: false,
+      disableColumnMenu: true,
+      width: 130,
+    },
+    {
+      field: "escopo_fechado",
+      headerName: "Escopo Fechado",
+      sortable: false,
+      filterable: false,
+      hideable: false,
+      disableColumnMenu: true,
+      width: 80,
+    },
+    {
+      field: "aprovado_GP",
+      headerName: "Aprovado GP",
+      sortable: false,
+      filterable: false,
+      hideable: false,
+      disableColumnMenu: true,
+      width: 80,
+    },
+    {
+      field: "faturavel",
+      headerName: "Faturável",
+      sortable: false,
+      filterable: false,
+      hideable: false,
+      disableColumnMenu: true,
+      width: 80,
+    },
+    {
+      field: "lancado",
+      headerName: "Lançado",
+      sortable: false,
+      filterable: false,
+      hideable: false,
+      disableColumnMenu: true,
+      width: 80,
+    },
+    {
+      field: "aprovado",
+      headerName: "Aprovado",
+      sortable: false,
+      filterable: false,
+      hideable: false,
+      disableColumnMenu: true,
+      width: 80,
+    },
+    {
+      field: "chamado_lancado",
+      headerName: "Chamado Lançado",
+      sortable: false,
+      filterable: false,
+      hideable: false,
+      disableColumnMenu: true,
+      width: 150,
+    },
+    {
+      field: "descricao",
+      headerName: "Descrição",
+      sortable: false,
+      filterable: false,
+      hideable: false,
+      disableColumnMenu: true,
+      width: 200,
+    },
+    {
+      field: "data_criacao",
+      headerName: "Data Criação",
+      sortable: false,
+      filterable: false,
+      hideable: false,
+      disableColumnMenu: true,
+      width: 100,
+    },
+    {
+      field: "data_edicao",
+      headerName: "Data Edição",
+      sortable: false,
+      filterable: false,
+      hideable: false,
+      disableColumnMenu: true,
+      width: 100,
+    },
+  ];
+
+  const hoursDataGrid = validateUserRegisterHours()?.data.map(
+    ({
+      _id,
+      initial,
+      final,
+      adjustment,
+      relClient,
+      relProject,
+      relActivity,
+      relUser,
+      approvedGP,
+      billable,
+      released,
+      approved,
+      releasedCall,
+      activityDesc,
+      createdAt,
+      updatedAt,
+    }: Hours) => {
+      return {
+        id: _id,
+        data: generateDateWithTimestamp(initial),
+        dia: generateDayWeekWithTimestamp(initial),
+        hora_inicial: generateTimeWithTimestamp(initial),
+        hora_final: generateTimeWithTimestamp(final),
+        total: generateTotalHours(initial, final),
+        ajuste: generateAdjustmentWithNumberInMilliseconds(adjustment),
+        total_com_ajuste: generateTotalHoursWithAdjustment(
+          initial,
+          final,
+          adjustment
+        ),
+        cliente: relClient ? relClient?.name : "Sem cliente",
+        projeto: relProject ? relProject?.title : "Sem projeto",
+        atividade: relActivity ? relActivity?.title : "Sem atividade",
+        valor:
+          relActivity || relProject || relClient
+            ? currencyMask(
+                (relActivity?.valueActivity
+                  ? relActivity.valueActivity
+                  : relProject.valueProject
+                  ? relProject.valueProject
+                  : relClient.valueClient
+                ).toString()
+              )
+            : "Sem valor",
+        gerente_de_projetos: relActivity.gpActivity.length
+          ? relActivity.gpActivity
+              .map(({ name, surname }) => `${name} ${surname}`)
+              .join(", ")
+          : relProject.gpProject && relProject.gpProject.length
+          ? relProject.gpProject.reduce(
+              (accumulator, { name, surname }) =>
+                `${accumulator}${
+                  accumulator.length > 0 ? ", " : ""
+                }${name} ${surname}`,
+              ""
+            )
+          : relClient.gpClient && relClient.gpClient.length
+          ? relClient.gpClient
+              .map(({ name, surname }) => `${name} ${surname}`)
+              .join(", ")
+          : "Nenhum usuário foi vinculado",
+        consultor: `${relUser?.name} ${relUser?.surname}`,
+        escopo_fechado: relActivity.closedScope,
+        aprovado_GP: approvedGP,
+        faturavel: billable,
+        lancado: released,
+        aprovado: approved,
+        chamado_lancado: releasedCall,
+        descricao: activityDesc,
+        data_criacao: `${generateDateWithTimestamp(
+          createdAt
+        )} ${generateTimeWithTimestamp(createdAt)}`,
+        data_edicao: `${generateDateWithTimestamp(
+          updatedAt
+        )} ${generateTimeWithTimestamp(updatedAt)}`,
+      };
+    }
+  );
 
   return (
     <div>
@@ -725,6 +1009,17 @@ export function Timesheet() {
           currentHour={currentHour}
         />
       </Permission>
+
+      <Box sx={{ height: 400, width: "100%" }}>
+        <DataGrid
+          rows={hoursDataGrid}
+          columns={columns}
+          pageSize={30}
+          rowsPerPageOptions={[30]}
+          disableSelectionOnClick
+          experimentalFeatures={{ newEditingApi: true }}
+        />
+      </Box>
     </div>
   );
 }
