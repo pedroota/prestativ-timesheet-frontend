@@ -71,10 +71,12 @@ export interface PatchHour {
 }
 
 export interface UpdateHoursProps {
-  initial: number;
-  final: number;
-  adjustment: number;
-  relActivity: string;
-  relUser: string;
-  activityDesc: string;
+  id?: string;
+  initial?: number;
+  final?: number;
+  adjustment?: number;
+  relActivity?: string;
+  relUser?: string;
+  activityDesc?: string;
+  releasedCall?: string;
 }

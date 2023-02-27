@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { getHoursFilters } from "services/hours.service";
+import { useCallback, useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getHoursFilters, updateHours } from "services/hours.service";
 import {
   Button,
   Typography,
@@ -8,7 +8,7 @@ import {
   Box,
   CircularProgress,
 } from "@mui/material";
-import { Hours } from "interfaces/hours.interface";
+import { Hours, UpdateHoursProps } from "interfaces/hours.interface";
 import { ModalRegisterHours } from "pages/Dashboard/pages/Timesheet/components/ModalRegisterHours";
 import { EmptyList } from "components/EmptyList";
 // import { updateClosedEscope } from "services/activities.service";
@@ -23,6 +23,7 @@ import {
   generateTotalHours,
   generateAdjustmentWithNumberInMilliseconds,
   generateTotalHoursWithAdjustment,
+  generateMilisecondsWithHoursAndMinutes,
 } from "utils/timeControl";
 // import { SwitchIOS } from "components/SwitchIOS";
 import { Filters } from "components/Filters";
@@ -32,10 +33,10 @@ import { currencyMask } from "utils/masks";
 import { useAuthStore } from "stores/userStore";
 import { ModalDeleteHours } from "./components/ModalDeleteHours";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { GridRowModel } from "@mui/x-data-grid/models";
 
 export function Timesheet() {
   const { user } = useAuthStore((state) => state);
-  // const queryClient = useQueryClient();
   const [isDeletingHour, setIsDeletingHour] = useState(false);
   const [currentHour] = useState("");
   const [isAddingHours, setIsAddingHours] = useState(false);
@@ -52,6 +53,20 @@ export function Timesheet() {
           ? `${stringFilters}&relUser=${user._id}`
           : `relUser=${user._id}`
       )
+  );
+
+  const { mutate } = useMutation(
+    ({ id, activityDesc, adjustment, releasedCall }: UpdateHoursProps) =>
+      updateHours(`${id}`, {
+        activityDesc,
+        adjustment,
+        releasedCall,
+      }),
+    {
+      onSuccess: () => {
+        window.location.reload();
+      },
+    }
   );
 
   // const { mutate: updateCheck, isLoading: updatingCheck } = useMutation(
@@ -333,6 +348,7 @@ export function Timesheet() {
       filterable: false,
       hideable: false,
       disableColumnMenu: true,
+      editable: true,
       width: 150,
     },
     {
@@ -341,6 +357,7 @@ export function Timesheet() {
       sortable: false,
       filterable: false,
       hideable: false,
+      editable: true,
       disableColumnMenu: true,
       width: 200,
     },
@@ -441,6 +458,16 @@ export function Timesheet() {
     }
   );
 
+  const processRowUpdate = useCallback(async (newRow: GridRowModel) => {
+    const response = mutate({
+      id: newRow.id,
+      adjustment: generateMilisecondsWithHoursAndMinutes(newRow.ajuste),
+      activityDesc: newRow.descricao,
+      releasedCall: newRow.chamado_lancado,
+    });
+    return response;
+  }, []);
+
   return (
     <div>
       <Box
@@ -518,6 +545,9 @@ export function Timesheet() {
                 rows={hours && hoursDataGrid}
                 columns={columns}
                 pageSize={30}
+                processRowUpdate={processRowUpdate}
+                onProcessRowUpdateError={(error) => console.log(error)}
+                loading={isLoading}
                 rowsPerPageOptions={[30]}
                 disableSelectionOnClick
                 experimentalFeatures={{ newEditingApi: true }}
