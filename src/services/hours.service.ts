@@ -57,6 +57,7 @@ export const updateHours = async (
     relActivity,
     relUser,
     activityDesc,
+    releasedCall,
   }: UpdateHoursProps
 ) => {
   const result = await Api.put(`/hours/${id}`, {
@@ -66,6 +67,7 @@ export const updateHours = async (
     relActivity,
     relUser,
     activityDesc,
+    releasedCall,
   });
 
   return result;
