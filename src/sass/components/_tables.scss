@@ -1,15 +1,66 @@
 .c-table {
   overflow-x: auto;
-
+  
   &--helper {
     display: table;
     table-layout: fixed;
     min-width: 100%;
+    border: 1px solid #0a0a0a;
   }
 
   &--reset-head {
     > th {
       white-space: nowrap;
+    }
+    > td {
+      color: #000000;
+      font-weight: bold;
+      background-color: #f26522;
+    }
+    > td div {
+      resize: horizontal;
+      overflow: auto;
+    }
+    ::-webkit-resizer {
+      display: none;
+    }
+  }
+  &--reset-body {
+    height: 1rem;
+    > th {
+      white-space: nowrap;
+    }
+    > td {
+      border-top: 1px solid #383838;
+      padding: 0 1rem;
+    }
+    .green-cell {
+      border-left: 2px solid #00ff00;
+      border-right: 2px solid #00ff00;
+    }
+    .names {
+      min-width: 200px;
+    }
+    .client {
+      min-width: 200px;
+    }
+    .project {
+      min-width: 250px;
+    }
+    .activity {
+      min-width: 400px;
+    }
+    .value {
+      min-width: 150px;
+    }
+    .description {
+      min-width: 300px;
+    }
+    .releasedcall {
+      min-width: 300px;
+    }
+    .created-edit {
+      min-width: 200px;
     }
   }
 }
