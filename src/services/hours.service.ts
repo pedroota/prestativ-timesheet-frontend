@@ -73,6 +73,12 @@ export const updateHours = async (
   return result;
 };
 
+export const updateDataRow = async (id: string, data: any) => {
+  const result = await Api.put(`/hours/${id}`, data);
+
+  return result;
+};
+
 export const updateReleasedCall = async (id: string, releasedCall: string) => {
   const result = await Api.patch(`/hours/releasedcall/${id}`, {
     releasedCall,
