@@ -1,16 +1,13 @@
 import { useRef, useState } from "react";
-import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { CSVLink } from "react-csv";
 import {
-  checkHours,
   createHours,
   deleteHours,
   getHoursFilters,
-  updateDataRow,
 } from "services/hours.service";
 import {
   Paper,
-  Button,
   Typography,
   Tooltip,
   Box,
@@ -19,9 +16,7 @@ import {
 // import DeleteIcon from "@mui/icons-material/Delete";
 // import EditIcon from "@mui/icons-material/Edit";
 // import BrushIcon from "@mui/icons-material/Brush";
-import { Hours, PatchHour } from "interfaces/hours.interface";
-import { EmptyList } from "components/EmptyList";
-import { updateClosedEscope } from "services/activities.service";
+import { Hours } from "interfaces/hours.interface";
 
 import * as XLSX from "xlsx";
 
@@ -33,26 +28,18 @@ import {
   generateTotalHours,
   generateAdjustmentWithNumberInMilliseconds,
   generateTotalHoursWithAdjustment,
-  generateMilisecondsWithHoursAndMinutes,
+  // generateMilisecondsWithHoursAndMinutes,
 } from "utils/timeControl";
 // import { SwitchIOS } from "components/SwitchIOS";
-import { ModalEditHours } from "./components/ModalEditHours";
-import { Filters } from "components/Filters";
 import { Permission } from "components/Permission";
-import { PatchActivities } from "interfaces/activities.interface";
 import { currencyMask } from "utils/masks";
-import { ModalEditReleasedCall } from "./components/ModalEditReleasedCall";
 import { useAuthStore } from "stores/userStore";
-import { ModalDeleteHours } from "./components/ModalDeleteHours";
-// import { addClassesToRows } from "./hooksCallbacks";
 
 import "handsontable/dist/handsontable.full.min.css";
-
-import Handsontable from "handsontable/base";
 import { registerAllModules } from "handsontable/registry";
 
 import { HotColumn, HotTable } from "@handsontable/react";
-import { getClients } from "services/clients.service";
+// import { getClients } from "services/clients.service";
 import { toast } from "react-toastify";
 
 registerAllModules();
@@ -60,12 +47,9 @@ registerAllModules();
 export function Timesheet() {
   const { user } = useAuthStore((state: any) => state);
   const queryClient = useQueryClient();
-  const [isDeletingHour, setIsDeletingHour] = useState(false);
-  const [isEditingReleasedCall, setIsEditingReleasedCall] = useState(false);
-  const [currentHour, setCurrentHour] = useState("");
-  const [stringFilters, setStringFilters] = useState("");
-  const { data: hours, isLoading } = useQuery(["hours", stringFilters], () =>
-    getHoursFilters(stringFilters)
+
+  const { data: hours, isLoading: isLoadingHours } = useQuery(["hours"], () =>
+    getHoursFilters("")
   );
 
   const hottable: any = useRef(null);
@@ -139,38 +123,28 @@ export function Timesheet() {
     return arrayPermissions;
   };
 
-  const { data: hoursByUser } = useQuery(
-    ["hours", user._id, stringFilters],
-    () =>
-      getHoursFilters(
-        stringFilters
-          ? `${stringFilters}&relUser=${user._id}`
-          : `relUser=${user._id}`
-      )
+  const { data: hoursByUser, isLoading: isLoadingHoursByUser } = useQuery(
+    ["hours", user._id],
+    () => getHoursFilters("relUser=" + user._id)
   );
 
-  const { mutate: updateCheck, isLoading: updatingCheck } = useMutation(
-    ({ _id, field, value }: PatchHour) => checkHours(_id, field, value),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["hours"]);
-      },
-    }
-  );
+  // const { mutate: updateCheck, isLoading: updatingCheck } = useMutation(
+  //   ({ _id, field, value }: PatchHour) => checkHours(_id, field, value),
+  //   {
+  //     onSuccess: () => {
+  //       queryClient.invalidateQueries(["hours"]);
+  //     },
+  //   }
+  // );
 
-  const { mutate: updateEscope, isLoading: updatingEscope } = useMutation(
-    ({ _id, value }: PatchActivities) => updateClosedEscope(_id, value),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["hours"]);
-      },
-    }
-  );
-
-  const receiveDataURI = (encondeURIParams: string) => {
-    const decoded = encondeURIParams.replaceAll("%3D", "=");
-    setStringFilters(decoded);
-  };
+  // const { mutate: updateEscope, isLoading: updatingEscope } = useMutation(
+  //   ({ _id, value }: PatchActivities) => updateClosedEscope(_id, value),
+  //   {
+  //     onSuccess: () => {
+  //       queryClient.invalidateQueries(["hours"]);
+  //     },
+  //   }
+  // );
 
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
@@ -182,8 +156,18 @@ export function Timesheet() {
 
   const [changes, setChanges] = useState<Changes[]>([]);
 
-  const [selectedId, setSelectedId] = useState("");
-  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const handleUpdatedChanges = (
+    idChanged: string,
+    index: number,
+    collumnChanged: string | number,
+    newValue: string | number
+  ) => {
+    console.log("Salvando modificações no array de objetos!");
+    console.log("Id sendo Alterado no banco: " + idChanged);
+    console.log("Número da Coluna Alterada: " + collumnChanged);
+    console.log("Valor que vai ser salvo no banco: " + newValue);
+    // hottable.current.hotInstance.setDataAtCell(index, collumnChanged, newValue);
+  };
 
   // const { data: clients, isLoading: loadingClients } = useQuery(
   //   ["clients"],
@@ -367,6 +351,15 @@ export function Timesheet() {
     }
   );
 
+  const hotSettings = {
+    data: hoursDataGrid,
+    filters: true,
+    dropdownMenu: true,
+    rowHeaders: true,
+    persistentState: true,
+    autoSave: true, // habilita a função de autosave
+  };
+
   return (
     <div>
       <Box
@@ -383,7 +376,7 @@ export function Timesheet() {
           Timesheet
         </Typography>
       </Box>
-      {isLoading ? (
+      {isLoadingHours || isLoadingHoursByUser ? (
         <Box
           sx={{
             display: "flex",
@@ -528,22 +521,13 @@ export function Timesheet() {
                     Salvar
                   </button>
                 </Tooltip>
-                {/* <ModalEditHours
-                  isOpen={isEditingHour}
-                  setIsOpen={setIsEditingHour}
-                  currentHour={currentHour}
-                /> */}
               </Permission>
             </div>
           </div>
 
           <Paper className="c-timesheet">
             <HotTable
-              data={hoursDataGrid}
-              // afterInit={handleHotTableInit}
-              filters={true}
-              dropdownMenu={true}
-              rowHeaders={true}
+              settings={hotSettings}
               ref={hottable}
               height="500"
               // mergeCells={[
@@ -559,13 +543,9 @@ export function Timesheet() {
               hiddenColumns={{
                 indicators: false,
                 // columns: [0], esconde o ID
-                columns: generateUserPermissions(),
+                columns: [0, ...generateUserPermissions()],
               }}
-              afterSelectionEndByProp={(change) => {
-                // console.log(hoursDataGrid[change][0]);
-                setSelectedId(hoursDataGrid[change][0]);
-                setSelectedIndex(change);
-              }}
+              // afterSelectionEndByProp={(change) => {}}
               afterSelection={() => {
                 const getRange =
                   hottable.current.hotInstance.getSelectedRange();
@@ -609,20 +589,26 @@ export function Timesheet() {
                   ]);
                 }
               }}
-              afterChange={(change) => {
-                if (!change) return;
-                console.log(change);
-                console.log(hoursDataGrid[change[0][0]][0]);
-                // console.log(change[0][1]);
-                // console.log(change[0][3]);
-
-                if (change[0][1] == "ajuste") {
-                  updateDataRow(hoursDataGrid[change[0][0]][0], {
-                    adjustment: generateMilisecondsWithHoursAndMinutes(
-                      change[0][3]
-                    ),
+              afterChange={(changes, source) => {
+                if (source === "edit") {
+                  const savedData = JSON.parse(
+                    localStorage.getItem("myTableData") || "[]"
+                  );
+                  changes?.forEach(([row, prop, oldValue, newValue]) => {
+                    savedData[row] = savedData[row] || {};
+                    savedData[row][prop] = newValue;
                   });
+                  localStorage.setItem(
+                    "myTableData",
+                    JSON.stringify(savedData)
+                  );
                 }
+              }}
+              beforeInit={() => {
+                const savedData = JSON.parse(
+                  localStorage.getItem("myTableData") || "[]"
+                );
+                localStorage.loadData(savedData);
               }}
               licenseKey="non-commercial-and-evaluation" // for non-commercial use only
             >
@@ -634,16 +620,21 @@ export function Timesheet() {
                 correctFormat={true}
               />
               <HotColumn title="Dia" type="text" readOnly={true} />
+              <HotColumn title="Inicio" type="time" timeFormat="hh:mm" />
+              <HotColumn title="Final" type="time" timeFormat="hh:mm" />
               <HotColumn
-                title="Inicio"
+                title="Total"
+                readOnly={true}
                 type="time"
-                correctFormat={true}
                 timeFormat="hh:mm"
               />
-              <HotColumn title="Final" />
-              <HotColumn title="Total" readOnly={true} />
-              <HotColumn title="Ajuste" />
-              <HotColumn title="Total c/ Ajuste" readOnly={true} />
+              <HotColumn title="Ajuste" type="time" timeFormat="hh:mm" />
+              <HotColumn
+                title="Total c/ Ajuste"
+                type="time"
+                timeFormat="hh:mm"
+                readOnly={true}
+              />
               <HotColumn
                 title="Cliente"
                 // editor="select"
@@ -667,20 +658,6 @@ export function Timesheet() {
           </Paper>
         </>
       )}
-      <Permission roles={["EDITAR_CHAMADO_LANCADO"]}>
-        <ModalEditReleasedCall
-          isOpen={isEditingReleasedCall}
-          setIsOpen={setIsEditingReleasedCall}
-          currentHour={currentHour}
-        />
-      </Permission>
-      <Permission roles={["DELETAR_HORAS"]}>
-        <ModalDeleteHours
-          isOpen={isDeletingHour}
-          setIsOpen={setIsDeletingHour}
-          currentHour={currentHour}
-        />
-      </Permission>
     </div>
   );
 }
