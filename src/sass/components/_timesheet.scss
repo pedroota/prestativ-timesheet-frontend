@@ -3,3 +3,43 @@
 .c-timesheet {
   overflow-x: auto;
 }
+.buttons-container {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+}
+.buttons-export {
+  display: flex;
+  flex-direction: row;
+}
+.buttons-export * {
+  background-color: #b1b1b1;
+  margin: 0.5rem 0 0.5rem 0.5rem;
+  padding: 0 0.5rem;
+  font-size: 0.75rem;
+  
+}
+.button-hours {
+  display: flex;
+  flex-direction: row-reverse
+}
+.csvbutton {
+  border: 1px solid #000;
+  width: 120px;
+  text-align: center;
+}
+.excelbutton {
+  border: 1px solid #000;
+  width: 120px;
+  cursor: pointer;
+}
+.lancarhoras {
+  border: 1px solid #000;
+  width: 120px;
+  cursor: pointer;
+  background-color: #b1b1b1;
+  margin: 0.5rem 0.5rem 0.5rem 0;
+  padding: 0 0.5rem;
+  font-size: 0.75rem;
+}
+

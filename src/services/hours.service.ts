@@ -28,21 +28,9 @@ export const getHoursByUser = async (_id: string) => {
   return result;
 };
 
-export const createHours = async ({
-  initial,
-  final,
-  adjustment,
-  relActivity,
-  relUser,
-  activityDesc,
-}: RegisterHours) => {
+export const createHours = async ({ relUser }: RegisterHours) => {
   const result = await Api.post("/hours", {
-    initial,
-    final,
-    adjustment,
-    relActivity,
     relUser,
-    activityDesc,
   });
 
   return result;
@@ -69,6 +57,12 @@ export const updateHours = async (
     activityDesc,
     releasedCall,
   });
+
+  return result;
+};
+
+export const updateDataRow = async (id: string, data: any) => {
+  const result = await Api.put(`/hours/${id}`, data);
 
   return result;
 };
