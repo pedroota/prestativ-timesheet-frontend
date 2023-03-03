@@ -56,12 +56,7 @@ export interface Hours {
 }
 
 export interface RegisterHours {
-  initial: number;
-  final: number;
-  relActivity: string;
   relUser: string;
-  activityDesc: string;
-  adjustment: number;
 }
 
 export interface PatchHour {
