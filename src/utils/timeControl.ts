@@ -47,41 +47,72 @@ function generateTimestampWithDateAndTime(date: string, time: string) {
 }
 
 function generateTotalHours(initial: number, final: number) {
+  let signal = "";
+  if (final < initial) {
+    signal = "-";
+    const temp = initial;
+    initial = final;
+    final = temp;
+  }
   let hours = Math.trunc((final - initial) / 60 / 60 / 1000);
   let minutes = Math.trunc(((final - initial) / 60 / 1000) % 60);
   if (hours > 60) {
     minutes = hours % 60;
     hours = Math.trunc(hours / 60);
   }
-  return `${hours < 10 ? "0" + hours : hours}:${
+  return `${signal}${hours < 10 ? "0" + hours : hours}:${
     minutes < 10 ? "0" + minutes : minutes
   }`;
 }
 
 function generateAdjustmentWithNumberInMilliseconds(number: number) {
-  if (!number) {
-    return "0";
+  let signal = "";
+  if (number < 0) {
+    signal = "-";
+    number = Math.abs(number);
   }
-  let hours = Math.trunc(number / 60 / 60 / 60 / 1000);
-  let minutes = Math.trunc((number / 60 / 60 / 1000) % 60);
-  if (hours > 60) {
-    minutes = hours % 60;
-    hours = Math.trunc(hours / 60);
-  }
-  return `${hours < 10 ? "0" + hours : hours}:${
-    minutes < 10 ? "0" + minutes : minutes
-  }`;
-}
 
-function generateMilisecondsWithTime(minutes: number) {
-  return minutes * 60 * 60 * 1000;
+  let seconds = Math.floor(number / 1000);
+  let minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+
+  minutes %= 60;
+  seconds %= 60;
+
+  const hoursFormated = hours < 10 ? "0" + hours : hours;
+  const minutesFormated = minutes < 10 ? "0" + minutes : minutes;
+
+  return `${signal}${hoursFormated}:${minutesFormated}`;
 }
 
 function generateMilisecondsWithHoursAndMinutes(timeString: string) {
-  const timeFormated = timeString.split(":");
-  const minutesOfHours = Number(timeFormated[0]) * 60;
-  const minutes = minutesOfHours + Number(timeFormated[1]);
-  return minutes * 60 * 60 * 1000;
+  const sign = timeString.startsWith("-") ? -1 : 1;
+  const timeFormated = timeString.replace("-", "").split(":");
+  const hours = Number(timeFormated[0]) * sign;
+  const minutes = Number(timeFormated[1]) * sign;
+  return hours * 60 * 60 * 1000 + minutes * 60 * 1000;
+}
+
+function generateTotalWithAdjustment(total: string, adjustment: string) {
+  const totalMilliseconds = generateMilisecondsWithHoursAndMinutes(total);
+  const adjustmentMilliseconds =
+    generateMilisecondsWithHoursAndMinutes(adjustment);
+  const sign = adjustmentMilliseconds < 0 ? "-" : "+";
+  let operation = 0;
+  if (sign == "+") {
+    operation = totalMilliseconds + adjustmentMilliseconds;
+  } else {
+    operation = totalMilliseconds + adjustmentMilliseconds;
+  }
+  const totalSign = operation < 0 ? "-" : "";
+  const totalWithAdjustment = Math.abs(operation);
+  const hours = Math.floor(totalWithAdjustment / (60 * 60 * 1000));
+  const minutes = Math.floor(
+    (totalWithAdjustment % (60 * 60 * 1000)) / (60 * 1000)
+  );
+  return `${totalSign}${hours < 10 ? "0" + hours : hours}:${
+    minutes < 10 ? "0" + minutes : minutes
+  }`;
 }
 
 function generateTotalHoursWithAdjustment(
@@ -89,10 +120,13 @@ function generateTotalHoursWithAdjustment(
   final: number,
   adjustment: number
 ) {
+  const total = generateTotalHours(initial, final);
   if (!adjustment) {
-    return generateTotalHours(initial, final);
+    return total;
   } else {
-    return generateTotalHours(initial, final + adjustment / 60);
+    const adjustmentFormated =
+      generateAdjustmentWithNumberInMilliseconds(adjustment);
+    return generateTotalWithAdjustment(total, adjustmentFormated);
   }
 }
 
@@ -109,8 +143,8 @@ export {
   generateTimestampWithDateAndTime,
   generateTotalHours,
   generateAdjustmentWithNumberInMilliseconds,
-  generateMilisecondsWithTime,
   generateMilisecondsWithHoursAndMinutes,
+  generateTotalWithAdjustment,
   generateTotalHoursWithAdjustment,
   convertDate,
 };
