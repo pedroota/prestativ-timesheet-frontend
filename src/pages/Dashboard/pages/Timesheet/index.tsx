@@ -921,13 +921,13 @@ export function Timesheet() {
                         Number(str)
                       );
 
+                      const selectedIds = selectedRows.map(
+                        (index) => hoursDataGridData[Number(index)][0]
+                      );
+
                       arrayOfRows.forEach((num) => {
                         hottable.current.hotInstance.alter("remove_row", num);
                       });
-
-                      const selectedIds = selectedRows.map(
-                        (index) => hoursDataGridData[index][0]
-                      );
 
                       setIdsSelectedForDelete([
                         ...idsSelectedForDelete,
@@ -1011,9 +1011,7 @@ export function Timesheet() {
                       console.log(changes);
                       console.log(numberOfNewReleases);
                       console.log(hoursDataGridData);
-                      // console.log(selectedRows);
-                      // console.log(selectedIds);
-                      // console.log(idsSelectedForDelete);
+                      console.log(idsSelectedForDelete);
                       console.log(user);
                       console.log(clients);
                     }}
