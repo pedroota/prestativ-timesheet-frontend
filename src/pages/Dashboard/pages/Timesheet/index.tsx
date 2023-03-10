@@ -998,7 +998,7 @@ export function Timesheet() {
                   </button>
                 </Tooltip>
               </Permission>
-              <Permission roles={["EDITAR_HORAS"]}>
+              <Permission roles={["DEVELOPER"]}>
                 <Tooltip
                   title="Esse botão será deletado, utilizado apenas em ambiente dev"
                   arrow

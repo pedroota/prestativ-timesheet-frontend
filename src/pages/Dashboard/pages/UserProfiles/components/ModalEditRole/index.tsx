@@ -265,6 +265,10 @@ export function ModalEditRole({
         value: Permissions.DASHBOARD,
         label: "Opção do Menu para acessar a Dashboard",
       },
+      {
+        value: Permissions.DEVELOPER,
+        label: "Apenas Desenvolvimento",
+      },
     ],
   };
 
