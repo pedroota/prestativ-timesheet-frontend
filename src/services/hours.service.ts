@@ -28,35 +28,15 @@ export const getHoursByUser = async (_id: string) => {
   return result;
 };
 
-export const createHours = async ({ relUser }: RegisterHours) => {
-  const result = await Api.post("/hours", {
-    relUser,
-  });
+export const createHours = async (data: RegisterHours) => {
+  const result = await Api.post("/hours", { ...data });
 
   return result;
 };
 
-export const updateHours = async (
-  id: string,
-  {
-    initial,
-    final,
-    adjustment,
-    relActivity,
-    relUser,
-    activityDesc,
-    releasedCall,
-  }: UpdateHoursProps
-) => {
-  const result = await Api.put(`/hours/${id}`, {
-    initial,
-    final,
-    adjustment,
-    relActivity,
-    relUser,
-    activityDesc,
-    releasedCall,
-  });
+// DATA abaixo deve ser um objeto
+export const updateHours = async (id: string, data: UpdateHoursProps) => {
+  const result = await Api.put(`/hours/${id}`, { ...data });
 
   return result;
 };

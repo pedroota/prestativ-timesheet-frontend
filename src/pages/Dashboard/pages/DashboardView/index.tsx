@@ -113,7 +113,7 @@ export function DashboardView() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {Object.keys(grouped).map((clientId) => (
+            {Object.keys(grouped)?.map((clientId) => (
               <>
                 <StyledTableRow key={clientId}>
                   <StyledTableCell component="th" scope="row" align="center">
@@ -123,7 +123,7 @@ export function DashboardView() {
                   <StyledTableCell />
                   <StyledTableCell />
                 </StyledTableRow>
-                {Object.keys(grouped[clientId].projects).map((projectId) => (
+                {Object.keys(grouped[clientId].projects)?.map((projectId) => (
                   <>
                     <StyledTableRow key={projectId}>
                       <StyledTableCell />
@@ -139,7 +139,7 @@ export function DashboardView() {
                     </StyledTableRow>
                     {Object.keys(
                       grouped[clientId].projects[projectId].activities
-                    ).map((activityTitle) => (
+                    )?.map((activityTitle) => (
                       <>
                         <StyledTableRow key={activityTitle}>
                           <StyledTableCell />

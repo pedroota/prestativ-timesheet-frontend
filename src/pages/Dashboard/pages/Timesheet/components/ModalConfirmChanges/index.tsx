@@ -7,9 +7,6 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteClient } from "services/clients.service";
-import { toast } from "react-toastify";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -20,30 +17,28 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-interface ModalDeleteClientProps {
+interface ModalConfirmChanges {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  currentClient: string;
+  onCancel: () => void;
+  onConfirm: () => void;
 }
 
-export function ModalDeleteClient({
+export function ModalConfirmChanges({
   isOpen,
   setIsOpen,
-  currentClient,
-}: ModalDeleteClientProps) {
-  const queryClient = useQueryClient();
+  onCancel,
+  onConfirm,
+}: ModalConfirmChanges) {
+  const handleCancel = () => {
+    setIsOpen(false);
+    onCancel();
+  };
 
-  // Delete client Mutation
-  const { mutate } = useMutation((id: string) => deleteClient(id), {
-    onSuccess: () => {
-      queryClient.invalidateQueries(["clients"]);
-      setIsOpen((prevState) => !prevState);
-      toast.success("Este cliente foi deletado!");
-    },
-    onError: () => {
-      toast.error("Ocorreu algum erro ao deletar este cliente!");
-    },
-  });
+  const handleConfirm = async () => {
+    setIsOpen(false);
+    onConfirm();
+  };
 
   return (
     <div>
@@ -51,29 +46,25 @@ export function ModalDeleteClient({
         open={isOpen}
         TransitionComponent={Transition}
         keepMounted
-        onClose={() => setIsOpen((prevState) => !prevState)}
+        onClose={handleCancel}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>Você realmente deseja deletar este Cliente?</DialogTitle>
+        <DialogTitle>Você deseja salvar todas as modificações?</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Esta operação não poderá ser desfeita!
+            Se escolher &quot;Cancelar&quot; ele voltará para a tela anterior
+            com as modificações que já foram efetuadas. Se escolher
+            &quot;Confirmar&quot; serão enviados os novos lançamentos, todas as
+            modificações realizadas e as linhas que foram deletadas. Essa
+            operação não poderá ser desfeita!
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => setIsOpen((prevState) => !prevState)}
-          >
+          <Button variant="contained" color="error" onClick={handleCancel}>
             Cancelar
           </Button>
-          <Button
-            variant="contained"
-            color="warning"
-            onClick={() => mutate(currentClient)}
-          >
-            Deletar
+          <Button variant="contained" color="success" onClick={handleConfirm}>
+            Confirmar
           </Button>
         </DialogActions>
       </Dialog>

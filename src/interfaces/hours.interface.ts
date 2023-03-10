@@ -71,7 +71,13 @@ export interface UpdateHoursProps {
   final?: number;
   adjustment?: number;
   relActivity?: string;
+  relProject?: string;
+  relClient?: string;
   relUser?: string;
+  approvedGP?: boolean;
+  billable?: boolean;
+  released?: boolean;
+  approved?: boolean;
   activityDesc?: string;
   releasedCall?: string;
 }
