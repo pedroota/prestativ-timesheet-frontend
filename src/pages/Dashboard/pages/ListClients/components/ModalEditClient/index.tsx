@@ -77,7 +77,7 @@ export function ModalEditClient({
     }: RegisterClients) =>
       updateClient(currentClient, {
         corporateName,
-        name,
+        name: name.trim(),
         cnpj,
         cep,
         street,
@@ -142,7 +142,7 @@ export function ModalEditClient({
     }) => {
       mutate({
         corporateName,
-        name,
+        name: name.trim(),
         cnpj,
         cep: valueCep,
         street,

@@ -57,7 +57,7 @@ export function ModalRegisterActivity({
   const { mutate, isLoading } = useMutation(
     ({ title, project, gpActivity, description, users }: RegisterActivity) =>
       createActivities({
-        title,
+        title: title.trim(),
         project,
         valueActivity: priceNumber,
         gpActivity,
@@ -92,7 +92,7 @@ export function ModalRegisterActivity({
   const onSubmit = handleSubmit(
     ({ title, project, gpActivity, description, users }) => {
       mutate({
-        title,
+        title: title.trim(),
         project,
         valueActivity: priceNumber,
         gpActivity,

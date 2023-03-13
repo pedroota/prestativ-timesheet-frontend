@@ -74,7 +74,7 @@ export function ModalRegisterClient({
     }: Clients) =>
       createClients({
         corporateName,
-        name,
+        name: name.trim(),
         cnpj,
         cep,
         street,
@@ -132,7 +132,7 @@ export function ModalRegisterClient({
       }
       mutate({
         corporateName,
-        name,
+        name: name.trim(),
         cnpj,
         cep,
         street,
