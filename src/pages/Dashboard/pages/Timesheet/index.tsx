@@ -365,10 +365,36 @@ export function Timesheet() {
         return change.id !== null && Object.keys(change).length > 1;
       });
       if (filteredChanges) {
+        console.log(filteredChanges); // contém as modificações
+        console.log(hours?.data); // contem todos os dados iniciais
+
         for (const { id, ...data } of filteredChanges) {
-          await updateHours(id as string, { ...data });
+          // adicionando verificação de data
+          const currentDate = new Date();
+          const currentYear = currentDate.getFullYear();
+          const currentMonth = currentDate.getMonth() + 1;
+          const currentDay = currentDate.getDate();
+          const currentDateStr = `${currentYear}-${
+            currentMonth < 10 ? `0${currentMonth}` : currentMonth
+          }-${currentDay < 10 ? `0${currentDay}` : currentDay}`;
+          const editedDate = new Date(data?.initial as number);
+          const editedYear = editedDate.getFullYear();
+          const editedMonth = editedDate.getMonth() + 1;
+          const editedDay = editedDate.getDate();
+          const editedDateStr = `${editedYear}-${
+            editedMonth < 10 ? `0${editedMonth}` : editedMonth
+          }-${editedDay < 10 ? `0${editedDay}` : editedDay}`;
+          if (editedDateStr < currentDateStr) {
+            toast.error(
+              `A data ${editedDateStr} foi alterada! Essa ação não está disponível!`
+            );
+            return;
+          }
         }
-        setChanges([]);
+        // for (const { id, ...data } of filteredChanges) {
+        //   await updateHours(id as string, { ...data });
+        // }
+        // setChanges([]);
       }
     }
     // Salvar Criações
@@ -987,7 +1013,16 @@ export function Timesheet() {
                       const arrayOfRows = arrayforDelete.map((str) =>
                         Number(str)
                       );
-
+                      // if (
+                      //   hoursDataGridData[selectedRow][16] ||
+                      //   hoursDataGridData[selectedRow][17] ||
+                      //   hoursDataGridData[selectedRow][18] ||
+                      //   hoursDataGridData[selectedRow][19]
+                      // ) {
+                      //   console.log("esse lançamento não pode ser deletado");
+                      // } else {
+                      //   console.log("esse lançamento pode ser deletado");
+                      // }
                       const selectedIds = selectedRows.map(
                         (index) => hoursDataGridData[Number(index)][0]
                       );
@@ -1001,17 +1036,6 @@ export function Timesheet() {
                         ...selectedIds,
                       ]);
                       setSelectedRows([]);
-
-                      // if (
-                      //   hoursDataGridData[selectedRow][16] ||
-                      //   hoursDataGridData[selectedRow][17] ||
-                      //   hoursDataGridData[selectedRow][18] ||
-                      //   hoursDataGridData[selectedRow][19]
-                      // ) {
-                      //   console.log("esse lançamento não pode ser deletado");
-                      // } else {
-                      //   console.log("esse lançamento pode ser deletado");
-                      // }
                     }}
                   >
                     Deletar
