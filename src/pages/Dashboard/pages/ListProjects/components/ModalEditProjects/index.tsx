@@ -88,7 +88,7 @@ export function ModalEditProject({
 
   const onSubmit = handleSubmit(({ valueProject, description, gpProject }) => {
     mutate({
-      title: titleProject,
+      title: titleProject.trim(),
       idClient: currentClient,
       valueProject,
       description,

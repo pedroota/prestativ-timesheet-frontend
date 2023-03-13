@@ -64,7 +64,7 @@ export function ModalRegisterProject({
   const onSubmit = handleSubmit(
     ({ title, idClient, gpProject, description }) => {
       mutate({
-        title,
+        title: title.trim(),
         idClient,
         valueProject: priceNumber,
         gpProject,

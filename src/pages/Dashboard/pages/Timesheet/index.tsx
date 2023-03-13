@@ -46,6 +46,7 @@ import { HotColumn, HotTable } from "@handsontable/react";
 import { getClients } from "services/clients.service";
 import { ModalConfirmChanges } from "./components/ModalConfirmChanges";
 import moment from "moment";
+import { toast } from "react-toastify";
 
 registerAllModules();
 
@@ -343,41 +344,119 @@ export function Timesheet() {
 
   const handleConfirm = async () => {
     // efetuar os deletamentos no banco
-    const arrayOfIdsForDelete = idsSelectedForDelete.filter((value) => {
-      if (value === null) {
-        setNumberOfNewReleases(numberOfNewReleases - 1);
-        return false;
+    if (idsSelectedForDelete.length > 0) {
+      const arrayOfIdsForDelete = idsSelectedForDelete.filter((value) => {
+        if (value === null) {
+          setNumberOfNewReleases(numberOfNewReleases - 1);
+          return false;
+        }
+        return true;
+      });
+      if (arrayOfIdsForDelete.length > 0) {
+        for (let i = 0; i < arrayOfIdsForDelete.length; i++) {
+          await deleteHours(arrayOfIdsForDelete[i]);
+        }
+        setIdsSelectedForDelete([]);
       }
-      return true;
-    });
-    if (arrayOfIdsForDelete.length > 0) {
-      for (let i = 0; i < arrayOfIdsForDelete.length; i++) {
-        await deleteHours(arrayOfIdsForDelete[i]);
-      }
-      setIdsSelectedForDelete([]);
     }
     // Salvar Edições
-    const filteredChanges = changes.filter((change) => {
-      return change.id !== null && Object.keys(change).length > 1;
-    });
-    if (filteredChanges) {
-      for (const { id, ...data } of filteredChanges) {
-        await updateHours(id as string, { ...data });
+    if (changes.length > 0) {
+      const filteredChanges = changes.filter((change) => {
+        return change.id !== null && Object.keys(change).length > 1;
+      });
+      if (filteredChanges) {
+        console.log(filteredChanges); // contém as modificações
+        console.log(hours?.data); // contem todos os dados iniciais
+
+        for (const { id, ...data } of filteredChanges) {
+          // adicionando verificação de data
+          const currentDate = new Date();
+          const currentYear = currentDate.getFullYear();
+          const currentMonth = currentDate.getMonth() + 1;
+          const currentDay = currentDate.getDate();
+          const currentDateStr = `${currentYear}-${
+            currentMonth < 10 ? `0${currentMonth}` : currentMonth
+          }-${currentDay < 10 ? `0${currentDay}` : currentDay}`;
+          const editedDate = new Date(data?.initial as number);
+          const editedYear = editedDate.getFullYear();
+          const editedMonth = editedDate.getMonth() + 1;
+          const editedDay = editedDate.getDate();
+          const editedDateStr = `${editedYear}-${
+            editedMonth < 10 ? `0${editedMonth}` : editedMonth
+          }-${editedDay < 10 ? `0${editedDay}` : editedDay}`;
+          if (editedDateStr < currentDateStr) {
+            toast.error(
+              `A data ${editedDateStr} foi alterada! Essa ação não está disponível!`
+            );
+            return;
+          }
+        }
+        // for (const { id, ...data } of filteredChanges) {
+        //   await updateHours(id as string, { ...data });
+        // }
+        // setChanges([]);
       }
-      setChanges([]);
     }
     // Salvar Criações
-    if (numberOfNewReleases !== 0) {
+    if (numberOfNewReleases > 0) {
       const arrayOfCreations = hoursDataGridData.filter(
         (arrayInside: any[]) => arrayInside[0] === null
       );
+      for (const data of arrayOfCreations) {
+        if (data[1] == null || data[3] == null || data[4] == null) {
+          toast.error("Preencha corretamente os campos!");
+          return;
+        }
+      }
+
       const arrayForDB = processDataForCreation(arrayOfCreations);
+      const maxDaysCanRelease = 4; // Periodo máximo para lançar horas - editando essa variável, o sistema irá permitir que datas mais antigas sejam possiveis lançar
+      const daysInMiliseconds = maxDaysCanRelease * 1000 * 60 * 60 * 24;
+      const today = Date.now();
+      const todayDate = new Date();
+      const todayDay = todayDate.getDate();
+      const todayMonth = todayDate.getMonth() + 1;
+      const todayYear = todayDate.getFullYear();
+      const todayMaxRelease = generateTimestampWithDateAndTime(
+        `${todayYear}-${todayMonth < 10 ? `0${todayMonth}` : todayMonth}-${
+          todayDay < 10 ? `0${todayDay}` : todayDay
+        }`,
+        "23:59"
+      );
+      for (const data of arrayForDB) {
+        if (data.final > todayMaxRelease) {
+          const date = new Date(data.initial);
+          const dateString = `${date.getDate()}/${
+            date.getMonth() + 1
+          }/${date.getFullYear()}`;
+          toast.error(`A data ${dateString} ainda não está disponível!`);
+          return;
+        }
+      }
+      for (const data of arrayForDB) {
+        if (data.initial < today - daysInMiliseconds) {
+          const date = new Date(data.initial);
+          const dateString = `${date.getDate()}/${
+            date.getMonth() + 1
+          }/${date.getFullYear()}`;
+          toast.error(`A data ${dateString} não está disponível!`);
+          return;
+        }
+      }
+      for (const data of arrayForDB) {
+        if (data.initial > data.final) {
+          toast.error("A hora final não pode ser anterior a hora inicial!");
+          return;
+        }
+      }
 
       for (const { ...data } of arrayForDB) {
         await createHours({ ...data });
       }
       setNumberOfNewReleases(0);
     }
+
+    toast.success("Todas as modificações foram salvas");
 
     setIsOpen(false);
     queryClient.invalidateQueries(["hours"]);
@@ -407,7 +486,7 @@ export function Timesheet() {
     const updatingId = changes.find((o) => o.id === idChanged);
     const newChanges = [...changes]; // cria uma cópia do array de changes
 
-    if (!updatingId) {
+    if (!updatingId && idChanged) {
       newChanges.push({ id: idChanged });
     }
 
@@ -443,14 +522,30 @@ export function Timesheet() {
 
     if (collumnChanged === 3 || collumnChanged === 4 || collumnChanged === 6) {
       const insertedValue = newValue as string;
+      console.log(insertedValue);
       const regex = /^\d{2}:\d{2}$/; // expressão regular para o formato HH:mm
+      const regexLetters = /[A-Za-z]/; // expressão regular que verifica se tem letras na string
       if (!regex.test(insertedValue)) {
+        if (Number(insertedValue) >= 2359) {
+          toast.error("digite um horário que seja válido");
+          return;
+        }
+        if (regexLetters.test(insertedValue)) {
+          toast.error("esse campo não aceita letras");
+          hottable.current.hotInstance.setDataAtCell(
+            index,
+            collumnChanged,
+            "00:00"
+          );
+          return;
+        }
         const formattedValue = moment(insertedValue, "HHmm").format("HH:mm");
         hottable.current.hotInstance.setDataAtCell(
           index,
           collumnChanged,
           formattedValue
         );
+        return;
       }
 
       // Alterando Inicio
@@ -735,13 +830,11 @@ export function Timesheet() {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
   const validateUserRegisterHours = () => {
-    if (user.typeField !== "nenhum" && hoursByUser?.data?.length) {
+    if (user.typeField !== "nenhum") {
       return hoursByUser;
-    }
-    if (hours?.data?.length) {
+    } else {
       return hours;
     }
-    return null;
   };
 
   const hoursDataGrid = validateUserRegisterHours()?.data.map(
@@ -920,7 +1013,16 @@ export function Timesheet() {
                       const arrayOfRows = arrayforDelete.map((str) =>
                         Number(str)
                       );
-
+                      // if (
+                      //   hoursDataGridData[selectedRow][16] ||
+                      //   hoursDataGridData[selectedRow][17] ||
+                      //   hoursDataGridData[selectedRow][18] ||
+                      //   hoursDataGridData[selectedRow][19]
+                      // ) {
+                      //   console.log("esse lançamento não pode ser deletado");
+                      // } else {
+                      //   console.log("esse lançamento pode ser deletado");
+                      // }
                       const selectedIds = selectedRows.map(
                         (index) => hoursDataGridData[Number(index)][0]
                       );
@@ -934,17 +1036,6 @@ export function Timesheet() {
                         ...selectedIds,
                       ]);
                       setSelectedRows([]);
-
-                      // if (
-                      //   hoursDataGridData[selectedRow][16] ||
-                      //   hoursDataGridData[selectedRow][17] ||
-                      //   hoursDataGridData[selectedRow][18] ||
-                      //   hoursDataGridData[selectedRow][19]
-                      // ) {
-                      //   console.log("esse lançamento não pode ser deletado");
-                      // } else {
-                      //   console.log("esse lançamento pode ser deletado");
-                      // }
                     }}
                   >
                     Deletar
@@ -960,20 +1051,56 @@ export function Timesheet() {
                   <button
                     className="lancarhoras"
                     onClick={async () => {
-                      hottable.current.hotInstance.alter("insert_row_above", 0);
-                      hottable.current.hotInstance.setDataAtCell(
-                        0,
-                        14,
-                        `${user.name} ${user.surname}`
-                      );
-                      hottable.current.hotInstance.setDataAtCell(
-                        0,
-                        21,
-                        `${generateDateWithTimestamp(
-                          Date.now()
-                        )} ${generateTimeWithTimestamp(Date.now())}`
-                      );
-                      setNumberOfNewReleases(numberOfNewReleases + 1);
+                      if (hoursDataGridData.length === 0) {
+                        setHoursDataGridData([
+                          [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            `${user.name} ${user.surname}`,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            `${generateDateWithTimestamp(
+                              Date.now()
+                            )} ${generateTimeWithTimestamp(Date.now())}`,
+                            null,
+                          ],
+                        ]);
+                        setNumberOfNewReleases(numberOfNewReleases + 1);
+                      } else {
+                        hottable.current.hotInstance.alter(
+                          "insert_row_above",
+                          0
+                        );
+                        hottable.current.hotInstance.setDataAtCell(
+                          0,
+                          14,
+                          `${user.name} ${user.surname}`
+                        );
+                        hottable.current.hotInstance.setDataAtCell(
+                          0,
+                          21,
+                          `${generateDateWithTimestamp(
+                            Date.now()
+                          )} ${generateTimeWithTimestamp(Date.now())}`
+                        );
+                        setNumberOfNewReleases(numberOfNewReleases + 1);
+                      }
                     }}
                   >
                     Criar
@@ -998,28 +1125,32 @@ export function Timesheet() {
                   </button>
                 </Tooltip>
               </Permission>
-              <Permission roles={["DEVELOPER"]}>
-                <Tooltip
-                  title="Esse botão será deletado, utilizado apenas em ambiente dev"
-                  arrow
-                  placement="top"
+              <Tooltip
+                title="Esse botão será deletado, utilizado apenas em ambiente dev"
+                arrow
+                placement="top"
+              >
+                <button
+                  className="lancarhoras"
+                  onClick={async () => {
+                    console.log("modificações que serão enviadas no banco:");
+                    console.log("DELETAR:");
+                    console.log(idsSelectedForDelete);
+                    console.log("EDIÇÕES:");
+                    console.log(changes);
+                    console.log("CRIAÇÕES:");
+                    console.log(numberOfNewReleases);
+                    console.log("ARRAY DE ARRAYS PARA SER PROCESSADO:");
+                    console.log(hoursDataGridData);
+                    console.log("CONFIGS USUARIO:");
+                    console.log(user);
+                    console.log("ARRAY DE CLIENTES:");
+                    console.log(clients);
+                  }}
                 >
-                  <button
-                    className="lancarhoras"
-                    onClick={async () => {
-                      console.log("modificações que serão enviadas no banco:");
-                      console.log(changes);
-                      console.log(numberOfNewReleases);
-                      console.log(hoursDataGridData);
-                      console.log(idsSelectedForDelete);
-                      console.log(user);
-                      console.log(clients);
-                    }}
-                  >
-                    DEV verEdições
-                  </button>
-                </Tooltip>
-              </Permission>
+                  DEV verEdições
+                </button>
+              </Tooltip>
             </div>
           </div>
 
@@ -1033,7 +1164,10 @@ export function Timesheet() {
               hiddenColumns={{
                 indicators: false,
                 // columns: [0], esconde o ID
-                columns: [...generateUserPermissions()],
+                columns: [0, ...generateUserPermissions()],
+              }}
+              beforeOnCellMouseDown={() => {
+                hottable.current.hotInstance.deselectCell();
               }}
               afterSelection={(
                 row,
@@ -1046,7 +1180,6 @@ export function Timesheet() {
                 const getRange =
                   hottable.current.hotInstance.getSelectedRange();
                 console.log(getRange);
-
                 if (getRange.length === 1) {
                   // só aceita um range por vez
                   const range = getRange[0];
@@ -1133,6 +1266,9 @@ export function Timesheet() {
                   collumnChanged,
                   newValue
                 );
+                if (source === "edit") {
+                  hottable.current.hotInstance.deselectCell();
+                }
               }}
               // beforeInit={() => {
               //   // verificação dos dados no localstorage, talvez seja o causador do bug na inicialização

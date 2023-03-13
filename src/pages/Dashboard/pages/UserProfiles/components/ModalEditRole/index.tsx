@@ -46,7 +46,7 @@ export function ModalEditRole({
 
   const { mutate, isLoading } = useMutation(
     ({ name, permissions }: Pick<Roles, "name" | "permissions">) =>
-      updateRoles(currentRole, { name, permissions }),
+      updateRoles(currentRole, { name: name.trim(), permissions }),
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["roles"]);
@@ -62,7 +62,7 @@ export function ModalEditRole({
   );
 
   const onSubmit = handleSubmit((data) => {
-    mutate({ name: data?.name, permissions: multipleSelectValue });
+    mutate({ name: data?.name.trim(), permissions: multipleSelectValue });
     reset();
   });
 

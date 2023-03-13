@@ -37,7 +37,7 @@ export function ModalCreateRole({ isOpen, setIsOpen }: ModalCreateRoleProps) {
   const queryClient = useQueryClient();
   const { mutate, isLoading } = useMutation(
     ({ name, permissions }: Pick<Roles, "name" | "permissions">) =>
-      createRoles({ name, permissions }),
+      createRoles({ name: name.trim(), permissions }),
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["roles"]);
