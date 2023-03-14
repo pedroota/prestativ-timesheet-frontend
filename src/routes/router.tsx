@@ -3,16 +3,17 @@ import { PrivateRoutes } from "./privateRoutes";
 
 // Pages imports
 import { LoginPage } from "pages/LoginPage";
+import { ForgotPassword } from "pages/ForgotPassword";
+import { NewPassword } from "pages/NewPassword";
 import { Dashboard } from "pages/Dashboard";
 import { Timesheet } from "pages/Dashboard/pages/Timesheet";
-import { DashboardView } from "pages/Dashboard/pages/DashboardView";
 import { ListClients } from "pages/Dashboard/pages/ListClients";
 import { ListProjects } from "pages/Dashboard/pages/ListProjects";
 import { ListActivities } from "pages/Dashboard/pages/ListActivities";
 import { ListUsers } from "pages/Dashboard/pages/ListUsers";
-import { ForgotPassword } from "pages/ForgotPassword";
-import { NewPassword } from "pages/NewPassword";
+import { DashboardView } from "pages/Dashboard/pages/DashboardView";
 import { ListLogs } from "pages/Dashboard/pages/ListLogs";
+import { ListBusinessUnit } from "pages/Dashboard/pages/ListBusinessUnit";
 
 // Context
 import { UserProfiles } from "pages/Dashboard/pages/UserProfiles";
@@ -75,6 +76,14 @@ export function Router() {
               element={
                 <Permission roles={["VER_LOGS"]}>
                   <ListLogs />
+                </Permission>
+              }
+            />
+            <Route
+              path="business"
+              element={
+                <Permission roles={["VER_BUS"]}>
+                  <ListBusinessUnit />
                 </Permission>
               }
             />
