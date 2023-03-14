@@ -234,6 +234,24 @@ export function ModalEditRole({
         label: "Autorizado para Deletar Usuários",
       },
     ],
+    businessUnit: [
+      {
+        value: Permissions.VER_BUS,
+        label: "Opção do Menu para acessar Business Unit",
+      },
+      {
+        value: Permissions.CADASTRO_BU,
+        label: "Autorizado para Cadastrar um Novo Business Unit",
+      },
+      {
+        value: Permissions.EDITAR_BU,
+        label: "Autorizado para Editar Business Units Existentes",
+      },
+      {
+        value: Permissions.DELETAR_BU,
+        label: "Autorizado para Deletar Business Units",
+      },
+    ],
     perfisUsuario: [
       {
         value: Permissions.PERFIS_USUARIO,
@@ -453,6 +471,34 @@ export function ModalEditRole({
               renderValue={(selected) => selected.join(", ")}
             >
               {options.usuarios.map((permission) => (
+                <MenuItem
+                  key={permission.value}
+                  value={permission.value}
+                  sx={{ justifyContent: "spaceBetween" }}
+                >
+                  <SwitchIOS
+                    color="warning"
+                    checked={multipleSelectValue.indexOf(permission.value) > -1}
+                    inputProps={{ "aria-label": "controlled" }}
+                    sx={{ marginRight: 2 }}
+                  />
+                  <ListItemText primary={permission.value} />
+                  <ListItemText primary={permission.label} />
+                </MenuItem>
+              ))}
+            </Select>
+            <InputLabel id="demo-multiple-checkbox-label">
+              Permissões Business Unit
+            </InputLabel>
+            <Select
+              labelId="demo-multiple-checkbox-label"
+              id="demo-multiple-checkbox"
+              multiple
+              value={multipleSelectValue}
+              onChange={handleMultipleSelectChange}
+              renderValue={(selected) => selected.join(", ")}
+            >
+              {options.businessUnit.map((permission) => (
                 <MenuItem
                   key={permission.value}
                   value={permission.value}

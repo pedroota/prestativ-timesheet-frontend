@@ -35,6 +35,7 @@ import {
   Source,
   Task,
 } from "@mui/icons-material";
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
 
 // Components
 import { HeaderUser } from "components/HeaderUser";
@@ -339,6 +340,33 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                     </ListItemIcon>
                     <ListItemText
                       primary={"Logs"}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            </Permission>
+            <Permission roles={["VER_BUS"]}>
+              <Link to="business">
+                <ListItem disablePadding>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <AccountBoxIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={"Business Unit"}
                       sx={{ opacity: open ? 1 : 0 }}
                     />
                   </ListItemButton>
