@@ -100,13 +100,17 @@ export function ListClients() {
                             Período Faturado
                           </StyledTableCell>
                           <StyledTableCell align="center">
-                            Limite de Cobrança + Dia de Pagamento
+                            Limite de Cobrança
+                            <br /> + Dia de Pagamento
                           </StyledTableCell>
                           <StyledTableCell align="center">
                             Valor
                           </StyledTableCell>
                           <StyledTableCell align="center">
                             Gerente de Projetos
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            Business Unit
                           </StyledTableCell>
                           <Permission
                             roles={["EDITAR_CLIENTE" || "DELETAR_CLIENTE"]}
@@ -137,6 +141,7 @@ export function ListClients() {
                             payDay,
                             valueClient,
                             gpClient,
+                            businessUnit,
                           }: ClientsInfo) => (
                             <StyledTableRow key={_id}>
                               <StyledTableCell align="center">
@@ -171,6 +176,13 @@ export function ListClients() {
                                   ))
                                 ) : (
                                   <p>Nenhum usuário foi vinculado</p>
+                                )}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                {businessUnit ? (
+                                  <p>{`${businessUnit.nameBU}`}</p>
+                                ) : (
+                                  <p>Nenhum B.U.</p>
                                 )}
                               </StyledTableCell>
                               <Permission

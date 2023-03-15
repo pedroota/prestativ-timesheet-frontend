@@ -97,6 +97,9 @@ export function ListProjects() {
                             Gerente de Projetos
                           </StyledTableCell>
                           <StyledTableCell align="center">
+                            Business Unit
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
                             Descrição
                           </StyledTableCell>
                           <Permission
@@ -116,6 +119,7 @@ export function ListProjects() {
                             idClient,
                             valueProject,
                             gpProject,
+                            businessUnit,
                             description,
                           }: ProjectsInfo) => (
                             <StyledTableRow key={_id}>
@@ -141,6 +145,13 @@ export function ListProjects() {
                                   ))
                                 ) : (
                                   <p>Nenhum usuário foi vinculado</p>
+                                )}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                {businessUnit ? (
+                                  <p>{`${businessUnit.nameBU}`}</p>
+                                ) : (
+                                  <p>Nenhum B.U.</p>
                                 )}
                               </StyledTableCell>
                               <StyledTableCell align="center">

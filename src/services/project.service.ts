@@ -12,6 +12,7 @@ export const createProjects = async ({
   idClient,
   valueProject,
   gpProject,
+  businessUnit,
   description,
 }: Projects) => {
   const result = await Api.post("/projects", {
@@ -19,6 +20,7 @@ export const createProjects = async ({
     idClient,
     valueProject,
     gpProject,
+    businessUnit,
     description,
   });
 
@@ -33,13 +35,21 @@ export const getProjectById = async (_id: string) => {
 
 export const updateProjects = async (
   id: string,
-  { title, idClient, valueProject, gpProject, description }: RegisterProject
+  {
+    title,
+    idClient,
+    valueProject,
+    gpProject,
+    businessUnit,
+    description,
+  }: RegisterProject
 ) => {
   const results = await Api.put(`/projects/${id}`, {
     title,
     idClient,
     valueProject,
     gpProject,
+    businessUnit,
     description,
   });
 

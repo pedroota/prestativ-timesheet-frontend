@@ -14,6 +14,8 @@ import { getUserByRole } from "services/auth.service";
 import { getClients } from "services/clients.service";
 import FormLabel from "@mui/material/FormLabel";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { getBusiness } from "services/business.service";
+import { BusinessUnitModals } from "interfaces/business.interface";
 
 interface ModalRegisterProjectProps {
   isOpen: boolean;
@@ -26,11 +28,16 @@ export function ModalRegisterProject({
 }: ModalRegisterProjectProps) {
   const [nameClient, setNameClient] = useState("");
   const [price, setPrice] = useState("");
+  const [idBusinessUnit, setIdBusinessUnit] = useState("");
   const [priceNumber, setPriceNumber] = useState(0);
   const [gpProject, setGpProject] = useState<string[]>([]);
   const { data: clientList } = useQuery([], () => getClients());
   const { data: GPList } = useQuery(["users-role", "Gerente de Projetos"], () =>
     getUserByRole("gerenteprojetos")
+  );
+
+  const { data: businessUnitList } = useQuery(["business"], () =>
+    getBusiness()
   );
 
   const { register, handleSubmit, reset } = useForm<Projects>({});
@@ -42,6 +49,7 @@ export function ModalRegisterProject({
         idClient,
         valueProject: priceNumber,
         gpProject,
+        businessUnit: idBusinessUnit,
         description,
       }),
     {
@@ -50,6 +58,7 @@ export function ModalRegisterProject({
         setPrice("");
         setGpProject([]);
         setNameClient("");
+        setIdBusinessUnit("");
         toast.success("Projeto criado com sucesso.");
         setIsOpen((prevState) => !prevState);
       },
@@ -68,6 +77,7 @@ export function ModalRegisterProject({
         idClient,
         valueProject: priceNumber,
         gpProject,
+        businessUnit: idBusinessUnit,
         description,
       });
     }
@@ -151,6 +161,39 @@ export function ModalRegisterProject({
                     {`${name} ${surname}`}
                   </MenuItem>
                 ))}
+              </Select>
+            </FormLabel>
+          </div>
+          <div className="c-register-activity--input-container">
+            <FormLabel
+              sx={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.2rem",
+              }}
+            >
+              Business Unit
+              <Select
+                color="warning"
+                variant="outlined"
+                sx={{ width: "100%" }} // maxWidth: "14rem"
+                value={idBusinessUnit}
+                onChange={(event) => setIdBusinessUnit(event.target.value)}
+              >
+                <MenuItem value="" disabled>
+                  Selecione uma opção (campo opicional)
+                </MenuItem>
+                <MenuItem value="">
+                  <p>Nenhum B.U.</p>
+                </MenuItem>
+                {businessUnitList?.data.map(
+                  ({ _id, nameBU }: BusinessUnitModals) => (
+                    <MenuItem key={_id} value={_id}>
+                      {nameBU}
+                    </MenuItem>
+                  )
+                )}
               </Select>
             </FormLabel>
           </div>

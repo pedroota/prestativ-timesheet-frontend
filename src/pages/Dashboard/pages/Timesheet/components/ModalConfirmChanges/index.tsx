@@ -52,11 +52,7 @@ export function ModalConfirmChanges({
         <DialogTitle>Você deseja salvar todas as modificações?</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Se escolher &quot;Cancelar&quot; ele voltará para a tela anterior
-            com as modificações que já foram efetuadas. Se escolher
-            &quot;Confirmar&quot; serão enviados os novos lançamentos, todas as
-            modificações realizadas e as linhas que foram deletadas. Essa
-            operação não poderá ser desfeita!
+            Essa operação não poderá ser desfeita!
           </DialogContentText>
         </DialogContent>
         <DialogActions>

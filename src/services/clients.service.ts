@@ -24,6 +24,7 @@ export const createClients = async ({
   payDay,
   valueClient,
   gpClient,
+  businessUnit,
 }: RegisterClients) => {
   const result = await Api.post("/clients", {
     corporateName,
@@ -42,6 +43,7 @@ export const createClients = async ({
     payDay,
     valueClient,
     gpClient,
+    businessUnit,
   });
 
   return result;
@@ -66,6 +68,7 @@ export const updateClient = async (
     payDay,
     valueClient,
     gpClient,
+    businessUnit,
   }: RegisterClients
 ) => {
   const results = await Api.put(`/clients/${id}`, {
@@ -85,6 +88,7 @@ export const updateClient = async (
     payDay,
     valueClient,
     gpClient,
+    businessUnit,
   });
 
   return results;

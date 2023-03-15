@@ -156,6 +156,9 @@ export function ListActivities() {
                             Gerente de Projetos
                           </StyledTableCell>
                           <StyledTableCell align="center">
+                            Business Unit
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
                             Descrição
                           </StyledTableCell>
                           <StyledTableCell align="center">
@@ -187,6 +190,7 @@ export function ListActivities() {
                             project,
                             valueActivity,
                             gpActivity,
+                            businessUnit,
                             description,
                             users,
                             closedScope,
@@ -217,6 +221,13 @@ export function ListActivities() {
                                   )
                                 ) : (
                                   <p>Nenhum usuário foi vinculado</p>
+                                )}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                {businessUnit ? (
+                                  <p>{`${businessUnit.nameBU}`}</p>
+                                ) : (
+                                  <p>Nenhum B.U.</p>
                                 )}
                               </StyledTableCell>
                               <StyledTableCell align="center">

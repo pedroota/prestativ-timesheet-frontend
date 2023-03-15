@@ -23,6 +23,8 @@ import { getUserByRole } from "services/auth.service";
 import { useForm } from "react-hook-form";
 import { getProjects } from "services/project.service";
 import { generateTimestampWithDateAndTime } from "utils/timeControl";
+import { getBusiness } from "services/business.service";
+import { BusinessUnitModals } from "interfaces/business.interface";
 
 interface ModalRegisterActivityProps {
   isOpen: boolean;
@@ -36,6 +38,7 @@ export function ModalRegisterActivity({
   const queryClient = useQueryClient();
   const [nameProject, setNameProject] = useState("");
   const [price, setPrice] = useState("");
+  const [idBusinessUnit, setIdBusinessUnit] = useState("");
   const [priceNumber, setPriceNumber] = useState(0);
   const [gpActivity, setGpActivity] = useState<string[]>([]);
   const [fieldClosedScope, setFieldClosedScope] = useState(false);
@@ -52,6 +55,11 @@ export function ModalRegisterActivity({
     ["user-consultant", "Consultor"],
     () => getUserByRole("consultor")
   );
+
+  const { data: businessUnitList } = useQuery(["business"], () =>
+    getBusiness()
+  );
+
   const { register, handleSubmit, reset } = useForm();
 
   const { mutate, isLoading } = useMutation(
@@ -61,6 +69,7 @@ export function ModalRegisterActivity({
         project,
         valueActivity: priceNumber,
         gpActivity,
+        businessUnit: idBusinessUnit,
         description,
         users,
         closedScope: fieldClosedScope,
@@ -76,6 +85,7 @@ export function ModalRegisterActivity({
         setPriceNumber(0);
         setMultipleSelect([]);
         setGpActivity([]);
+        setIdBusinessUnit("");
         setChosenDay(oneMonthLater);
         toast.success("Atividade criada com sucesso.");
         setIsOpen((prevState) => !prevState);
@@ -96,6 +106,7 @@ export function ModalRegisterActivity({
         project,
         valueActivity: priceNumber,
         gpActivity,
+        businessUnit: idBusinessUnit,
         description,
         users,
         closedScope: fieldClosedScope,
@@ -247,6 +258,39 @@ export function ModalRegisterActivity({
                   ({ name, surname, _id }: UserRegister) => (
                     <MenuItem key={_id} value={_id}>
                       {`${name} ${surname}`}
+                    </MenuItem>
+                  )
+                )}
+              </Select>
+            </FormLabel>
+          </div>
+          <div className="c-register-activity--input-container">
+            <FormLabel
+              sx={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.2rem",
+              }}
+            >
+              Business Unit
+              <Select
+                color="warning"
+                variant="outlined"
+                sx={{ width: "100%" }} // maxWidth: "14rem"
+                value={idBusinessUnit}
+                onChange={(event) => setIdBusinessUnit(event.target.value)}
+              >
+                <MenuItem value="" disabled>
+                  Selecione uma opção (campo opicional)
+                </MenuItem>
+                <MenuItem value="">
+                  <p>Nenhum B.U.</p>
+                </MenuItem>
+                {businessUnitList?.data.map(
+                  ({ _id, nameBU }: BusinessUnitModals) => (
+                    <MenuItem key={_id} value={_id}>
+                      {nameBU}
                     </MenuItem>
                   )
                 )}
