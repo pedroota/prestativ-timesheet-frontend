@@ -193,10 +193,6 @@ export function Timesheet() {
     setIsOpen(false);
   };
 
-  function removeDuplicates(array: string[]) {
-    return [...new Set(array)];
-  }
-
   function findClientByName(name: string) {
     return clients?.data?.find(
       (client: { name: string }) => client.name === name
@@ -343,6 +339,7 @@ export function Timesheet() {
   };
 
   const handleConfirm = async () => {
+    // esse comentario será removido: PRIMEIRO checar as infos, DEPOIS enviar tudo para o banco!
     // efetuar os deletamentos no banco
     if (idsSelectedForDelete.length > 0) {
       const arrayOfIdsForDelete = idsSelectedForDelete.filter((value) => {
@@ -365,9 +362,6 @@ export function Timesheet() {
         return change.id !== null && Object.keys(change).length > 1;
       });
       if (filteredChanges) {
-        console.log(filteredChanges); // contém as modificações
-        console.log(hours?.data); // contem todos os dados iniciais
-
         for (const { id, ...data } of filteredChanges) {
           // adicionando verificação de data
           const currentDate = new Date();
@@ -391,10 +385,10 @@ export function Timesheet() {
             return;
           }
         }
-        // for (const { id, ...data } of filteredChanges) {
-        //   await updateHours(id as string, { ...data });
-        // }
-        // setChanges([]);
+        for (const { id, ...data } of filteredChanges) {
+          await updateHours(id as string, { ...data });
+        }
+        setChanges([]);
       }
     }
     // Salvar Criações
@@ -469,19 +463,18 @@ export function Timesheet() {
 
   const handleUpdatedChanges = (
     idChanged: string,
-    index: number,
+    index123: number, // essa variável só passa o index da tabela QUE ESTÁ NA TELA (com filtros muda os indices)
     collumnChanged: string | number,
     newValue: string | number | boolean
   ) => {
     // caso não tenha valor de dia inicial ele preencherá o dia da semana só com a data
-    if (!idChanged) {
-      if (collumnChanged == 1) {
-        const date = convertDate(newValue as string);
-        hoursDataGridData[index][2] = generateDayWeekWithTimestamp(
-          generateTimestampWithDateAndTime(date, "15:00")
-        );
-      }
-    }
+
+    const index = idChanged
+      ? hoursDataGridData.findIndex((arr: string[]) => arr[0] === idChanged)
+      : index123;
+
+    // console.log(idChanged);
+    // console.log(index);
 
     const updatingId = changes.find((o) => o.id === idChanged);
     const newChanges = [...changes]; // cria uma cópia do array de changes
@@ -496,7 +489,13 @@ export function Timesheet() {
       const finalHour = hoursDataGridData[index][4];
       const date = convertDate(newValue as string);
 
-      if (initialHour.length > 4) {
+      // altera o valor que está no DIA ATUAL (SEG / TER / QUA)
+      const dayWeek = generateDayWeekWithTimestamp(
+        generateTimestampWithDateAndTime(date, "15:00")
+      );
+      hottable.current.hotInstance.setDataAtCell(index123, 2, dayWeek);
+
+      if (initialHour && initialHour.length > 4) {
         const updatingId = newChanges.find((o) => o.id === idChanged);
         if (updatingId) {
           updatingId.initial = generateTimestampWithDateAndTime(
@@ -506,42 +505,45 @@ export function Timesheet() {
         }
       }
 
-      if (finalHour.length > 4) {
+      if (finalHour && finalHour.length > 4) {
         const updatingId = newChanges.find((o) => o.id === idChanged);
         if (updatingId) {
           updatingId.final = generateTimestampWithDateAndTime(date, finalHour);
         }
       }
-
-      // altera o valor que está no DIA ATUAL (SEG / TER / QUA)
-      hoursDataGridData[index][2] = generateDayWeekWithTimestamp(
-        generateTimestampWithDateAndTime(date, initialHour)
-      );
-      setHoursDataGridData(hoursDataGridData);
     }
 
-    if (collumnChanged === 3 || collumnChanged === 4 || collumnChanged === 6) {
+    if (collumnChanged === 3 || collumnChanged === 4) {
       const insertedValue = newValue as string;
-      console.log(insertedValue);
       const regex = /^\d{2}:\d{2}$/; // expressão regular para o formato HH:mm
       const regexLetters = /[A-Za-z]/; // expressão regular que verifica se tem letras na string
       if (!regex.test(insertedValue)) {
-        if (Number(insertedValue) >= 2359) {
-          toast.error("digite um horário que seja válido");
+        let hours = 0;
+        let minutes = 0;
+        if (insertedValue.length === 4 && !regexLetters.test(insertedValue)) {
+          hours = parseInt(insertedValue.substring(0, 2));
+          minutes = parseInt(insertedValue.substring(2, 4));
+        } else {
+          toast.error("Digite um horário válido.");
+          return;
+        }
+        if (hours > 23 || minutes > 59) {
+          toast.error("Digite um horário válido.");
           return;
         }
         if (regexLetters.test(insertedValue)) {
           toast.error("esse campo não aceita letras");
           hottable.current.hotInstance.setDataAtCell(
-            index,
+            index123,
             collumnChanged,
             "00:00"
           );
           return;
         }
         const formattedValue = moment(insertedValue, "HHmm").format("HH:mm");
+
         hottable.current.hotInstance.setDataAtCell(
-          index,
+          index123,
           collumnChanged,
           formattedValue
         );
@@ -552,6 +554,11 @@ export function Timesheet() {
       if (collumnChanged == 3) {
         const initialHour = newValue as string;
         const date = convertDate(hoursDataGridData[index][1]);
+        const [hoursI, minutesI] = initialHour.split(":").map(parseInt);
+        if (hoursI > 23 || minutesI > 59) {
+          toast.error("Digite um horário válido.");
+          return;
+        }
 
         if (initialHour.length > 4) {
           const updatingId = newChanges.find((o) => o.id === idChanged);
@@ -576,6 +583,11 @@ export function Timesheet() {
       // Alterando Final
       if (collumnChanged == 4) {
         const finalHour = newValue as string;
+        const [hoursF, minutesF] = finalHour.split(":").map(parseInt);
+        if (hoursF > 23 || minutesF > 59) {
+          toast.error("Digite um horário válido.");
+          return;
+        }
         const date = convertDate(hoursDataGridData[index][1]);
 
         if (finalHour.length > 4) {
@@ -598,21 +610,63 @@ export function Timesheet() {
           setHoursDataGridData(hoursDataGridData);
         }
       }
-      // Alterando Ajuste
-      if (collumnChanged == 6) {
-        const adjustment = newValue as string;
-        const total = hoursDataGridData[index][5];
-        const updatingId = newChanges.find((o) => o.id === idChanged);
-        if (updatingId) {
-          updatingId.adjustment =
-            generateMilisecondsWithHoursAndMinutes(adjustment);
+    }
+
+    // Alterando Ajuste
+    if (collumnChanged === 6) {
+      const insertedValue = newValue as string;
+      const regex = /^(-?\d{2}):(\d{2})$/; // expressão regular para o formato HH:mm ou -HH:mm
+      const regexLetters = /[A-Za-z]/; // expressão regular que verifica se tem letras na string
+      if (!regex.test(insertedValue)) {
+        let hours = 0;
+        let minutes = 0;
+        const isNegative = insertedValue.startsWith("-") ? true : false;
+        const hourString = isNegative
+          ? insertedValue.substring(1)
+          : insertedValue;
+        if (hourString.length === 4 && !regexLetters.test(hourString)) {
+          hours = parseInt(hourString.substring(0, 2));
+          minutes = parseInt(hourString.substring(2, 4));
+        } else {
+          toast.error("Digite um horário válido.");
+          return;
         }
-        // atualizando TOTAL COM AJUSTE
-        hoursDataGridData[index][7] = generateTotalWithAdjustment(
-          total,
-          adjustment
+        if (hours > 23 || minutes > 59) {
+          toast.error("Digite um horário válido.");
+          return;
+        }
+        if (regexLetters.test(hourString)) {
+          toast.error("esse campo não aceita letras");
+          hottable.current.hotInstance.setDataAtCell(
+            index123,
+            collumnChanged,
+            "00:00"
+          );
+          return;
+        }
+        const formattedValue = moment(hourString, "HHmm").format("HH:mm");
+
+        hottable.current.hotInstance.setDataAtCell(
+          index123,
+          collumnChanged,
+          isNegative ? `-${formattedValue}` : formattedValue
         );
+        return;
       }
+
+      // definição
+      const adjustment = newValue as string;
+      const total = hoursDataGridData[index][5];
+      const updatingId = newChanges.find((o) => o.id === idChanged);
+      if (updatingId) {
+        updatingId.adjustment =
+          generateMilisecondsWithHoursAndMinutes(adjustment);
+      }
+      // atualizando TOTAL COM AJUSTE
+      hoursDataGridData[index][7] = generateTotalWithAdjustment(
+        total,
+        adjustment
+      );
     }
 
     // Alterando Cliente
@@ -770,16 +824,27 @@ export function Timesheet() {
         Atividade: relActivity?.title || " ",
         DescricaoAtividade: activityDesc || " ",
         Valor:
-          relActivity && relProject && relClient
-            ? Number(
-                (relActivity.valueActivity
-                  ? relActivity.valueActivity
-                  : relProject.valueProject
-                  ? relProject.valueProject
-                  : relClient.valueClient
-                ).toString()
-              )
-            : " ",
+          Number(
+            (relActivity.valueActivity
+              ? relActivity.valueActivity
+              : relProject.valueProject
+              ? relProject.valueProject
+              : relClient.valueClient
+            ).toString()
+          ) *
+          (parseFloat(
+            generateTotalHoursWithAdjustment(initial, final, adjustment).split(
+              ":"
+            )[0]
+          ) +
+            parseFloat(
+              generateTotalHoursWithAdjustment(
+                initial,
+                final,
+                adjustment
+              ).split(":")[1]
+            ) /
+              60),
         GerenteProjetos:
           relActivity && relProject && relClient
             ? relActivity.gpActivity.length
@@ -873,15 +938,32 @@ export function Timesheet() {
         relProject ? relProject?.title : " ",
         relActivity ? relActivity?.title : " ",
         activityDesc || " ",
-        relActivity && relProject && relClient
-          ? currencyMask(
-              (relActivity?.valueActivity
-                ? relActivity.valueActivity
-                : relProject.valueProject
-                ? relProject.valueProject
-                : relClient.valueClient
-              ).toString()
-            )
+        relActivity && relProject && relClient && initial && final
+          ? (
+              Number(
+                (relActivity.valueActivity
+                  ? relActivity.valueActivity
+                  : relProject.valueProject
+                  ? relProject.valueProject
+                  : relClient.valueClient
+                ).toString()
+              ) *
+              (parseFloat(
+                generateTotalHoursWithAdjustment(
+                  initial,
+                  final,
+                  adjustment ? adjustment : 0
+                ).split(":")[0]
+              ) +
+                parseFloat(
+                  generateTotalHoursWithAdjustment(
+                    initial,
+                    final,
+                    adjustment ? adjustment : 0
+                  ).split(":")[1]
+                ) /
+                  60)
+            ).toFixed(2)
           : " ",
         relActivity && relProject && relClient
           ? relActivity.gpActivity
@@ -1023,8 +1105,11 @@ export function Timesheet() {
                       // } else {
                       //   console.log("esse lançamento pode ser deletado");
                       // }
-                      const selectedIds = selectedRows.map(
-                        (index) => hoursDataGridData[Number(index)][0]
+                      const selectedIds = selectedRows.map((index) =>
+                        hottable.current.hotInstance.getDataAtCell(
+                          Number(index),
+                          0
+                        )
                       );
 
                       arrayOfRows.forEach((num) => {
@@ -1083,22 +1168,36 @@ export function Timesheet() {
                         ]);
                         setNumberOfNewReleases(numberOfNewReleases + 1);
                       } else {
-                        hottable.current.hotInstance.alter(
-                          "insert_row_above",
-                          0
-                        );
-                        hottable.current.hotInstance.setDataAtCell(
-                          0,
-                          14,
-                          `${user.name} ${user.surname}`
-                        );
-                        hottable.current.hotInstance.setDataAtCell(
-                          0,
-                          21,
-                          `${generateDateWithTimestamp(
-                            Date.now()
-                          )} ${generateTimeWithTimestamp(Date.now())}`
-                        );
+                        setHoursDataGridData([
+                          [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            `${user.name} ${user.surname}`,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            `${generateDateWithTimestamp(
+                              Date.now()
+                            )} ${generateTimeWithTimestamp(Date.now())}`,
+                            null,
+                          ],
+                          ...hoursDataGridData,
+                        ]);
                         setNumberOfNewReleases(numberOfNewReleases + 1);
                       }
                     }}
@@ -1125,32 +1224,34 @@ export function Timesheet() {
                   </button>
                 </Tooltip>
               </Permission>
-              <Tooltip
-                title="Esse botão será deletado, utilizado apenas em ambiente dev"
-                arrow
-                placement="top"
-              >
-                <button
-                  className="lancarhoras"
-                  onClick={async () => {
-                    console.log("modificações que serão enviadas no banco:");
-                    console.log("DELETAR:");
-                    console.log(idsSelectedForDelete);
-                    console.log("EDIÇÕES:");
-                    console.log(changes);
-                    console.log("CRIAÇÕES:");
-                    console.log(numberOfNewReleases);
-                    console.log("ARRAY DE ARRAYS PARA SER PROCESSADO:");
-                    console.log(hoursDataGridData);
-                    console.log("CONFIGS USUARIO:");
-                    console.log(user);
-                    console.log("ARRAY DE CLIENTES:");
-                    console.log(clients);
-                  }}
+              <Permission roles={["DEVELOPER"]}>
+                <Tooltip
+                  title="Botão utilizado apenas em ambiente dev - só é possivel enxergar ele com a permissão DEVELOPER"
+                  arrow
+                  placement="top"
                 >
-                  DEV verEdições
-                </button>
-              </Tooltip>
+                  <button
+                    className="lancarhoras"
+                    onClick={async () => {
+                      console.log("modificações que serão enviadas no banco:");
+                      console.log("DELETAR:");
+                      console.log(idsSelectedForDelete);
+                      console.log("EDIÇÕES:");
+                      console.log(changes);
+                      console.log("CRIAÇÕES:");
+                      console.log(numberOfNewReleases);
+                      console.log("ARRAY DE ARRAYS PARA SER PROCESSADO:");
+                      console.log(hoursDataGridData);
+                      console.log("CONFIGS USUARIO:");
+                      console.log(user);
+                      console.log("ARRAY DE CLIENTES:");
+                      console.log(clients);
+                    }}
+                  >
+                    DEV verEdições
+                  </button>
+                </Tooltip>
+              </Permission>
             </div>
           </div>
 
@@ -1158,13 +1259,14 @@ export function Timesheet() {
             <HotTable
               settings={hotSettings}
               ref={hottable}
-              height="70vh"
+              height="60vh"
               width="100%"
               // mergeCells={}
               hiddenColumns={{
                 indicators: false,
                 // columns: [0], esconde o ID
-                columns: [0, ...generateUserPermissions()],
+                columns: [...generateUserPermissions()],
+                // columns: [0, ...generateUserPermissions()],
               }}
               beforeOnCellMouseDown={() => {
                 hottable.current.hotInstance.deselectCell();
@@ -1179,7 +1281,8 @@ export function Timesheet() {
               ) => {
                 const getRange =
                   hottable.current.hotInstance.getSelectedRange();
-                console.log(getRange);
+                // console.log(getRange);
+                // console.log(row, column);
                 if (getRange.length === 1) {
                   // só aceita um range por vez
                   const range = getRange[0];
@@ -1188,11 +1291,11 @@ export function Timesheet() {
                     range.to.col === hoursDataGridData[0].length - 1
                   ) {
                     // verifica se é uma linha completa
-                    const selectedRowsSet = new Set(selectedRows); // cria um novo Set para atualizar o estado
+                    const newSelectedRows = [];
                     for (let i = range.from.row; i <= range.to.row; i++) {
-                      selectedRowsSet.add(i);
+                      newSelectedRows.push(i);
                     }
-                    setSelectedRows([...selectedRowsSet]); // atualiza o estado
+                    setSelectedRows(newSelectedRows);
                   }
                 }
 
@@ -1256,8 +1359,11 @@ export function Timesheet() {
                 //   );
                 // }
                 if (!changes) return;
-                const idChanged = hoursDataGridData[changes[0][0]][0];
                 const index = changes[0][0];
+                const idChanged = hottable.current.hotInstance.getDataAtCell(
+                  index,
+                  0
+                );
                 const collumnChanged = changes[0][1];
                 const newValue = changes[0][3];
                 handleUpdatedChanges(

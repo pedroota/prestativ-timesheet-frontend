@@ -21,6 +21,7 @@ export interface Clients {
       surname: string;
     }
   ];
+  businessUnit?: string;
 }
 
 export interface RegisterClients {
@@ -46,6 +47,7 @@ export interface RegisterClients {
       surname: string;
     }
   ];
+  businessUnit?: string;
 }
 
 export interface ClientsInfo {
@@ -74,4 +76,9 @@ export interface ClientsInfo {
       surname: string;
     }
   ];
+  businessUnit?: {
+    _id: string;
+    nameBU: string;
+    relUser: string;
+  };
 }

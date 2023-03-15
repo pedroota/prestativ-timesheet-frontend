@@ -5,12 +5,14 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import cep from "cep-promise";
 import { Modal } from "components/ModalGeneral";
 import { Permission } from "components/Permission";
+import { BusinessUnitModals } from "interfaces/business.interface";
 import { Clients } from "interfaces/clients.interface";
 import { UserRegister } from "interfaces/users.interface";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { getUserByRole } from "services/auth.service";
+import { getBusiness } from "services/business.service";
 import { createClients } from "services/clients.service";
 import { cepMask, cnpjMask, currencyMask } from "utils/masks";
 import { validateCNPJ } from "utils/validator";
@@ -27,10 +29,14 @@ export function ModalRegisterClient({
   const [price, setPrice] = useState("");
   const [priceNumber, setPriceNumber] = useState(0);
   const [valueCep, setValueCep] = useState("");
+  const [idBusinessUnit, setIdBusinessUnit] = useState("");
   const [gpClient, setGpClient] = useState<string[]>([]);
   const { register, handleSubmit, reset, setValue } = useForm<Clients>({});
   const { data } = useQuery(["users-role", "Gerente de Projetos"], () =>
     getUserByRole("gerenteprojetos")
+  );
+  const { data: businessUnitList } = useQuery(["business"], () =>
+    getBusiness()
   );
 
   useEffect(() => {
@@ -89,6 +95,7 @@ export function ModalRegisterClient({
         payDay,
         valueClient: priceNumber,
         gpClient,
+        businessUnit: idBusinessUnit,
       }),
     {
       onSuccess: () => {
@@ -96,6 +103,7 @@ export function ModalRegisterClient({
         setValueCep("");
         setValues({ cnpj: "" });
         setPrice("");
+        setIdBusinessUnit("");
         setGpClient([]);
         toast.success("Cadastro de cliente efetuado com sucesso!");
         setIsOpen((prevState) => !prevState);
@@ -147,6 +155,7 @@ export function ModalRegisterClient({
         payDay,
         valueClient: priceNumber,
         gpClient,
+        businessUnit: idBusinessUnit,
       });
     }
   );
@@ -343,6 +352,39 @@ export function ModalRegisterClient({
                     {`${name} ${surname}`}
                   </MenuItem>
                 ))}
+              </Select>
+            </FormLabel>
+          </div>
+          <div className="c-register-activity--input-container">
+            <FormLabel
+              sx={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.2rem",
+              }}
+            >
+              Business Unit
+              <Select
+                color="warning"
+                variant="outlined"
+                sx={{ width: "100%" }} // maxWidth: "14rem"
+                value={idBusinessUnit}
+                onChange={(event) => setIdBusinessUnit(event.target.value)}
+              >
+                <MenuItem value="" disabled>
+                  Selecione uma opção (campo opicional)
+                </MenuItem>
+                <MenuItem value="">
+                  <p>Nenhum B.U.</p>
+                </MenuItem>
+                {businessUnitList?.data.map(
+                  ({ _id, nameBU }: BusinessUnitModals) => (
+                    <MenuItem key={_id} value={_id}>
+                      {nameBU}
+                    </MenuItem>
+                  )
+                )}
               </Select>
             </FormLabel>
           </div>

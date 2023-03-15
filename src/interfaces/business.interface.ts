@@ -12,3 +12,8 @@ export interface BusinessUnitRegister {
   nameBU: string;
   relUser: string;
 }
+
+export interface BusinessUnitModals {
+  _id: string;
+  nameBU: string;
+}

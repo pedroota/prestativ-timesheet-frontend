@@ -12,6 +12,7 @@ export interface Projects {
       surname: string;
     }
   ];
+  businessUnit?: string;
   description: string;
 }
 
@@ -30,6 +31,11 @@ export interface ProjectsInfo {
       surname: string;
     }
   ];
+  businessUnit?: {
+    _id: string;
+    nameBU: string;
+    relUser: string;
+  };
   description: string;
 }
 export interface RegisterProject {
@@ -44,5 +50,6 @@ export interface RegisterProject {
       surname: string;
     }
   ];
+  businessUnit?: string;
   description: string;
 }

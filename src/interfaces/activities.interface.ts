@@ -12,6 +12,11 @@ export interface Activities {
       surname: string;
     }
   ];
+  businessUnit?: {
+    _id: string;
+    nameBU: string;
+    relUser: string;
+  };
   description: string;
   users: [
     {
@@ -43,6 +48,11 @@ export interface ActivitiesInfo {
       surname: string;
     }
   ];
+  businessUnit?: {
+    _id: string;
+    nameBU: string;
+    relUser: string;
+  };
   description: string;
   users: [
     {
@@ -70,6 +80,7 @@ export interface RegisterActivity {
   project: string;
   valueActivity: number;
   gpActivity: string[];
+  businessUnit?: string;
   description: string;
   users: string[];
   closedScope: boolean;

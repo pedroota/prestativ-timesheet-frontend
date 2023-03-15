@@ -14,6 +14,8 @@ import { getUserByRole } from "services/auth.service";
 import { UserInfo, UserRegister } from "interfaces/users.interface";
 import FormLabel from "@mui/material/FormLabel";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { getBusiness } from "services/business.service";
+import { BusinessUnitModals } from "interfaces/business.interface";
 
 interface ModalEditUserProps {
   isOpen: boolean;
@@ -26,21 +28,6 @@ export function ModalEditProject({
   setIsOpen,
   currentProject,
 }: ModalEditUserProps) {
-  const [price, setPrice] = useState("");
-  const [priceNumber, setPriceNumber] = useState(0);
-  const [currentClient, setCurrentClient] = useState("");
-  const [titleProject, setTitleProject] = useState("");
-  const [gpProject, setGpProject] = useState<string[]>([]);
-  const [projectDescription, setProjectDescription] = useState("");
-  const queryClient = useQueryClient();
-  const { data: clientsList } = useQuery(["clients"], () => getClients());
-
-  const setNewPrice = (value: string) => {
-    const stringValueWithoutDots = value.replaceAll(".", "");
-    setPrice(stringValueWithoutDots);
-    setPriceNumber(Number(stringValueWithoutDots.slice(2)));
-  };
-
   useQuery(["projects", currentProject], () => getProjectById(currentProject), {
     onSuccess: ({ data }) => {
       data.project.title && setTitleProject(data.project?.title);
@@ -55,8 +42,32 @@ export function ModalEditProject({
           return element._id;
         });
       setGpProject(gps);
+      setIdBusinessUnit(
+        data.project.businessUnit ? data.project.businessUnit._id : ""
+      );
+      console.log(data);
     },
   });
+  const [price, setPrice] = useState("");
+  const [priceNumber, setPriceNumber] = useState(0);
+  const [currentClient, setCurrentClient] = useState("");
+  const [titleProject, setTitleProject] = useState("");
+  const [gpProject, setGpProject] = useState<string[]>([]);
+  const [projectDescription, setProjectDescription] = useState("");
+  const [idBusinessUnit, setIdBusinessUnit] = useState("");
+  const queryClient = useQueryClient();
+  const { data: clientsList } = useQuery(["clients"], () => getClients());
+
+  const { data: businessUnitList } = useQuery(["business"], () =>
+    getBusiness()
+  );
+
+  const setNewPrice = (value: string) => {
+    const stringValueWithoutDots = value.replaceAll(".", "");
+    setPrice(stringValueWithoutDots);
+    setPriceNumber(Number(stringValueWithoutDots.slice(2)));
+  };
+
   const { data: listGps } = useQuery(["users-gp", "Gerente de Projetos"], () =>
     getUserByRole("gerenteprojetos")
   );
@@ -68,6 +79,7 @@ export function ModalEditProject({
         idClient,
         valueProject: priceNumber,
         gpProject,
+        businessUnit: idBusinessUnit,
         description,
       } as RegisterProject),
     {
@@ -93,6 +105,7 @@ export function ModalEditProject({
       valueProject,
       description,
       gpProject,
+      businessUnit: idBusinessUnit,
     });
     setCurrentClient("");
     setTitleProject("");
@@ -176,6 +189,39 @@ export function ModalEditProject({
                     {`${name} ${surname}`}
                   </MenuItem>
                 ))}
+              </Select>
+            </FormLabel>
+          </div>
+          <div className="c-register-activity--input-container">
+            <FormLabel
+              sx={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.2rem",
+              }}
+            >
+              Business Unit
+              <Select
+                color="warning"
+                variant="outlined"
+                sx={{ width: "100%" }} // maxWidth: "14rem"
+                value={idBusinessUnit}
+                onChange={(event) => setIdBusinessUnit(event.target.value)}
+              >
+                <MenuItem value="" disabled>
+                  Selecione uma opção (campo opicional)
+                </MenuItem>
+                <MenuItem value="">
+                  <p>Nenhum B.U.</p>
+                </MenuItem>
+                {businessUnitList?.data.map(
+                  ({ _id, nameBU }: BusinessUnitModals) => (
+                    <MenuItem key={_id} value={_id}>
+                      {nameBU}
+                    </MenuItem>
+                  )
+                )}
               </Select>
             </FormLabel>
           </div>

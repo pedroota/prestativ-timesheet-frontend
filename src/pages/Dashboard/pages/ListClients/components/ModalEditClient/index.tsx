@@ -21,6 +21,8 @@ import { cepMask, currencyMask } from "utils/masks";
 import { toast } from "react-toastify";
 import FormLabel from "@mui/material/FormLabel";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { getBusiness } from "services/business.service";
+import { BusinessUnitModals } from "interfaces/business.interface";
 
 interface ModalEditUserProps {
   isOpen: boolean;
@@ -37,6 +39,7 @@ export function ModalEditClient({
   const [priceNumber, setPriceNumber] = useState(0);
   const [gpClient, setGpClient] = useState<string[]>([]);
   const [valueCep, setValueCep] = useState("");
+  const [idBusinessUnit, setIdBusinessUnit] = useState("");
 
   const { data } = useQuery(
     ["clients", currentClient],
@@ -53,6 +56,9 @@ export function ModalEditClient({
         setGpClient(gps);
         setValueCep(data.client.cep);
         setFormattedCep(cepMask(data.client.cep));
+        setIdBusinessUnit(
+          data.client.businessUnit ? data.client.businessUnit._id : ""
+        );
       },
     }
   );
@@ -92,6 +98,7 @@ export function ModalEditClient({
         payDay,
         valueClient: priceNumber,
         gpClient,
+        businessUnit: idBusinessUnit,
       }),
     {
       onSuccess: () => {
@@ -109,6 +116,9 @@ export function ModalEditClient({
   );
   const { data: listGps } = useQuery(["users-gp", "gpClient"], () =>
     getUserByRole("gerenteprojetos")
+  );
+  const { data: businessUnitList } = useQuery(["business"], () =>
+    getBusiness()
   );
   const [formattedCep, setFormattedCep] = useState<string>(
     data?.data.client && cepMask(data?.data.client.cep)
@@ -157,6 +167,7 @@ export function ModalEditClient({
         payDay,
         valueClient,
         gpClient,
+        businessUnit: idBusinessUnit,
       });
       reset();
     }
@@ -390,7 +401,39 @@ export function ModalEditClient({
                 </Select>
               </FormLabel>
             </div>
-
+            <div className="c-register-activity--input-container">
+              <FormLabel
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.2rem",
+                }}
+              >
+                Business Unit
+                <Select
+                  color="warning"
+                  variant="outlined"
+                  sx={{ width: "100%" }} // maxWidth: "14rem"
+                  value={idBusinessUnit}
+                  onChange={(event) => setIdBusinessUnit(event.target.value)}
+                >
+                  <MenuItem value="" disabled>
+                    Selecione uma opção (campo opicional)
+                  </MenuItem>
+                  <MenuItem value="">
+                    <p>Nenhum B.U.</p>
+                  </MenuItem>
+                  {businessUnitList?.data.map(
+                    ({ _id, nameBU }: BusinessUnitModals) => (
+                      <MenuItem key={_id} value={_id}>
+                        {nameBU}
+                      </MenuItem>
+                    )
+                  )}
+                </Select>
+              </FormLabel>
+            </div>
             <Button
               type="submit"
               id="button-primary"

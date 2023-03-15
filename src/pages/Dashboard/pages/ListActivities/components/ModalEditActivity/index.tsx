@@ -29,6 +29,8 @@ import {
 } from "utils/timeControl";
 import { UserInfo } from "interfaces/users.interface";
 import { currencyMask } from "utils/masks";
+import { getBusiness } from "services/business.service";
+import { BusinessUnitModals } from "interfaces/business.interface";
 
 interface ModalEditActivityProps {
   isOpen: boolean;
@@ -67,6 +69,9 @@ export function ModalEditActivity({
         setProject(data.activity.project._id);
         setPrice(`${data.activity.valueActivity}`);
         setFieldClosedScope(data.activity.closedScope);
+        setIdBusinessUnit(
+          data.activity.businessUnit ? data.activity.businessUnit._id : ""
+        );
       },
     }
   );
@@ -78,6 +83,7 @@ export function ModalEditActivity({
   const [dateField, setDateField] = useState("");
   const [timeField, setTimeField] = useState("");
   const [gpActivity, setGpActivity] = useState<string[]>([]);
+  const [idBusinessUnit, setIdBusinessUnit] = useState("");
   const queryClient = useQueryClient();
 
   const setNewPrice = (e: { target: { value: string } }) => {
@@ -94,6 +100,7 @@ export function ModalEditActivity({
         project,
         description,
         gpActivity,
+        businessUnit: idBusinessUnit,
         users,
         closedScope: fieldClosedScope,
         valueActivity: priceNumber,
@@ -125,6 +132,10 @@ export function ModalEditActivity({
   const { data: projectList } = useQuery(["projects"], getProjects);
   const { register, reset, handleSubmit } = useForm();
 
+  const { data: businessUnitList } = useQuery(["business"], () =>
+    getBusiness()
+  );
+
   const onSubmit = handleSubmit(
     ({ title, description, gpActivity, users, valueActivity, closedScope }) => {
       mutate({
@@ -132,6 +143,7 @@ export function ModalEditActivity({
         project,
         description,
         gpActivity,
+        businessUnit: idBusinessUnit,
         users,
         valueActivity,
         closedScope,
@@ -299,6 +311,39 @@ export function ModalEditActivity({
                     setFieldClosedScope((prevState) => !prevState)
                   }
                 />
+              </FormLabel>
+            </div>
+            <div className="c-register-activity--input-container">
+              <FormLabel
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.2rem",
+                }}
+              >
+                Business Unit
+                <Select
+                  color="warning"
+                  variant="outlined"
+                  sx={{ width: "100%" }} // maxWidth: "14rem"
+                  value={idBusinessUnit}
+                  onChange={(event) => setIdBusinessUnit(event.target.value)}
+                >
+                  <MenuItem value="" disabled>
+                    Selecione uma opção (campo opicional)
+                  </MenuItem>
+                  <MenuItem value="">
+                    <p>Nenhum B.U.</p>
+                  </MenuItem>
+                  {businessUnitList?.data.map(
+                    ({ _id, nameBU }: BusinessUnitModals) => (
+                      <MenuItem key={_id} value={_id}>
+                        {nameBU}
+                      </MenuItem>
+                    )
+                  )}
+                </Select>
               </FormLabel>
             </div>
             <div className="c-register-activity--input-container">
