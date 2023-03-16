@@ -14,6 +14,11 @@ export interface Hours {
         surname: string;
       }
     ];
+    businessUnit?: {
+      _id: string;
+      nameBU: string;
+      relUser: string;
+    };
   };
   relProject: {
     _id: string;
@@ -26,6 +31,11 @@ export interface Hours {
         surname: string;
       }
     ];
+    businessUnit?: {
+      _id: string;
+      nameBU: string;
+      relUser: string;
+    };
   };
   relActivity: {
     _id: string;
@@ -38,6 +48,11 @@ export interface Hours {
         surname: string;
       }
     ];
+    businessUnit?: {
+      _id: string;
+      nameBU: string;
+      relUser: string;
+    };
     closedScope: boolean;
   };
   relUser: {

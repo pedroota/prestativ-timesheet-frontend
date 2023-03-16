@@ -63,12 +63,12 @@ export function ModalRegisterActivity({
   const { register, handleSubmit, reset } = useForm();
 
   const { mutate, isLoading } = useMutation(
-    ({ title, project, gpActivity, description, users }: RegisterActivity) =>
+    ({ title, project, description, users }: RegisterActivity) =>
       createActivities({
         title: title.trim(),
         project,
         valueActivity: priceNumber,
-        gpActivity,
+        gpActivity: gpActivity,
         businessUnit: idBusinessUnit,
         description,
         users,
@@ -99,21 +99,19 @@ export function ModalRegisterActivity({
     }
   );
 
-  const onSubmit = handleSubmit(
-    ({ title, project, gpActivity, description, users }) => {
-      mutate({
-        title: title.trim(),
-        project,
-        valueActivity: priceNumber,
-        gpActivity,
-        businessUnit: idBusinessUnit,
-        description,
-        users,
-        closedScope: fieldClosedScope,
-        activityValidity: generateTimestampWithDateAndTime(chosenDay, "00:00"),
-      });
-    }
-  );
+  const onSubmit = handleSubmit(({ title, project, description, users }) => {
+    mutate({
+      title: title.trim(),
+      project,
+      valueActivity: priceNumber,
+      gpActivity: gpActivity,
+      businessUnit: idBusinessUnit,
+      description,
+      users,
+      closedScope: fieldClosedScope,
+      activityValidity: generateTimestampWithDateAndTime(chosenDay, "00:00"),
+    });
+  });
 
   const multipleSelectChange = (
     event: SelectChangeEvent<typeof multipleSelect>

@@ -41,12 +41,13 @@ export function ListProjects() {
   );
 
   return (
-    <div>
+    <div className="class-projetos">
       <Box
         sx={{
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
+          width: "85vw",
         }}
       >
         <Typography variant="h4" sx={{ marginBlock: "1.3rem" }}>
@@ -65,7 +66,6 @@ export function ListProjects() {
       {isLoading ? (
         <Box
           sx={{
-            width: "100%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -77,9 +77,9 @@ export function ListProjects() {
       ) : (
         <>
           {projects?.data.length ? (
-            <div>
-              <Paper className="c-timesheet">
-                <div className="c-table">
+            <div className="table-projetos">
+              <Paper>
+                <div>
                   <div className="c-table--helper">
                     <Table aria-label="customized table">
                       <TableHead>

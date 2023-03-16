@@ -55,9 +55,9 @@ export function ModalEditUser({
   const { mutate, isLoading } = useMutation(
     ({ name, surname, email, password, role, typeField }: UserRegister) =>
       updateUser(currentUser, {
-        name,
-        surname,
-        email,
+        name: name?.trim(),
+        surname: surname?.trim(),
+        email: email?.trim(),
         password,
         role,
         typeField,
@@ -80,7 +80,14 @@ export function ModalEditUser({
 
   const onSubmit = handleSubmit(
     ({ name, surname, email, password, role, typeField }) => {
-      mutate({ name, surname, email, password, role, typeField });
+      mutate({
+        name: name?.trim(),
+        surname: surname?.trim(),
+        email: email?.trim(),
+        password,
+        role,
+        typeField,
+      });
       reset();
     }
   );
@@ -138,20 +145,20 @@ export function ModalEditUser({
               color="warning"
               select
               defaultValue={"nenhum"}
-              label="Campo Cadastral"
+              label="Campo Cadastral + Visibilidade"
               type="typeField"
               {...register("typeField")}
               value={currentTypefield}
               onChange={(event) => setCurrentTypefield(event.target.value)}
             >
               <MenuItem value={"nenhum"} key={0}>
-                Não se aplica
+                Não se aplica - Todos os Lançamentos
               </MenuItem>
               <MenuItem value={"gerenteprojetos"} key={1}>
-                Gerente de Projetos
+                Gerente de Projetos - Apenas os Próprios Lançamentos
               </MenuItem>
               <MenuItem value={"consultor"} key={2}>
-                Consultor
+                Consultor - Apenas os Próprios Lançamentos
               </MenuItem>
             </TextField>
             <TextField

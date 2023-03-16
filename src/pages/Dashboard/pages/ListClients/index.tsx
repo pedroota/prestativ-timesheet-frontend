@@ -42,12 +42,14 @@ export function ListClients() {
   );
 
   return (
-    <div>
+    <div className="class-cliente">
       <Box
         sx={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          left: "100%",
+          width: "85vw",
         }}
       >
         <Typography variant="h4" sx={{ marginBlock: "1.3rem" }}>
@@ -67,7 +69,6 @@ export function ListClients() {
       {isLoading ? (
         <Box
           sx={{
-            width: "100%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -79,10 +80,10 @@ export function ListClients() {
       ) : (
         <>
           {clients?.data.length ? (
-            <div>
+            <div className="table-cliente">
               <Paper>
-                <div className="c-table">
-                  <div className="c-table--helper">
+                <div>
+                  <div>
                     <Table aria-label="customized table">
                       <TableHead>
                         <TableRow className="c-table--reset-head">

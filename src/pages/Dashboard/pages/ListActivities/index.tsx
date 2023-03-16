@@ -100,12 +100,14 @@ export function ListActivities() {
   };
 
   return (
-    <div>
+    <div className="class-activity">
       <Box
         sx={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          left: "100%",
+          width: "85vw",
         }}
       >
         <Typography variant="h4" sx={{ marginBlock: "1.3rem" }}>
@@ -124,7 +126,6 @@ export function ListActivities() {
       {isLoading ? (
         <Box
           sx={{
-            width: "100%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -136,10 +137,10 @@ export function ListActivities() {
       ) : (
         <>
           {activities?.data.length ? (
-            <div>
+            <div className="activity-table">
               <Paper className="c-timesheet">
-                <div className="c-table">
-                  <div className="c-table--helper">
+                <div>
+                  <div>
                     <Table aria-label="customized table">
                       <TableHead>
                         <TableRow className="c-table--reset-head">
