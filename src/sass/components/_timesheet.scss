@@ -3,36 +3,67 @@
 .c-timesheet {
   overflow-x: auto;
 }
+
 .buttons-container {
   display: flex;
   flex-direction: row-reverse;
   justify-content: space-between;
 }
+
 .buttons-export {
   display: flex;
   flex-direction: row;
 }
+
 .buttons-export * {
   background-color: #b1b1b1;
   margin: 0.5rem 0 0.5rem 0.5rem;
   padding: 0 0.5rem;
   font-size: 0.75rem;
-  
 }
+
 .button-hours {
   display: flex;
   flex-direction: row-reverse
 }
+
+.button-hours {
+  position: absolute;
+  left: 3rem;
+  top: 2px;
+}
+.buttons-container{
+  position: relative;
+  bottom:1px;
+  height: 35px;
+  overflow: hidden;
+}
+
+.buttons-export{
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  right: 10px;
+  top: 2px;
+}
+
+.esp{
+  position:relative;
+  visibility: hidden;
+}
+
 .csvbutton {
   border: 1px solid #000;
   width: 120px;
   text-align: center;
 }
+
 .excelbutton {
   border: 1px solid #000;
   width: 120px;
   cursor: pointer;
 }
+
 .lancarhoras {
   border: 1px solid #000;
   width: 120px;
@@ -42,4 +73,3 @@
   padding: 0 0.5rem;
   font-size: 0.75rem;
 }
-

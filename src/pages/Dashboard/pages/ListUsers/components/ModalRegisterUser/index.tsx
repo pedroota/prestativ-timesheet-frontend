@@ -38,7 +38,14 @@ export function ModalRegisterUser({
 
   const { mutate, isLoading } = useMutation(
     ({ name, surname, email, password, role, typeField }: UserRegister) =>
-      signUp({ name, surname, email, password, role, typeField }),
+      signUp({
+        name: name?.trim(),
+        surname: surname?.trim(),
+        email: email?.trim(),
+        password,
+        role,
+        typeField,
+      }),
     {
       onSuccess: () => {
         reset();
@@ -58,7 +65,14 @@ export function ModalRegisterUser({
       if (!validateEmail(email)) {
         return toast.error("O Email digitado é inválido", { autoClose: 1500 });
       }
-      mutate({ name, surname, email, password, role, typeField });
+      mutate({
+        name: name?.trim(),
+        surname: surname?.trim(),
+        email: email?.trim(),
+        password,
+        role,
+        typeField,
+      });
     }
   );
 
@@ -117,20 +131,20 @@ export function ModalRegisterUser({
             required
             color="warning"
             select
-            label="Campo Cadastral"
+            label="Campo Cadastral + Visibilidade"
             type="typeField"
             {...register("typeField")}
             value={typeFieldValue}
             onChange={(event) => setTypeFieldValue(event.target.value)}
           >
             <MenuItem value={"nenhum"} key={0}>
-              Não se aplica
+              Não se aplica - Enxerga todos os Lançamentos
             </MenuItem>
             <MenuItem value={"gerenteprojetos"} key={1}>
-              Gerente de Projetos
+              Gerente de Projetos - Apenas os Próprios Lançamentos
             </MenuItem>
             <MenuItem value={"consultor"} key={2}>
-              Consultor
+              Consultor - Apenas os Próprios Lançamentos
             </MenuItem>
           </TextField>
           <TextField

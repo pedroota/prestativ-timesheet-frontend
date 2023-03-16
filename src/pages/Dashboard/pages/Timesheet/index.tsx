@@ -58,6 +58,8 @@ export function Timesheet() {
     getHoursFilters("")
   );
 
+  console.log(hours);
+
   setTimeout(() => {
     hoursDataGrid && setHaveData(true);
   }, 200);
@@ -89,7 +91,7 @@ export function Timesheet() {
   const [activityListNames, setActivityListNames] = useState([]);
 
   const { data: hoursByUser, isLoading: isLoadingHoursByUser } = useQuery(
-    ["hours", user._id],
+    ["hoursByUser", user._id],
     () => getHoursFilters("relUser=" + user._id)
   );
 
@@ -444,6 +446,13 @@ export function Timesheet() {
         }
       }
 
+      for (const data of arrayForDB) {
+        if (!data.relClient || !data.relProject || !data.relActivity) {
+          toast.error("Deve ser informado Cliente, Projeto e Atividade!");
+          return;
+        }
+      }
+
       for (const { ...data } of arrayForDB) {
         await createHours({ ...data });
       }
@@ -453,10 +462,11 @@ export function Timesheet() {
     toast.success("Todas as modificações foram salvas");
 
     setIsOpen(false);
+    setHoursDataGridData([]);
     queryClient.invalidateQueries(["hours"]);
-    // setHoursDataGridData(hoursDataGridData);
-    // setTimeout(() => {
-    // }, 2000);
+    queryClient.invalidateQueries(["hoursByUser"]);
+    setHoursDataGridData(hoursDataGrid);
+    // location.reload();
   };
 
   const [numberOfNewReleases, setNumberOfNewReleases] = useState(0);
@@ -822,6 +832,16 @@ export function Timesheet() {
         Cliente: relClient?.name || " ",
         Projeto: relProject?.title || " ",
         Atividade: relActivity?.title || " ",
+        BusinessUnit:
+          relActivity || relProject || relClient
+            ? relActivity.businessUnit?.nameBU
+              ? relActivity.businessUnit?.nameBU
+              : relProject.businessUnit?.nameBU
+              ? relProject.businessUnit?.nameBU
+              : relClient.businessUnit?.nameBU
+              ? relClient.businessUnit?.nameBU
+              : " "
+            : "Nenhum B.U.",
         DescricaoAtividade: activityDesc || " ",
         Valor:
           Number(
@@ -846,20 +866,16 @@ export function Timesheet() {
             ) /
               60),
         GerenteProjetos:
-          relActivity && relProject && relClient
-            ? relActivity.gpActivity.length
+          relActivity || relProject || relClient
+            ? relActivity.gpActivity.length > 0
               ? relActivity.gpActivity
                   .map(({ name, surname }) => `${name} ${surname}`)
                   .join(", ")
-              : relProject.gpProject && relProject.gpProject.length
-              ? relProject.gpProject.reduce(
-                  (accumulator, { name, surname }) =>
-                    `${accumulator}${
-                      accumulator.length > 0 ? ", " : " "
-                    }${name} ${surname}`,
-                  " "
-                )
-              : relClient.gpClient && relClient.gpClient.length
+              : relProject.gpProject.length > 0
+              ? relProject.gpProject
+                  .map(({ name, surname }) => `${name} ${surname}`)
+                  .join(", ")
+              : relClient.gpClient.length > 0
               ? relClient.gpClient
                   .map(({ name, surname }) => `${name} ${surname}`)
                   .join(", ")
@@ -901,6 +917,8 @@ export function Timesheet() {
       return hours;
     }
   };
+
+  console.log(validateUserRegisterHours());
 
   const hoursDataGrid = validateUserRegisterHours()?.data.map(
     ({
@@ -965,16 +983,16 @@ export function Timesheet() {
                   60)
             ).toFixed(2)
           : " ",
-        relActivity && relProject && relClient
-          ? relActivity.gpActivity
+        relActivity || relProject || relClient
+          ? relActivity.gpActivity.length > 0
             ? relActivity.gpActivity
                 .map(({ name, surname }) => `${name} ${surname}`)
                 .join(", ")
-            : relProject.gpProject && relProject.gpProject
+            : relProject.gpProject.length > 0
             ? relProject.gpProject
                 .map(({ name, surname }) => `${name} ${surname}`)
                 .join(", ")
-            : relClient.gpClient && relClient.gpClient
+            : relClient.gpClient.length > 0
             ? relClient.gpClient
                 .map(({ name, surname }) => `${name} ${surname}`)
                 .join(", ")
@@ -1020,6 +1038,7 @@ export function Timesheet() {
 
   useEffect(() => {
     queryClient.invalidateQueries(["hours"]);
+    queryClient.invalidateQueries(["hoursByUser"]);
     setHoursDataGridData(hoursDataGrid);
   }, [haveData]);
 
@@ -1053,6 +1072,7 @@ export function Timesheet() {
       ) : (
         <>
           <div className="buttons-container">
+            <div className="esp">.</div>
             <Permission roles={["EXPORTAR_EXCEL"]}>
               <div className="buttons-export">
                 <Tooltip
@@ -1081,7 +1101,7 @@ export function Timesheet() {
             <div className="button-hours">
               <Permission roles={["DELETAR_HORAS"]}>
                 <Tooltip
-                  title="Selecione a inha inteira para deletar"
+                  title="Selecione a linha inteira para deletar"
                   arrow
                   placement="top"
                 >
@@ -1240,7 +1260,7 @@ export function Timesheet() {
                       console.log(changes);
                       console.log("CRIAÇÕES:");
                       console.log(numberOfNewReleases);
-                      console.log("ARRAY DE ARRAYS PARA SER PROCESSADO:");
+                      console.log("HOURSDATAGRIDDATA:");
                       console.log(hoursDataGridData);
                       console.log("CONFIGS USUARIO:");
                       console.log(user);
@@ -1248,7 +1268,7 @@ export function Timesheet() {
                       console.log(clients);
                     }}
                   >
-                    DEV verEdições
+                    DEVELOPER
                   </button>
                 </Tooltip>
               </Permission>
@@ -1259,6 +1279,7 @@ export function Timesheet() {
             <HotTable
               settings={hotSettings}
               ref={hottable}
+              className="handsontable"
               height="60vh"
               width="100%"
               // mergeCells={}

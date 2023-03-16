@@ -94,12 +94,12 @@ export function ModalEditActivity({
   };
 
   const { mutate, isLoading } = useMutation(
-    ({ title, project, description, gpActivity, users }: RegisterActivity) =>
+    ({ title, project, description, users }: RegisterActivity) =>
       updateActivity(currentActivity, {
         title: title.trim(),
         project,
         description,
-        gpActivity,
+        gpActivity: gpActivity,
         businessUnit: idBusinessUnit,
         users,
         closedScope: fieldClosedScope,
@@ -137,12 +137,12 @@ export function ModalEditActivity({
   );
 
   const onSubmit = handleSubmit(
-    ({ title, description, gpActivity, users, valueActivity, closedScope }) => {
+    ({ title, description, users, valueActivity, closedScope }) => {
       mutate({
         title: title.trim(),
         project,
         description,
-        gpActivity,
+        gpActivity: gpActivity,
         businessUnit: idBusinessUnit,
         users,
         valueActivity,

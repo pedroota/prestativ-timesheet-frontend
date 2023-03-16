@@ -79,7 +79,7 @@ export function ListUsers() {
                             Email
                           </StyledTableCell>
                           <StyledTableCell align="center">
-                            Campo Cadastral
+                            Campo Cadastral + Visibilidade
                           </StyledTableCell>
                           <StyledTableCell align="center">
                             Perfil
@@ -113,10 +113,10 @@ export function ListUsers() {
                               </StyledTableCell>
                               <StyledTableCell align="center">
                                 {typeField == "consultor"
-                                  ? "Consultor"
+                                  ? "Consultor / Só os próprios lançamentos"
                                   : typeField == "gerenteprojetos"
-                                  ? "Gerente de Projetos"
-                                  : "Não se Aplica"}
+                                  ? "Gerente de Projetos / Só os próprios lançamentos"
+                                  : "Não se Aplica / Enxerga todos os lançamentos"}
                               </StyledTableCell>
                               <StyledTableCell align="center">
                                 {role.name}

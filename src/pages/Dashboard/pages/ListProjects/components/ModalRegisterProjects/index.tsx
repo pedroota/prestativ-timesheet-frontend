@@ -43,12 +43,12 @@ export function ModalRegisterProject({
   const { register, handleSubmit, reset } = useForm<Projects>({});
 
   const { mutate, isLoading } = useMutation(
-    ({ title, idClient, gpProject, description }: Projects) =>
+    ({ title, idClient, description }: Projects) =>
       createProjects({
         title,
         idClient,
         valueProject: priceNumber,
-        gpProject,
+        gpProject: gpProject,
         businessUnit: idBusinessUnit,
         description,
       }),
@@ -70,18 +70,16 @@ export function ModalRegisterProject({
     }
   );
 
-  const onSubmit = handleSubmit(
-    ({ title, idClient, gpProject, description }) => {
-      mutate({
-        title: title.trim(),
-        idClient,
-        valueProject: priceNumber,
-        gpProject,
-        businessUnit: idBusinessUnit,
-        description,
-      });
-    }
-  );
+  const onSubmit = handleSubmit(({ title, idClient, description }) => {
+    mutate({
+      title: title.trim(),
+      idClient,
+      valueProject: priceNumber,
+      gpProject: gpProject,
+      businessUnit: idBusinessUnit,
+      description,
+    });
+  });
 
   const setNewPrice = (e: { target: { value: string } }) => {
     const stringValue = e.target.value;

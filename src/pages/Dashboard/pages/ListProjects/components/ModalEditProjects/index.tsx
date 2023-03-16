@@ -73,12 +73,12 @@ export function ModalEditProject({
   );
 
   const { mutate, isLoading } = useMutation(
-    ({ title, idClient, gpProject, description }: RegisterProject) =>
+    ({ title, idClient, description }: RegisterProject) =>
       updateProjects(currentProject, {
         title,
         idClient,
         valueProject: priceNumber,
-        gpProject,
+        gpProject: gpProject,
         businessUnit: idBusinessUnit,
         description,
       } as RegisterProject),
@@ -98,13 +98,13 @@ export function ModalEditProject({
 
   const { register, reset, handleSubmit } = useForm<Projects>();
 
-  const onSubmit = handleSubmit(({ valueProject, description, gpProject }) => {
+  const onSubmit = handleSubmit(({ valueProject, description }) => {
     mutate({
       title: titleProject.trim(),
       idClient: currentClient,
       valueProject,
       description,
-      gpProject,
+      gpProject: gpProject,
       businessUnit: idBusinessUnit,
     });
     setCurrentClient("");
