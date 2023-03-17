@@ -370,16 +370,14 @@ export function Timesheet() {
           const currentYear = currentDate.getFullYear();
           const currentMonth = currentDate.getMonth() + 1;
           const currentDay = currentDate.getDate();
-          const currentDateStr = `${currentYear}-${
-            currentMonth < 10 ? `0${currentMonth}` : currentMonth
-          }-${currentDay < 10 ? `0${currentDay}` : currentDay}`;
+          const currentDateStr = `${currentYear}-${currentMonth < 10 ? `0${currentMonth}` : currentMonth
+            }-${currentDay < 10 ? `0${currentDay}` : currentDay}`;
           const editedDate = new Date(data?.initial as number);
           const editedYear = editedDate.getFullYear();
           const editedMonth = editedDate.getMonth() + 1;
           const editedDay = editedDate.getDate();
-          const editedDateStr = `${editedYear}-${
-            editedMonth < 10 ? `0${editedMonth}` : editedMonth
-          }-${editedDay < 10 ? `0${editedDay}` : editedDay}`;
+          const editedDateStr = `${editedYear}-${editedMonth < 10 ? `0${editedMonth}` : editedMonth
+            }-${editedDay < 10 ? `0${editedDay}` : editedDay}`;
           if (editedDateStr < currentDateStr) {
             toast.error(
               `A data ${editedDateStr} foi alterada! Essa ação não está disponível!`
@@ -414,17 +412,15 @@ export function Timesheet() {
       const todayMonth = todayDate.getMonth() + 1;
       const todayYear = todayDate.getFullYear();
       const todayMaxRelease = generateTimestampWithDateAndTime(
-        `${todayYear}-${todayMonth < 10 ? `0${todayMonth}` : todayMonth}-${
-          todayDay < 10 ? `0${todayDay}` : todayDay
+        `${todayYear}-${todayMonth < 10 ? `0${todayMonth}` : todayMonth}-${todayDay < 10 ? `0${todayDay}` : todayDay
         }`,
         "23:59"
       );
       for (const data of arrayForDB) {
         if (data.final > todayMaxRelease) {
           const date = new Date(data.initial);
-          const dateString = `${date.getDate()}/${
-            date.getMonth() + 1
-          }/${date.getFullYear()}`;
+          const dateString = `${date.getDate()}/${date.getMonth() + 1
+            }/${date.getFullYear()}`;
           toast.error(`A data ${dateString} ainda não está disponível!`);
           return;
         }
@@ -432,9 +428,8 @@ export function Timesheet() {
       for (const data of arrayForDB) {
         if (data.initial < today - daysInMiliseconds) {
           const date = new Date(data.initial);
-          const dateString = `${date.getDate()}/${
-            date.getMonth() + 1
-          }/${date.getFullYear()}`;
+          const dateString = `${date.getDate()}/${date.getMonth() + 1
+            }/${date.getFullYear()}`;
           toast.error(`A data ${dateString} não está disponível!`);
           return;
         }
@@ -837,10 +832,10 @@ export function Timesheet() {
             ? relActivity.businessUnit?.nameBU
               ? relActivity.businessUnit?.nameBU
               : relProject.businessUnit?.nameBU
-              ? relProject.businessUnit?.nameBU
-              : relClient.businessUnit?.nameBU
-              ? relClient.businessUnit?.nameBU
-              : " "
+                ? relProject.businessUnit?.nameBU
+                : relClient.businessUnit?.nameBU
+                  ? relClient.businessUnit?.nameBU
+                  : " "
             : "Nenhum B.U.",
         DescricaoAtividade: activityDesc || " ",
         Valor:
@@ -848,8 +843,8 @@ export function Timesheet() {
             (relActivity.valueActivity
               ? relActivity.valueActivity
               : relProject.valueProject
-              ? relProject.valueProject
-              : relClient.valueClient
+                ? relProject.valueProject
+                : relClient.valueClient
             ).toString()
           ) *
           (parseFloat(
@@ -864,22 +859,22 @@ export function Timesheet() {
                 adjustment
               ).split(":")[1]
             ) /
-              60),
+            60),
         GerenteProjetos:
           relActivity || relProject || relClient
             ? relActivity.gpActivity.length > 0
               ? relActivity.gpActivity
-                  .map(({ name, surname }) => `${name} ${surname}`)
-                  .join(", ")
+                .map(({ name, surname }) => `${name} ${surname}`)
+                .join(", ")
               : relProject.gpProject.length > 0
-              ? relProject.gpProject
+                ? relProject.gpProject
                   .map(({ name, surname }) => `${name} ${surname}`)
                   .join(", ")
-              : relClient.gpClient.length > 0
-              ? relClient.gpClient
-                  .map(({ name, surname }) => `${name} ${surname}`)
-                  .join(", ")
-              : " "
+                : relClient.gpClient.length > 0
+                  ? relClient.gpClient
+                    .map(({ name, surname }) => `${name} ${surname}`)
+                    .join(", ")
+                  : " "
             : " ",
         Consultor: `${relUser?.name} ${relUser?.surname}` || " ",
         EscopoFechado: relActivity?.closedScope ? "sim" : "não",
@@ -950,53 +945,53 @@ export function Timesheet() {
         adjustment
           ? generateTotalHoursWithAdjustment(initial, final, adjustment)
           : initial && final
-          ? generateTotalHours(initial, final)
-          : " ",
+            ? generateTotalHours(initial, final)
+            : " ",
         relClient ? relClient?.name : " ",
         relProject ? relProject?.title : " ",
         relActivity ? relActivity?.title : " ",
         activityDesc || " ",
         relActivity && relProject && relClient && initial && final
           ? (
-              Number(
-                (relActivity.valueActivity
-                  ? relActivity.valueActivity
-                  : relProject.valueProject
+            Number(
+              (relActivity.valueActivity
+                ? relActivity.valueActivity
+                : relProject.valueProject
                   ? relProject.valueProject
                   : relClient.valueClient
-                ).toString()
-              ) *
-              (parseFloat(
+              ).toString()
+            ) *
+            (parseFloat(
+              generateTotalHoursWithAdjustment(
+                initial,
+                final,
+                adjustment ? adjustment : 0
+              ).split(":")[0]
+            ) +
+              parseFloat(
                 generateTotalHoursWithAdjustment(
                   initial,
                   final,
                   adjustment ? adjustment : 0
-                ).split(":")[0]
-              ) +
-                parseFloat(
-                  generateTotalHoursWithAdjustment(
-                    initial,
-                    final,
-                    adjustment ? adjustment : 0
-                  ).split(":")[1]
-                ) /
-                  60)
-            ).toFixed(2)
+                ).split(":")[1]
+              ) /
+              60)
+          ).toFixed(2)
           : " ",
         relActivity || relProject || relClient
           ? relActivity.gpActivity.length > 0
             ? relActivity.gpActivity
-                .map(({ name, surname }) => `${name} ${surname}`)
-                .join(", ")
+              .map(({ name, surname }) => `${name} ${surname}`)
+              .join(", ")
             : relProject.gpProject.length > 0
-            ? relProject.gpProject
+              ? relProject.gpProject
                 .map(({ name, surname }) => `${name} ${surname}`)
                 .join(", ")
-            : relClient.gpClient.length > 0
-            ? relClient.gpClient
-                .map(({ name, surname }) => `${name} ${surname}`)
-                .join(", ")
-            : " "
+              : relClient.gpClient.length > 0
+                ? relClient.gpClient
+                  .map(({ name, surname }) => `${name} ${surname}`)
+                  .join(", ")
+                : " "
           : " ",
         `${relUser?.name} ${relUser?.surname}` || " ",
         relActivity ? relActivity.closedScope : " ",
@@ -1011,6 +1006,15 @@ export function Timesheet() {
         `${generateDateWithTimestamp(updatedAt)} ${generateTimeWithTimestamp(
           updatedAt
         )}`,
+        relActivity || relProject || relClient
+          ? relActivity.businessUnit?.nameBU
+            ? relActivity.businessUnit?.nameBU
+            : relProject.businessUnit?.nameBU
+              ? relProject.businessUnit?.nameBU
+              : relClient.businessUnit?.nameBU
+                ? relClient.businessUnit?.nameBU
+                : " "
+          : "Nenhum B.U.",
       ];
     }
   );
@@ -1468,6 +1472,7 @@ export function Timesheet() {
               <HotColumn title="Chamado Lançado" />
               <HotColumn title="Criado em" readOnly={true} />
               <HotColumn title="Editado em" readOnly={true} />
+              <HotColumn title="BusinessUnit" readOnly={true} />
             </HotTable>
           </Paper>
         </>
