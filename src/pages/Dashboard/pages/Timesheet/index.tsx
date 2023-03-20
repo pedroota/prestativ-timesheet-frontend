@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { CSVLink } from "react-csv";
 import {
@@ -54,11 +54,11 @@ export function Timesheet() {
   const { user } = useAuthStore((state: any) => state);
   const queryClient = useQueryClient();
 
-  const { data: hours, isLoading: isLoadingHours } = useQuery(["hours"], () =>
-    getHoursFilters("")
-  );
-
-  console.log(hours);
+  const {
+    data: hours,
+    isLoading: isLoadingHours,
+    refetch: refetchHours,
+  } = useQuery(["hours"], () => getHoursFilters(""));
 
   setTimeout(() => {
     hoursDataGrid && setHaveData(true);
@@ -69,30 +69,40 @@ export function Timesheet() {
     () => getClients()
   );
 
-  const getClientData = () => {
+  const getProjectData = () => {
     const client = clients?.data?.find(
       (client: { name: string }) => client.name === actualClient
     );
     return client.projects;
   };
 
-  const getProjectData = () => {
-    const project = getClientData()?.find(
+  const getActivityData = () => {
+    const project = getProjectData()?.find(
       (project: { title: string }) => project.title === actualProject
     );
     return project.activities;
   };
 
-  const clientListNames = clients?.data?.map(
-    (client: { name: string }) => client.name
+  const [clientListNames, setClientListNames] = useState(
+    clients?.data?.map((client: { name: string }) => client.name)
   );
-
   const [projectListNames, setProjectListNames] = useState([]);
   const [activityListNames, setActivityListNames] = useState([]);
 
-  const { data: hoursByUser, isLoading: isLoadingHoursByUser } = useQuery(
-    ["hoursByUser", user._id],
-    () => getHoursFilters("relUser=" + user._id)
+  const clientsData = useMemo(
+    () =>
+      setClientListNames(
+        clients?.data?.map((client: { name: string }) => client.name)
+      ),
+    [clients]
+  );
+
+  const {
+    data: hoursByUser,
+    isLoading: isLoadingHoursByUser,
+    refetch: refetchHoursByUser,
+  } = useQuery(["hoursByUser", user._id], () =>
+    getHoursFilters("relUser=" + user._id)
   );
 
   const hottable: any = useRef(null);
@@ -460,12 +470,128 @@ export function Timesheet() {
     }
 
     toast.success("Todas as modificações foram salvas");
-
-    setIsOpen(false);
-    setHoursDataGridData([]);
+    // setHoursDataGridData([]);
     queryClient.invalidateQueries(["hours"]);
+    refetchHours();
     queryClient.invalidateQueries(["hoursByUser"]);
-    setHoursDataGridData(hoursDataGrid);
+    refetchHoursByUser();
+
+    const dataUpdated = async () => {
+      if (user.typeField !== "nenhum") {
+        return await getHoursFilters("relUser=" + user._id);
+      } else {
+        return await getHoursFilters("");
+      }
+    };
+
+    const newData = (await dataUpdated())?.data.map(
+      ({
+        _id,
+        initial,
+        final,
+        adjustment,
+        relClient,
+        relProject,
+        relActivity,
+        relUser,
+        approvedGP,
+        billable,
+        released,
+        approved,
+        releasedCall,
+        activityDesc,
+        createdAt,
+        updatedAt,
+      }: Hours) => {
+        return [
+          _id || " ",
+          generateDateWithTimestamp(initial) || " ",
+          generateDayWeekWithTimestamp(initial) || " ",
+          generateTimeWithTimestamp(initial) || " ",
+          final ? generateTimeWithTimestamp(final) : " ",
+          initial && final ? generateTotalHours(initial, final) : " ",
+          generateAdjustmentWithNumberInMilliseconds(adjustment) || " ",
+          adjustment
+            ? generateTotalHoursWithAdjustment(initial, final, adjustment)
+            : initial && final
+            ? generateTotalHours(initial, final)
+            : " ",
+          relClient ? relClient?.name : " ",
+          relProject ? relProject?.title : " ",
+          relActivity ? relActivity?.title : " ",
+          activityDesc || " ",
+          relActivity && relProject && relClient && initial && final
+            ? (
+                Number(
+                  (relActivity.valueActivity
+                    ? relActivity.valueActivity
+                    : relProject.valueProject
+                    ? relProject.valueProject
+                    : relClient.valueClient
+                  ).toString()
+                ) *
+                (parseFloat(
+                  generateTotalHoursWithAdjustment(
+                    initial,
+                    final,
+                    adjustment ? adjustment : 0
+                  ).split(":")[0]
+                ) +
+                  parseFloat(
+                    generateTotalHoursWithAdjustment(
+                      initial,
+                      final,
+                      adjustment ? adjustment : 0
+                    ).split(":")[1]
+                  ) /
+                    60)
+              ).toFixed(2)
+            : " ",
+          relActivity || relProject || relClient
+            ? relActivity.gpActivity.length > 0
+              ? relActivity.gpActivity
+                  .map(({ name, surname }) => `${name} ${surname}`)
+                  .join(", ")
+              : relProject.gpProject.length > 0
+              ? relProject.gpProject
+                  .map(({ name, surname }) => `${name} ${surname}`)
+                  .join(", ")
+              : relClient.gpClient.length > 0
+              ? relClient.gpClient
+                  .map(({ name, surname }) => `${name} ${surname}`)
+                  .join(", ")
+              : " "
+            : " ",
+          `${relUser?.name} ${relUser?.surname}` || " ",
+          relActivity ? relActivity.closedScope : " ",
+          approvedGP,
+          billable,
+          released,
+          approved,
+          releasedCall || " ",
+          `${generateDateWithTimestamp(createdAt)} ${generateTimeWithTimestamp(
+            createdAt
+          )}`,
+          `${generateDateWithTimestamp(updatedAt)} ${generateTimeWithTimestamp(
+            updatedAt
+          )}`,
+          relActivity || relProject || relClient
+            ? relActivity.businessUnit?.nameBU
+              ? relActivity.businessUnit?.nameBU
+              : relProject.businessUnit?.nameBU
+              ? relProject.businessUnit?.nameBU
+              : relClient.businessUnit?.nameBU
+              ? relClient.businessUnit?.nameBU
+              : " "
+            : "Nenhum B.U.",
+        ];
+      }
+    );
+
+    setHoursDataGridData(newData);
+    hottable.current.hotInstance.updateData(newData);
+    setIsOpen(false);
+
     // location.reload();
   };
 
@@ -918,8 +1044,6 @@ export function Timesheet() {
     }
   };
 
-  console.log(validateUserRegisterHours());
-
   const hoursDataGrid = validateUserRegisterHours()?.data.map(
     ({
       _id,
@@ -1011,6 +1135,15 @@ export function Timesheet() {
         `${generateDateWithTimestamp(updatedAt)} ${generateTimeWithTimestamp(
           updatedAt
         )}`,
+        relActivity || relProject || relClient
+          ? relActivity.businessUnit?.nameBU
+            ? relActivity.businessUnit?.nameBU
+            : relProject.businessUnit?.nameBU
+            ? relProject.businessUnit?.nameBU
+            : relClient.businessUnit?.nameBU
+            ? relClient.businessUnit?.nameBU
+            : " "
+          : "Nenhum B.U.",
       ];
     }
   );
@@ -1184,6 +1317,7 @@ export function Timesheet() {
                               Date.now()
                             )} ${generateTimeWithTimestamp(Date.now())}`,
                             null,
+                            null,
                           ],
                         ]);
                         setNumberOfNewReleases(numberOfNewReleases + 1);
@@ -1214,6 +1348,7 @@ export function Timesheet() {
                             `${generateDateWithTimestamp(
                               Date.now()
                             )} ${generateTimeWithTimestamp(Date.now())}`,
+                            null,
                             null,
                           ],
                           ...hoursDataGridData,
@@ -1260,12 +1395,16 @@ export function Timesheet() {
                       console.log(changes);
                       console.log("CRIAÇÕES:");
                       console.log(numberOfNewReleases);
-                      console.log("HOURSDATAGRIDDATA:");
-                      console.log(hoursDataGridData);
-                      console.log("CONFIGS USUARIO:");
-                      console.log(user);
-                      console.log("ARRAY DE CLIENTES:");
-                      console.log(clients);
+                      // console.log("HOURSDATAGRIDDATA:");
+                      // console.log(hoursDataGridData);
+                      // console.log("dados puxados:");
+                      // console.log(validateUserRegisterHours());
+                      // console.log("CONFIGS USUARIO:");
+                      // console.log(user);
+                      // console.log("ARRAY DE CLIENTES:");
+                      // console.log(clients);
+                      console.log("RANGE SELECIONADO:");
+                      console.log(selectedRows);
                     }}
                   >
                     DEVELOPER
@@ -1286,13 +1425,13 @@ export function Timesheet() {
               hiddenColumns={{
                 indicators: false,
                 // columns: [0], esconde o ID
-                columns: [...generateUserPermissions()],
+                columns: [0, ...generateUserPermissions()],
                 // columns: [0, ...generateUserPermissions()],
               }}
               beforeOnCellMouseDown={() => {
                 hottable.current.hotInstance.deselectCell();
               }}
-              afterSelection={(
+              afterSelection={async (
                 row,
                 column,
                 _row2,
@@ -1300,18 +1439,15 @@ export function Timesheet() {
                 _preventScrolling,
                 _selectionLayerLevel
               ) => {
+                // aqui fica a parte que fica lendo as colunas que estão selecionadas
                 const getRange =
                   hottable.current.hotInstance.getSelectedRange();
-                // console.log(getRange);
-                // console.log(row, column);
                 if (getRange.length === 1) {
-                  // só aceita um range por vez
                   const range = getRange[0];
                   if (
                     range.from.col === -1 &&
                     range.to.col === hoursDataGridData[0].length - 1
                   ) {
-                    // verifica se é uma linha completa
                     const newSelectedRows = [];
                     for (let i = range.from.row; i <= range.to.row; i++) {
                       newSelectedRows.push(i);
@@ -1321,18 +1457,22 @@ export function Timesheet() {
                 }
 
                 // aqui fica a parte que seleciona o projeto e a atividade de acordo com o cliente
-                if (column === 9) {
+                if (column == 9) {
                   setActualClient(hoursDataGridData[row][8]);
-                  const clientData = getClientData();
+                  const clientData = getProjectData();
+                  setProjectListNames([]);
                   setProjectListNames(
-                    clientData?.map(
-                      (project: { title: string }) => project.title
-                    ) || []
+                    clientData
+                      ? clientData?.map(
+                          (project: { title: string }) => project.title
+                        )
+                      : []
                   );
-                } else if (column === 10) {
+                } else if (column == 10) {
                   setActualClient(hoursDataGridData[row][8]);
                   setActualProject(hoursDataGridData[row][9]);
-                  const projectData = getProjectData();
+                  const projectData = getActivityData();
+                  console.log(projectData);
                   const userLevel = user.typeField;
                   const currentUserId = user._id;
                   const today = Date.now();
@@ -1355,14 +1495,19 @@ export function Timesheet() {
                         activity.users?.includes(currentUserId)
                     );
                   }
+                  setActivityListNames([]);
                   setActivityListNames(
-                    activeActivities?.map(
-                      (activity: { title: any }) => activity.title
-                    ) || []
+                    activeActivities
+                      ? activeActivities?.map(
+                          (activity: { title: any }) => activity.title
+                        )
+                      : []
                   );
                 }
                 setSelectedId(hoursDataGridData[row][0]);
                 setSelectedRow(row);
+                console.log(row);
+                console.log(column);
               }}
               afterChange={(changes, source) => {
                 // hook que é ativado sempre que uma edição é finalizada, isso será disparado sempre que clicar em outra celula depois de ter editado, ou ao pressionar Enter:
@@ -1468,6 +1613,7 @@ export function Timesheet() {
               <HotColumn title="Chamado Lançado" />
               <HotColumn title="Criado em" readOnly={true} />
               <HotColumn title="Editado em" readOnly={true} />
+              <HotColumn title="BusinessUnit" readOnly={true} />
             </HotTable>
           </Paper>
         </>
