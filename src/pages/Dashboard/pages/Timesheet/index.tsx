@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { CSVLink } from "react-csv";
 import {
@@ -69,26 +69,33 @@ export function Timesheet() {
     () => getClients()
   );
 
-  const getClientData = () => {
+  const getProjectData = () => {
     const client = clients?.data?.find(
       (client: { name: string }) => client.name === actualClient
     );
     return client.projects;
   };
 
-  const getProjectData = () => {
-    const project = getClientData()?.find(
+  const getActivityData = () => {
+    const project = getProjectData()?.find(
       (project: { title: string }) => project.title === actualProject
     );
     return project.activities;
   };
 
-  const clientListNames = clients?.data?.map(
-    (client: { name: string }) => client.name
+  const [clientListNames, setClientListNames] = useState(
+    clients?.data?.map((client: { name: string }) => client.name)
   );
-
   const [projectListNames, setProjectListNames] = useState([]);
   const [activityListNames, setActivityListNames] = useState([]);
+
+  const clientsData = useMemo(
+    () =>
+      setClientListNames(
+        clients?.data?.map((client: { name: string }) => client.name)
+      ),
+    [clients]
+  );
 
   const {
     data: hoursByUser,
@@ -1382,22 +1389,22 @@ export function Timesheet() {
                     className="lancarhoras"
                     onClick={async () => {
                       console.log("modificações que serão enviadas no banco:");
-                      // console.log("DELETAR:");
-                      // console.log(idsSelectedForDelete);
-                      // console.log("EDIÇÕES:");
-                      // console.log(changes);
-                      // console.log("CRIAÇÕES:");
-                      // console.log(numberOfNewReleases);
-                      console.log("HOURSDATAGRIDDATA:");
-                      console.log(hoursDataGridData);
-                      console.log("dados puxados:");
-                      console.log(validateUserRegisterHours());
+                      console.log("DELETAR:");
+                      console.log(idsSelectedForDelete);
+                      console.log("EDIÇÕES:");
+                      console.log(changes);
+                      console.log("CRIAÇÕES:");
+                      console.log(numberOfNewReleases);
+                      // console.log("HOURSDATAGRIDDATA:");
+                      // console.log(hoursDataGridData);
+                      // console.log("dados puxados:");
+                      // console.log(validateUserRegisterHours());
                       // console.log("CONFIGS USUARIO:");
                       // console.log(user);
                       // console.log("ARRAY DE CLIENTES:");
                       // console.log(clients);
-                      // console.log("RANGE SELECIONADO:");
-                      // console.log(selectedRows);
+                      console.log("RANGE SELECIONADO:");
+                      console.log(selectedRows);
                     }}
                   >
                     DEVELOPER
@@ -1418,13 +1425,13 @@ export function Timesheet() {
               hiddenColumns={{
                 indicators: false,
                 // columns: [0], esconde o ID
-                columns: [...generateUserPermissions()],
+                columns: [0, ...generateUserPermissions()],
                 // columns: [0, ...generateUserPermissions()],
               }}
               beforeOnCellMouseDown={() => {
                 hottable.current.hotInstance.deselectCell();
               }}
-              afterSelection={(
+              afterSelection={async (
                 row,
                 column,
                 _row2,
@@ -1452,7 +1459,8 @@ export function Timesheet() {
                 // aqui fica a parte que seleciona o projeto e a atividade de acordo com o cliente
                 if (column == 9) {
                   setActualClient(hoursDataGridData[row][8]);
-                  const clientData = getClientData();
+                  const clientData = getProjectData();
+                  setProjectListNames([]);
                   setProjectListNames(
                     clientData
                       ? clientData?.map(
@@ -1463,7 +1471,8 @@ export function Timesheet() {
                 } else if (column == 10) {
                   setActualClient(hoursDataGridData[row][8]);
                   setActualProject(hoursDataGridData[row][9]);
-                  const projectData = getProjectData();
+                  const projectData = getActivityData();
+                  console.log(projectData);
                   const userLevel = user.typeField;
                   const currentUserId = user._id;
                   const today = Date.now();
@@ -1486,6 +1495,7 @@ export function Timesheet() {
                         activity.users?.includes(currentUserId)
                     );
                   }
+                  setActivityListNames([]);
                   setActivityListNames(
                     activeActivities
                       ? activeActivities?.map(
