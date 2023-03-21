@@ -13,13 +13,8 @@ import {
   Tooltip,
   Box,
   CircularProgress,
-  Button,
 } from "@mui/material";
-// import DeleteIcon from "@mui/icons-material/Delete";
-// import EditIcon from "@mui/icons-material/Edit";
-// import BrushIcon from "@mui/icons-material/Brush";
 import { Hours } from "interfaces/hours.interface";
-
 import * as XLSX from "xlsx";
 
 // Utils
@@ -36,7 +31,6 @@ import {
   generateTotalWithAdjustment,
 } from "utils/timeControl";
 import { Permission } from "components/Permission";
-import { currencyMask } from "utils/masks";
 import { useAuthStore } from "stores/userStore";
 
 import "handsontable/dist/handsontable.full.min.css";
@@ -64,10 +58,13 @@ export function Timesheet() {
     hoursDataGrid && setHaveData(true);
   }, 200);
 
-  const { data: clients, isLoading: loadingClients } = useQuery(
+  const { data: clients, isLoading: _loadingClients } = useQuery(
     ["clients"],
     () => getClients()
   );
+
+  const [actualClient, setActualClient] = useState("");
+  const [actualProject, setActualProject] = useState("");
 
   const getProjectData = () => {
     const client = clients?.data?.find(
@@ -351,24 +348,7 @@ export function Timesheet() {
   };
 
   const handleConfirm = async () => {
-    // esse comentario será removido: PRIMEIRO checar as infos, DEPOIS enviar tudo para o banco!
-    // efetuar os deletamentos no banco
-    if (idsSelectedForDelete.length > 0) {
-      const arrayOfIdsForDelete = idsSelectedForDelete.filter((value) => {
-        if (value === null) {
-          setNumberOfNewReleases(numberOfNewReleases - 1);
-          return false;
-        }
-        return true;
-      });
-      if (arrayOfIdsForDelete.length > 0) {
-        for (let i = 0; i < arrayOfIdsForDelete.length; i++) {
-          await deleteHours(arrayOfIdsForDelete[i]);
-        }
-        setIdsSelectedForDelete([]);
-      }
-    }
-    // Salvar Edições
+    // Verificação se Existem modificações
     if (changes.length > 0) {
       const filteredChanges = changes.filter((change) => {
         return change.id !== null && Object.keys(change).length > 1;
@@ -397,10 +377,6 @@ export function Timesheet() {
             return;
           }
         }
-        for (const { id, ...data } of filteredChanges) {
-          await updateHours(id as string, { ...data });
-        }
-        setChanges([]);
       }
     }
     // Salvar Criações
@@ -467,6 +443,34 @@ export function Timesheet() {
         await createHours({ ...data });
       }
       setNumberOfNewReleases(0);
+    }
+    // efetuar os deletamentos no banco
+    if (idsSelectedForDelete.length > 0) {
+      const arrayOfIdsForDelete = idsSelectedForDelete.filter((value) => {
+        if (value === null) {
+          setNumberOfNewReleases(numberOfNewReleases - 1);
+          return false;
+        }
+        return true;
+      });
+      if (arrayOfIdsForDelete.length > 0) {
+        for (let i = 0; i < arrayOfIdsForDelete.length; i++) {
+          await deleteHours(arrayOfIdsForDelete[i]);
+        }
+        setIdsSelectedForDelete([]);
+      }
+    }
+    // Salvar Edições
+    if (changes.length > 0) {
+      const filteredChanges = changes.filter((change) => {
+        return change.id !== null && Object.keys(change).length > 1;
+      });
+      if (filteredChanges) {
+        for (const { id, ...data } of filteredChanges) {
+          await updateHours(id as string, { ...data });
+        }
+        setChanges([]);
+      }
     }
 
     toast.success("Todas as modificações foram salvas");
@@ -925,9 +929,6 @@ export function Timesheet() {
     setChanges(newChanges);
   };
 
-  const [actualClient, setActualClient] = useState("");
-  const [actualProject, setActualProject] = useState("");
-
   const hourxToExcel = hours?.data.map(
     ({
       initial,
@@ -1175,6 +1176,29 @@ export function Timesheet() {
     setHoursDataGridData(hoursDataGrid);
   }, [haveData]);
 
+  // useEffect(() => {
+  //   // iterando sobre cada array interno do array hoursDataGridData
+  //   hoursDataGridData.map((row: any) => {
+  //     if (row[0]) {
+  //       // verifica se o ID está preenchido
+  //       hottable.current.hotInstance.setCellMeta(
+  //         row,
+  //         1, // coluna 1
+  //         "readOnly",
+  //         true
+  //       );
+  //     } else {
+  //       hottable.current.hotInstance.setCellMeta(
+  //         row,
+  //         1, // coluna 1
+  //         "readOnly",
+  //         false
+  //       );
+  //     }
+  //   });
+  //   hottable.current.hotInstance.render();
+  // }, [hoursDataGridData]);
+
   return (
     <div>
       <Box
@@ -1248,16 +1272,6 @@ export function Timesheet() {
                       const arrayOfRows = arrayforDelete.map((str) =>
                         Number(str)
                       );
-                      // if (
-                      //   hoursDataGridData[selectedRow][16] ||
-                      //   hoursDataGridData[selectedRow][17] ||
-                      //   hoursDataGridData[selectedRow][18] ||
-                      //   hoursDataGridData[selectedRow][19]
-                      // ) {
-                      //   console.log("esse lançamento não pode ser deletado");
-                      // } else {
-                      //   console.log("esse lançamento pode ser deletado");
-                      // }
                       const selectedIds = selectedRows.map((index) =>
                         hottable.current.hotInstance.getDataAtCell(
                           Number(index),
@@ -1266,7 +1280,24 @@ export function Timesheet() {
                       );
 
                       arrayOfRows.forEach((num) => {
-                        hottable.current.hotInstance.alter("remove_row", num);
+                        if (
+                          hottable.current.hotInstance.getDataAtCell(num, 16) ||
+                          hottable.current.hotInstance.getDataAtCell(num, 17) ||
+                          hottable.current.hotInstance.getDataAtCell(num, 18) ||
+                          hottable.current.hotInstance.getDataAtCell(num, 19)
+                        ) {
+                          const thisId =
+                            hottable.current.hotInstance.getDataAtCell(num, 0);
+                          const indexOfThisId = selectedIds.indexOf(thisId);
+                          selectedIds.splice(indexOfThisId, 1);
+                          return toast.error(
+                            `O lançamento na linha ${
+                              num + 1
+                            } não pode ser deletado!`
+                          );
+                        } else {
+                          hottable.current.hotInstance.alter("remove_row", num);
+                        }
                       });
 
                       setIdsSelectedForDelete([
@@ -1424,9 +1455,8 @@ export function Timesheet() {
               // mergeCells={}
               hiddenColumns={{
                 indicators: false,
-                // columns: [0], esconde o ID
                 columns: [0, ...generateUserPermissions()],
-                // columns: [0, ...generateUserPermissions()],
+                // columns: [...generateUserPermissions()],
               }}
               beforeOnCellMouseDown={() => {
                 hottable.current.hotInstance.deselectCell();
@@ -1439,6 +1469,16 @@ export function Timesheet() {
                 _preventScrolling,
                 _selectionLayerLevel
               ) => {
+                setActualClient("");
+                setActualProject("");
+                // hottable.current.hotInstance.setCellMeta(
+                //   row,
+                //   column,
+                //   "readOnly",
+                //   true
+                // );
+                // hottable.current.hotInstance.render();
+                //
                 // aqui fica a parte que fica lendo as colunas que estão selecionadas
                 const getRange =
                   hottable.current.hotInstance.getSelectedRange();
@@ -1459,55 +1499,60 @@ export function Timesheet() {
                 // aqui fica a parte que seleciona o projeto e a atividade de acordo com o cliente
                 if (column == 9) {
                   setActualClient(hoursDataGridData[row][8]);
-                  const clientData = getProjectData();
-                  setProjectListNames([]);
-                  setProjectListNames(
-                    clientData
-                      ? clientData?.map(
-                          (project: { title: string }) => project.title
-                        )
-                      : []
-                  );
+                  if (!actualClient || actualClient == null) {
+                    setProjectListNames([]);
+                  } else {
+                    const clientData = getProjectData();
+                    setProjectListNames([]);
+                    setProjectListNames(
+                      clientData
+                        ? clientData?.map(
+                            (project: { title: string }) => project.title
+                          )
+                        : []
+                    );
+                  }
                 } else if (column == 10) {
                   setActualClient(hoursDataGridData[row][8]);
                   setActualProject(hoursDataGridData[row][9]);
-                  const projectData = getActivityData();
-                  console.log(projectData);
-                  const userLevel = user.typeField;
-                  const currentUserId = user._id;
-                  const today = Date.now();
-                  const activities = projectData?.map(
-                    (activity: {
-                      title: string;
-                      users?: string[];
-                      activityValidity: number;
-                    }) => activity
-                  );
-                  let activeActivities = activities.filter(
-                    (activity: {
-                      activityValidity: number;
-                      users?: string[];
-                    }) => activity.activityValidity > today
-                  );
-                  if (userLevel !== "nenhum") {
-                    activeActivities = activeActivities.filter(
-                      (activity: { users: string[] }) =>
-                        activity.users?.includes(currentUserId)
+                  if (!actualProject || actualProject == null) {
+                    setActivityListNames([]);
+                  } else {
+                    const projectData = getActivityData();
+                    const userLevel = user.typeField;
+                    const currentUserId = user._id;
+                    const today = Date.now();
+                    const activities = projectData?.map(
+                      (activity: {
+                        title: string;
+                        users?: string[];
+                        activityValidity: number;
+                      }) => activity
+                    );
+                    let activeActivities = activities.filter(
+                      (activity: {
+                        activityValidity: number;
+                        users?: string[];
+                      }) => activity.activityValidity > today
+                    );
+                    if (userLevel !== "nenhum") {
+                      activeActivities = activeActivities.filter(
+                        (activity: { users: string[] }) =>
+                          activity.users?.includes(currentUserId)
+                      );
+                    }
+                    setActivityListNames([]);
+                    setActivityListNames(
+                      activeActivities
+                        ? activeActivities?.map(
+                            (activity: { title: any }) => activity.title
+                          )
+                        : []
                     );
                   }
-                  setActivityListNames([]);
-                  setActivityListNames(
-                    activeActivities
-                      ? activeActivities?.map(
-                          (activity: { title: any }) => activity.title
-                        )
-                      : []
-                  );
                 }
                 setSelectedId(hoursDataGridData[row][0]);
                 setSelectedRow(row);
-                console.log(row);
-                console.log(column);
               }}
               afterChange={(changes, source) => {
                 // hook que é ativado sempre que uma edição é finalizada, isso será disparado sempre que clicar em outra celula depois de ter editado, ou ao pressionar Enter:
@@ -1542,13 +1587,6 @@ export function Timesheet() {
                   hottable.current.hotInstance.deselectCell();
                 }
               }}
-              // beforeInit={() => {
-              //   // verificação dos dados no localstorage, talvez seja o causador do bug na inicialização
-              //   const savedData = JSON.parse(
-              //     localStorage.getItem("myTableData") || "[]"
-              //   );
-              //   localStorage.loadData(savedData);
-              // }}
               licenseKey="non-commercial-and-evaluation" // for non-commercial use only
             >
               <HotColumn title="ID" readOnly={true} />
