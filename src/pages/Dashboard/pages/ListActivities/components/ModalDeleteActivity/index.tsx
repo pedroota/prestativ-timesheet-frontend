@@ -8,8 +8,9 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteActivity } from "services/activities.service";
+import { deleteActivity, getActivityById } from "services/activities.service";
 import { toast } from "react-toastify";
+import { getHoursFilters } from "services/hours.service";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -44,6 +45,19 @@ export function ModalDeleteActivity({
     },
   });
 
+  const verifyBeforeDelete = async () => {
+    const releases = await getHoursFilters("relActivity=" + currentActivity);
+
+    if (releases?.data.length > 0) {
+      setIsOpen((prevState) => !prevState);
+      return toast.error(
+        "Não é possível deletar essa atividade pois ela possui lançamentos de horas dentro"
+      );
+    } else {
+      mutate(currentActivity);
+    }
+  };
+
   return (
     <div>
       <Dialog
@@ -70,7 +84,7 @@ export function ModalDeleteActivity({
           <Button
             variant="contained"
             color="warning"
-            onClick={() => mutate(currentActivity)}
+            onClick={() => verifyBeforeDelete()}
           >
             Deletar
           </Button>

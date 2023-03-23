@@ -92,6 +92,10 @@ export function ModalCreateRole({ isOpen, setIsOpen }: ModalCreateRoleProps) {
       { value: Permissions.CLIENTE, label: "Visualiza o campo Cliente" },
       { value: Permissions.PROJETO, label: "Visualiza o campo Projeto" },
       { value: Permissions.ATIVIDADE, label: "Visualiza o campo Atividade" },
+      {
+        value: Permissions.BUSINESSUNITY,
+        label: "Visualiza o campo BusinessUnit",
+      },
       { value: Permissions.VALOR, label: "Visualiza o campo Valor" },
       {
         value: Permissions.GERENTE_DE_PROJETOS,

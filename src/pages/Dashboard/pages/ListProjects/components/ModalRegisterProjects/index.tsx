@@ -107,6 +107,7 @@ export function ModalRegisterProject({
             label="Nome do Projeto"
             {...register("title")}
             color="warning"
+            required
             variant="outlined"
           />
           <TextField
@@ -114,6 +115,7 @@ export function ModalRegisterProject({
             {...register("idClient")}
             label="Cliente"
             select
+            required
             value={nameClient}
             onChange={(event) => setNameClient(event.target.value)}
           >
@@ -199,6 +201,7 @@ export function ModalRegisterProject({
             label="Descrição do Projeto"
             {...register("description")}
             color="warning"
+            required
             variant="outlined"
           />
           <Button

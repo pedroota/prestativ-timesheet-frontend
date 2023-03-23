@@ -86,7 +86,7 @@ export function UserProfiles() {
                       <StyledTableRow key={_id}>
                         <StyledTableCell align="center">{name}</StyledTableCell>
                         <StyledTableCell align="center">
-                          {permissions.length >= 56 ? (
+                          {permissions.length >= 57 ? (
                             <p>Este perfil possui todas as permissões</p>
                           ) : permissions.length ? (
                             permissions.length === 1 ? (
