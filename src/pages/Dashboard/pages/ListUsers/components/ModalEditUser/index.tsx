@@ -162,6 +162,7 @@ export function ModalEditUser({
               </MenuItem>
             </TextField>
             <TextField
+              required
               {...register("role")}
               label="Perfil"
               select

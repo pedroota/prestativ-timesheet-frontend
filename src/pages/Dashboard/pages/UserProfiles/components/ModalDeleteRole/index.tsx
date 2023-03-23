@@ -10,6 +10,7 @@ import { TransitionProps } from "@mui/material/transitions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteRole } from "services/roles.service";
 import { toast } from "react-toastify";
+import { getAllUsers } from "services/auth.service";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -44,6 +45,23 @@ export function ModalDeleteRole({
     },
   });
 
+  const verifyBeforeDelete = async () => {
+    const users = await getAllUsers();
+
+    const userWithCurrentRole = users.data.some(
+      (user: { role: { _id: string } }) => user.role._id === currentRole
+    );
+
+    if (userWithCurrentRole) {
+      setIsOpen((prevState) => !prevState);
+      return toast.error(
+        "Não é possível deletar esse perfil pois ele está vinculado com usuários"
+      );
+    } else {
+      mutate(currentRole);
+    }
+  };
+
   return (
     <div>
       <Dialog
@@ -70,7 +88,7 @@ export function ModalDeleteRole({
           <Button
             variant="contained"
             color="warning"
-            onClick={() => mutate(currentRole)}
+            onClick={() => verifyBeforeDelete()}
           >
             Deletar
           </Button>

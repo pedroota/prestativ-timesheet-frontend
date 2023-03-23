@@ -170,6 +170,9 @@ export function Timesheet() {
       arrayPermissions.push(21);
       arrayPermissions.push(22);
     }
+    if (!user.role.permissions.includes("BUSINESSUNITY")) {
+      arrayPermissions.push(23);
+    }
     return arrayPermissions;
   };
 
@@ -960,7 +963,9 @@ export function Timesheet() {
         Projeto: relProject?.title || " ",
         Atividade: relActivity?.title || " ",
         BusinessUnit:
-          relActivity || relProject || relClient
+          relActivity.businessUnit ||
+          relProject.businessUnit ||
+          relClient.businessUnit
             ? relActivity.businessUnit?.nameBU
               ? relActivity.businessUnit?.nameBU
               : relProject.businessUnit?.nameBU
@@ -1136,7 +1141,9 @@ export function Timesheet() {
         `${generateDateWithTimestamp(updatedAt)} ${generateTimeWithTimestamp(
           updatedAt
         )}`,
-        relActivity || relProject || relClient
+        relActivity.businessUnit ||
+        relProject.businessUnit ||
+        relClient.businessUnit
           ? relActivity.businessUnit?.nameBU
             ? relActivity.businessUnit?.nameBU
             : relProject.businessUnit?.nameBU

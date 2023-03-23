@@ -8,7 +8,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteClient } from "services/clients.service";
+import { deleteClient, getClientById } from "services/clients.service";
 import { toast } from "react-toastify";
 
 const Transition = React.forwardRef(function Transition(
@@ -45,6 +45,18 @@ export function ModalDeleteClient({
     },
   });
 
+  const verifyBeforeDelete = async () => {
+    const client = await getClientById(currentClient);
+    if (client?.data.client.projects.length > 0) {
+      setIsOpen((prevState) => !prevState);
+      return toast.error(
+        "Não é possível deletar esse cliente pois ele está vinculado com projetos"
+      );
+    } else {
+      mutate(currentClient);
+    }
+  };
+
   return (
     <div>
       <Dialog
@@ -71,7 +83,7 @@ export function ModalDeleteClient({
           <Button
             variant="contained"
             color="warning"
-            onClick={() => mutate(currentClient)}
+            onClick={() => verifyBeforeDelete()}
           >
             Deletar
           </Button>

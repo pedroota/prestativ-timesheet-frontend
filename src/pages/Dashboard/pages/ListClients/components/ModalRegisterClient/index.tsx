@@ -76,7 +76,6 @@ export function ModalRegisterClient({
       periodUntil,
       billingLimit,
       payDay,
-      gpClient,
     }: Clients) =>
       createClients({
         corporateName,
@@ -94,7 +93,7 @@ export function ModalRegisterClient({
         billingLimit,
         payDay,
         valueClient: priceNumber,
-        gpClient,
+        gpClient: gpClient,
         businessUnit: idBusinessUnit,
       }),
     {
@@ -132,7 +131,6 @@ export function ModalRegisterClient({
       periodUntil,
       billingLimit,
       payDay,
-      gpClient,
     }) => {
       // Validates CNPJ
       if (!validateCNPJ(cnpj)) {
@@ -154,7 +152,7 @@ export function ModalRegisterClient({
         billingLimit,
         payDay,
         valueClient: priceNumber,
-        gpClient,
+        gpClient: gpClient,
         businessUnit: idBusinessUnit,
       });
     }

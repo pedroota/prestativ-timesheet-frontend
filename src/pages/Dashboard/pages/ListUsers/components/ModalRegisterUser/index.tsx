@@ -148,6 +148,7 @@ export function ModalRegisterUser({
             </MenuItem>
           </TextField>
           <TextField
+            required
             label="Perfil do Usuário"
             select
             color="warning"

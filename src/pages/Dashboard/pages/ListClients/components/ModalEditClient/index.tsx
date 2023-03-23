@@ -79,7 +79,6 @@ export function ModalEditClient({
       periodUntil,
       billingLimit,
       payDay,
-      gpClient,
     }: RegisterClients) =>
       updateClient(currentClient, {
         corporateName,
@@ -97,7 +96,7 @@ export function ModalEditClient({
         billingLimit,
         payDay,
         valueClient: priceNumber,
-        gpClient,
+        gpClient: gpClient,
         businessUnit: idBusinessUnit,
       }),
     {
@@ -148,7 +147,6 @@ export function ModalEditClient({
       billingLimit,
       payDay,
       valueClient,
-      gpClient,
     }) => {
       mutate({
         corporateName,
@@ -166,7 +164,7 @@ export function ModalEditClient({
         billingLimit,
         payDay,
         valueClient,
-        gpClient,
+        gpClient: gpClient,
         businessUnit: idBusinessUnit,
       });
       reset();

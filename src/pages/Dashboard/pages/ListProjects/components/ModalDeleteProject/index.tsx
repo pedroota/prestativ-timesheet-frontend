@@ -8,7 +8,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteProject } from "services/project.service";
+import { deleteProject, getProjectById } from "services/project.service";
 import { toast } from "react-toastify";
 
 const Transition = React.forwardRef(function Transition(
@@ -44,6 +44,19 @@ export function ModalDeleteProject({
     },
   });
 
+  const verifyBeforeDelete = async () => {
+    const project = await getProjectById(currentProject);
+
+    if (project?.data.project.activities.length > 0) {
+      setIsOpen((prevState) => !prevState);
+      return toast.error(
+        "Não é possível deletar esse projeto pois ele está vinculado com atividades"
+      );
+    } else {
+      mutate(currentProject);
+    }
+  };
+
   return (
     <div>
       <Dialog
@@ -70,7 +83,7 @@ export function ModalDeleteProject({
           <Button
             variant="contained"
             color="warning"
-            onClick={() => mutate(currentProject)}
+            onClick={() => verifyBeforeDelete()}
           >
             Deletar
           </Button>

@@ -14,13 +14,7 @@ export interface Clients {
   billingLimit: string;
   payDay: number;
   valueClient: number;
-  gpClient: [
-    {
-      _id: string;
-      name: string;
-      surname: string;
-    }
-  ];
+  gpClient: string[];
   businessUnit?: string;
 }
 
@@ -40,13 +34,7 @@ export interface RegisterClients {
   billingLimit: string;
   payDay: number;
   valueClient: number;
-  gpClient: [
-    {
-      _id: string;
-      name: string;
-      surname: string;
-    }
-  ];
+  gpClient: string[];
   businessUnit?: string;
 }
 

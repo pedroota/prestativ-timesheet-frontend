@@ -129,6 +129,7 @@ export function ModalEditProject({
         <form className="c-form-spacing" onSubmit={onSubmit}>
           <p>Informações do projeto</p>
           <TextField
+            required
             label="Nome do Projeto"
             color="warning"
             InputLabelProps={{ shrink: true }}
@@ -139,6 +140,7 @@ export function ModalEditProject({
           <TextField
             color="warning"
             select
+            required
             InputLabelProps={{ shrink: true }}
             label="Cliente"
             value={currentClient}
@@ -152,7 +154,6 @@ export function ModalEditProject({
             ))}
           </TextField>
           <TextField
-            required
             color="warning"
             variant="outlined"
             sx={{ width: "100%" }}
@@ -230,6 +231,7 @@ export function ModalEditProject({
             {...register("description")}
             InputLabelProps={{ shrink: true }}
             color="warning"
+            required
             variant="outlined"
             value={projectDescription}
             onChange={(event) => setProjectDescription(event.target.value)}
