@@ -44,6 +44,21 @@ import { toast } from "react-toastify";
 
 registerAllModules();
 
+interface ClientObject {
+  _id: string;
+  name: string;
+  projects: {
+    _id: string;
+    title: string;
+    activities: {
+      _id: string;
+      title: string;
+      users: string[];
+      activityValidity: number;
+    }[];
+  }[];
+}
+
 export function Timesheet() {
   const { user } = useAuthStore((state: any) => state);
   const queryClient = useQueryClient();
@@ -83,8 +98,9 @@ export function Timesheet() {
   const [clientListNames, setClientListNames] = useState(
     clients?.data?.map((client: { name: string }) => client.name)
   );
-  const [projectListNames, setProjectListNames] = useState([]);
-  const [activityListNames, setActivityListNames] = useState([]);
+
+  const [projectListNames, setProjectListNames] = useState<Array<string>>([]);
+  const [activityListNames, setActivityListNames] = useState<Array<string>>([]);
 
   const clientsData = useMemo(
     () =>
@@ -825,6 +841,31 @@ export function Timesheet() {
       if (updatingId) {
         updatingId.relClient = getClientIdByName(nameOfClient);
       }
+      hottable.current.hotInstance.setDataAtCell(
+        index123,
+        collumnChanged + 1,
+        null
+      );
+      hottable.current.hotInstance.setDataAtCell(
+        index123,
+        collumnChanged + 2,
+        null
+      );
+      //para definir a lista de projetos com base nesse cliente
+      setActualClient(nameOfClient);
+      if (!nameOfClient || nameOfClient == null) {
+        setProjectListNames([]);
+      } else {
+        const clientData = clientsHook.find(
+          (objeto) => objeto.name === nameOfClient
+        );
+        const projectList = clientData
+          ? clientData.projects.map(
+              (project: { title: string }) => project.title
+            )
+          : [];
+        setProjectListNames(projectList);
+      }
     }
     // Alterando Projeto
     if (collumnChanged == 9) {
@@ -849,10 +890,114 @@ export function Timesheet() {
       if (updatingId) {
         updatingId.relProject = getProjectIdByName();
       }
+      hottable.current.hotInstance.setDataAtCell(
+        index123,
+        collumnChanged + 1,
+        null
+      );
+      //para definir a lista de atividades com base nesse projeto
+      setActualProject(nameOfProject);
+      setActualClient(
+        hottable.current.hotInstance.getDataAtCell(index123, collumnChanged - 2)
+      );
+      if (
+        (!actualProject || actualProject == null) &&
+        (!actualClient || actualClient == null)
+      ) {
+        setActivityListNames([]);
+      } else {
+        const clientData = clientsHook.find(
+          (objeto) => objeto.name === actualClient
+        );
+        const projectData = clientData?.projects.find(
+          (objeto) => objeto.title === actualProject
+        );
+        const userLevel = user.typeField;
+        const currentUserId = user._id;
+        const today = Date.now();
+        const activities = projectData?.activities.map(
+          (activity: {
+            title: string;
+            users?: string[];
+            activityValidity: number;
+          }) => activity
+        );
+        let activeActivities = activities?.filter(
+          (activity: { activityValidity: number; users?: string[] }) =>
+            activity.activityValidity > today
+        );
+        if (userLevel !== "nenhum") {
+          activeActivities = activeActivities?.filter((activity) =>
+            activity?.users?.includes(currentUserId)
+          );
+        }
+        setActivityListNames([]);
+        setActivityListNames(
+          activeActivities
+            ? activeActivities?.map(
+                (activity: { title: any }) => activity.title
+              )
+            : []
+        );
+      }
     }
     // Alterando Atividade
     if (collumnChanged == 10) {
       const nameOfActivity = newValue as string;
+      if (!nameOfActivity || nameOfActivity == "") {
+        setActualProject(
+          hottable.current.hotInstance.getDataAtCell(
+            index123,
+            collumnChanged - 1
+          )
+        );
+        setActualClient(
+          hottable.current.hotInstance.getDataAtCell(
+            index123,
+            collumnChanged - 2
+          )
+        );
+        if (
+          (!actualProject || actualProject == null) &&
+          (!actualClient || actualClient == null)
+        ) {
+          setActivityListNames([]);
+        } else {
+          const clientData = clientsHook.find(
+            (objeto) => objeto.name === actualClient
+          );
+          const projectData = clientData?.projects.find(
+            (objeto) => objeto.title === actualProject
+          );
+          const userLevel = user.typeField;
+          const currentUserId = user._id;
+          const today = Date.now();
+          const activities = projectData?.activities.map(
+            (activity: {
+              title: string;
+              users?: string[];
+              activityValidity: number;
+            }) => activity
+          );
+          let activeActivities = activities?.filter(
+            (activity: { activityValidity: number; users?: string[] }) =>
+              activity.activityValidity > today
+          );
+          if (userLevel !== "nenhum") {
+            activeActivities = activeActivities?.filter((activity) =>
+              activity?.users?.includes(currentUserId)
+            );
+          }
+          setActivityListNames([]);
+          setActivityListNames(
+            activeActivities
+              ? activeActivities?.map(
+                  (activity: { title: any }) => activity.title
+                )
+              : []
+          );
+        }
+      }
       const nameOfProject = hoursDataGridData[index][9];
       const nameOfClient = hoursDataGridData[index][8];
       const getProjectIdByName = () => {
@@ -1174,6 +1319,73 @@ export function Timesheet() {
       });
     }
   }, [hottable]);
+  useEffect(() => {
+    getDataCliProAct();
+  }, []);
+
+  const [clientsHook, setclientsHook] = useState<Array<ClientObject>>([]);
+  const getDataCliProAct = async () => {
+    const clientsDataForHook = await getClients();
+    const data = clientsDataForHook?.data;
+
+    // Percorra o array de clientes
+    for (let i = 0; i < data.length; i++) {
+      const cliente = data[i];
+
+      // Percorra o array de projetos do cliente
+      for (let j = 0; j < cliente.projects.length; j++) {
+        const projeto = cliente.projects[j];
+
+        // Percorra o array de atividades do projeto
+        for (let k = 0; k < projeto.activities.length; k++) {
+          const atividade = projeto.activities[k];
+
+          // Remova os campos desnecessários da atividade
+          delete atividade.project;
+          delete atividade.valueActivity;
+          delete atividade.gpActivity;
+          delete atividade.description;
+          delete atividade.closedScope;
+          delete atividade.businessUnit;
+          delete atividade.createdAt;
+          delete atividade.updatedAt;
+          delete atividade.__v;
+        }
+
+        // Remova os campos desnecessários do projeto
+        delete projeto.idClient;
+        delete projeto.valueProject;
+        delete projeto.gpProject;
+        delete projeto.description;
+        delete projeto.createdAt;
+        delete projeto.updatedAt;
+        delete projeto.businessUnit;
+        delete projeto.__v;
+      }
+
+      // Remova os campos desnecessários do cliente
+      delete cliente.corporateName;
+      delete cliente.cnpj;
+      delete cliente.cep;
+      delete cliente.street;
+      delete cliente.streetNumber;
+      delete cliente.complement;
+      delete cliente.district;
+      delete cliente.city;
+      delete cliente.state;
+      delete cliente.createdAt;
+      delete cliente.updatedAt;
+      delete cliente.periodIn;
+      delete cliente.periodUntil;
+      delete cliente.billingLimit;
+      delete cliente.payDay;
+      delete cliente.valueClient;
+      delete cliente.gpClient;
+      delete cliente.businessUnit;
+      delete cliente.__v;
+    }
+    setclientsHook(data);
+  };
 
   const [haveData, setHaveData] = useState(false);
 
@@ -1426,13 +1638,15 @@ export function Timesheet() {
                   <button
                     className="lancarhoras"
                     onClick={async () => {
-                      console.log("modificações que serão enviadas no banco:");
-                      console.log("DELETAR:");
-                      console.log(idsSelectedForDelete);
-                      console.log("EDIÇÕES:");
-                      console.log(changes);
-                      console.log("CRIAÇÕES:");
-                      console.log(numberOfNewReleases);
+                      console.log("Solucionando gambiarra:");
+                      console.log(clientsHook);
+                      // console.log("modificações que serão enviadas no banco:");
+                      // console.log("DELETAR:");
+                      // console.log(idsSelectedForDelete);
+                      // console.log("EDIÇÕES:");
+                      // console.log(changes);
+                      // console.log("CRIAÇÕES:");
+                      // console.log(numberOfNewReleases);
                       // console.log("HOURSDATAGRIDDATA:");
                       // console.log(hoursDataGridData);
                       // console.log("dados puxados:");
@@ -1441,8 +1655,8 @@ export function Timesheet() {
                       // console.log(user);
                       // console.log("ARRAY DE CLIENTES:");
                       // console.log(clients);
-                      console.log("RANGE SELECIONADO:");
-                      console.log(selectedRows);
+                      // console.log("RANGE SELECIONADO:");
+                      // console.log(selectedRows);
                     }}
                   >
                     DEVELOPER
@@ -1465,27 +1679,79 @@ export function Timesheet() {
                 columns: [0, ...generateUserPermissions()],
                 // columns: [...generateUserPermissions()],
               }}
-              beforeOnCellMouseDown={() => {
-                hottable.current.hotInstance.deselectCell();
+              afterOnCellMouseDown={(event, coords) => {
+                const column = coords.col;
+                const row = coords.row;
+                setActualClient("");
+                setActualProject("");
+                // aqui fica a parte que seleciona o projeto e a atividade de acordo com o cliente
+                if (column == 9) {
+                  setActualClient(hoursDataGridData[row][8]);
+                  if (!actualClient || actualClient == null) {
+                    setProjectListNames([]);
+                  } else {
+                    const clientData = clientsHook.find(
+                      (objeto) => objeto.name === actualClient
+                    );
+                    const projectList = clientData
+                      ? clientData.projects.map(
+                          (project: { title: string }) => project.title
+                        )
+                      : [];
+                    setProjectListNames(projectList);
+                  }
+                } else if (column == 10) {
+                  setActualClient(hoursDataGridData[row][8]);
+                  setActualProject(hoursDataGridData[row][9]);
+                  if (!actualProject || actualProject == null) {
+                    setActivityListNames([]);
+                  } else {
+                    const clientData = clientsHook.find(
+                      (objeto) => objeto.name === actualClient
+                    );
+                    const projectData = clientData?.projects.find(
+                      (objeto) => objeto.title === actualProject
+                    );
+                    const userLevel = user.typeField;
+                    const currentUserId = user._id;
+                    const today = Date.now();
+                    const activities = projectData?.activities.map(
+                      (activity: {
+                        title: string;
+                        users?: string[];
+                        activityValidity: number;
+                      }) => activity
+                    );
+                    let activeActivities = activities?.filter(
+                      (activity: {
+                        activityValidity: number;
+                        users?: string[];
+                      }) => activity.activityValidity > today
+                    );
+                    if (userLevel !== "nenhum") {
+                      activeActivities = activeActivities?.filter((activity) =>
+                        activity?.users?.includes(currentUserId)
+                      );
+                    }
+                    setActivityListNames([]);
+                    setActivityListNames(
+                      activeActivities
+                        ? activeActivities?.map(
+                            (activity: { title: any }) => activity.title
+                          )
+                        : []
+                    );
+                  }
+                }
               }}
               afterSelection={async (
                 row,
-                column,
+                _column,
                 _row2,
                 _column2,
                 _preventScrolling,
                 _selectionLayerLevel
               ) => {
-                setActualClient("");
-                setActualProject("");
-                // hottable.current.hotInstance.setCellMeta(
-                //   row,
-                //   column,
-                //   "readOnly",
-                //   true
-                // );
-                // hottable.current.hotInstance.render();
-                //
                 // aqui fica a parte que fica lendo as colunas que estão selecionadas
                 const getRange =
                   hottable.current.hotInstance.getSelectedRange();
@@ -1503,61 +1769,6 @@ export function Timesheet() {
                   }
                 }
 
-                // aqui fica a parte que seleciona o projeto e a atividade de acordo com o cliente
-                if (column == 9) {
-                  setActualClient(hoursDataGridData[row][8]);
-                  if (!actualClient || actualClient == null) {
-                    setProjectListNames([]);
-                  } else {
-                    const clientData = getProjectData();
-                    setProjectListNames([]);
-                    setProjectListNames(
-                      clientData
-                        ? clientData?.map(
-                            (project: { title: string }) => project.title
-                          )
-                        : []
-                    );
-                  }
-                } else if (column == 10) {
-                  setActualClient(hoursDataGridData[row][8]);
-                  setActualProject(hoursDataGridData[row][9]);
-                  if (!actualProject || actualProject == null) {
-                    setActivityListNames([]);
-                  } else {
-                    const projectData = getActivityData();
-                    const userLevel = user.typeField;
-                    const currentUserId = user._id;
-                    const today = Date.now();
-                    const activities = projectData?.map(
-                      (activity: {
-                        title: string;
-                        users?: string[];
-                        activityValidity: number;
-                      }) => activity
-                    );
-                    let activeActivities = activities.filter(
-                      (activity: {
-                        activityValidity: number;
-                        users?: string[];
-                      }) => activity.activityValidity > today
-                    );
-                    if (userLevel !== "nenhum") {
-                      activeActivities = activeActivities.filter(
-                        (activity: { users: string[] }) =>
-                          activity.users?.includes(currentUserId)
-                      );
-                    }
-                    setActivityListNames([]);
-                    setActivityListNames(
-                      activeActivities
-                        ? activeActivities?.map(
-                            (activity: { title: any }) => activity.title
-                          )
-                        : []
-                    );
-                  }
-                }
                 setSelectedId(hoursDataGridData[row][0]);
                 setSelectedRow(row);
               }}
@@ -1633,18 +1844,21 @@ export function Timesheet() {
               />
               <HotColumn
                 title="Cliente"
-                editor="select"
-                selectOptions={clientListNames}
+                type="dropdown"
+                dropdownMenu={true}
+                source={clientListNames}
               />
               <HotColumn
                 title="Projeto"
-                editor="select"
-                selectOptions={projectListNames}
+                type="dropdown"
+                dropdownMenu={true}
+                source={projectListNames}
               />
               <HotColumn
                 title="Atividade"
-                editor="select"
-                selectOptions={activityListNames}
+                type="dropdown"
+                dropdownMenu={true}
+                source={activityListNames}
               />
               <HotColumn title="Descrição" />
               <HotColumn title="Valor" readOnly={true} />

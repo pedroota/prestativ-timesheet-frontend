@@ -15,6 +15,7 @@ import {
   ListItemIcon,
   ListItemText,
   Toolbar,
+  Tooltip,
   Typography,
 } from "@mui/material";
 
@@ -141,7 +142,13 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
               ...(open && { display: "none" }),
             }}
           >
-            <Menu />
+            <Tooltip
+              title="Ver Nome de todas as opções do Menu"
+              arrow
+              placement="bottom"
+            >
+              <Menu />
+            </Tooltip>
           </IconButton>
           <Box
             className="mobile"
@@ -185,7 +192,9 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                       justifyContent: "center",
                     }}
                   >
-                    <AccessTime />
+                    <Tooltip title="Timesheet" arrow placement="right">
+                      <AccessTime />
+                    </Tooltip>
                   </ListItemIcon>
                   <ListItemText
                     primary={"TimeSheet"}
@@ -228,7 +237,9 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                         justifyContent: "center",
                       }}
                     >
-                      <Hail />
+                      <Tooltip title="Clientes" arrow placement="right">
+                        <Hail />
+                      </Tooltip>
                     </ListItemIcon>
                     <ListItemText
                       primary={"Clientes"}
@@ -255,7 +266,9 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                         justifyContent: "center",
                       }}
                     >
-                      <Source />
+                      <Tooltip title="Projetos" arrow placement="right">
+                        <Source />
+                      </Tooltip>
                     </ListItemIcon>
                     <ListItemText
                       primary={"Projetos"}
@@ -282,7 +295,9 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                         justifyContent: "center",
                       }}
                     >
-                      <Task />
+                      <Tooltip title="Atividades" arrow placement="right">
+                        <Task />
+                      </Tooltip>
                     </ListItemIcon>
                     <ListItemText
                       primary={"Atividades"}
@@ -309,7 +324,9 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                         justifyContent: "center",
                       }}
                     >
-                      <Person />
+                      <Tooltip title="Usuários" arrow placement="right">
+                        <Person />
+                      </Tooltip>
                     </ListItemIcon>
                     <ListItemText
                       primary={"Usuários"}
@@ -336,7 +353,9 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                         justifyContent: "center",
                       }}
                     >
-                      <History />
+                      <Tooltip title="Logs" arrow placement="right">
+                        <History />
+                      </Tooltip>
                     </ListItemIcon>
                     <ListItemText
                       primary={"Logs"}
@@ -363,7 +382,9 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                         justifyContent: "center",
                       }}
                     >
-                      <AccountBoxIcon />
+                      <Tooltip title="Business Unit" arrow placement="right">
+                        <AccountBoxIcon />
+                      </Tooltip>
                     </ListItemIcon>
                     <ListItemText
                       primary={"Business Unit"}
@@ -390,7 +411,13 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                         justifyContent: "center",
                       }}
                     >
-                      <PersonAdd />
+                      <Tooltip
+                        title="Perfis de Usuário"
+                        arrow
+                        placement="right"
+                      >
+                        <PersonAdd />
+                      </Tooltip>
                     </ListItemIcon>
                     <ListItemText
                       primary={"Perfis de Usuário"}
@@ -417,7 +444,9 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                         justifyContent: "center",
                       }}
                     >
-                      <Settings />
+                      <Tooltip title="Configurações" arrow placement="right">
+                        <Settings />
+                      </Tooltip>
                     </ListItemIcon>
                     <ListItemText
                       primary={"Configurações"}
@@ -444,7 +473,9 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                         justifyContent: "center",
                       }}
                     >
-                      <Dashboard />
+                      <Tooltip title="Dashboard" arrow placement="right">
+                        <Dashboard />
+                      </Tooltip>
                     </ListItemIcon>
                     <ListItemText
                       primary={"Dashboard"}
@@ -473,7 +504,9 @@ export function SidebarAndAppBar({ children }: SidebarAndAppBarProps) {
                   justifyContent: "center",
                 }}
               >
-                <ExitToApp />
+                <Tooltip title="Sair" arrow placement="right">
+                  <ExitToApp />
+                </Tooltip>
               </ListItemIcon>
               <ListItemText primary={"Sair"} sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
