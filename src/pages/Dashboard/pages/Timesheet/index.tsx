@@ -256,10 +256,10 @@ export function Timesheet() {
         _projectManager,
         consultant,
         _closedScope,
-        approvedGpm,
         billablem,
-        releasedm,
+        approvedGpm,
         approvedADMm,
+        releasedm,
         releasedCall,
         _createdOn,
         _modifiedOn,
@@ -316,23 +316,10 @@ export function Timesheet() {
         desc = description;
       }
 
-      let approvedGpCheck = null;
-      let billableCheck = null;
-      let releasedCheck = null;
-      let approvedADMCheck = null;
-
-      if (approvedGpm == true || false) {
-        approvedGpCheck = approvedGpm;
-      }
-      if (billablem == true || false) {
-        billableCheck = billablem;
-      }
-      if (releasedm == true || false) {
-        releasedCheck = releasedm;
-      }
-      if (approvedADMm == true || false) {
-        approvedADMCheck = approvedADMm;
-      }
+      const approvedGpCheck = approvedGpm;
+      const billableCheck = billablem;
+      const releasedCheck = releasedm;
+      const approvedADMCheck = approvedADMm;
 
       let relCall = null;
       if (releasedCall) {
@@ -352,10 +339,12 @@ export function Timesheet() {
         ...(relProject && { relProject: relProject }),
         ...(relActivity && { relActivity: relActivity }),
         ...(rUser && { relUser: rUser }),
-        ...(approvedGpCheck !== null && { approvedGP: approvedGpCheck }),
-        ...(billableCheck !== null && { billable: billableCheck }),
-        ...(releasedCheck !== null && { released: releasedCheck }),
-        ...(approvedADMCheck !== null && { approved: approvedADMCheck }),
+        ...{ billable: billableCheck ? billableCheck : !billableCheck },
+        ...{ approvedGP: approvedGpCheck ? approvedGpCheck : !approvedGpCheck },
+        ...{
+          approved: approvedADMCheck ? approvedADMCheck : !approvedADMCheck,
+        },
+        ...{ released: releasedCheck ? releasedCheck : !releasedCheck },
         ...(desc && { activityDesc: desc }),
         ...(relCall && { releasedCall: relCall }),
       };
@@ -543,33 +532,43 @@ export function Timesheet() {
           relProject ? relProject?.title : " ",
           relActivity ? relActivity?.title : " ",
           activityDesc || " ",
-          relActivity && relProject && relClient && initial && final
-            ? (
-                Number(
-                  (relActivity.valueActivity
-                    ? relActivity.valueActivity
-                    : relProject.valueProject
-                    ? relProject.valueProject
-                    : relClient.valueClient
-                  ).toString()
-                ) *
-                (parseFloat(
-                  generateTotalHoursWithAdjustment(
-                    initial,
-                    final,
-                    adjustment ? adjustment : 0
-                  ).split(":")[0]
-                ) +
-                  parseFloat(
-                    generateTotalHoursWithAdjustment(
-                      initial,
-                      final,
-                      adjustment ? adjustment : 0
-                    ).split(":")[1]
-                  ) /
-                    60)
-              ).toFixed(2)
-            : " ",
+          relActivity && relActivity.closedScope
+            ? `R$ ${
+                relActivity.valueActivity
+                  ? relActivity.valueActivity
+                  : relProject.valueProject
+                  ? relProject.valueProject
+                  : relClient.valueClient
+              }`
+            : `R$ ${
+                relActivity && relProject && relClient && initial && final
+                  ? (
+                      Number(
+                        (relActivity.valueActivity
+                          ? relActivity.valueActivity
+                          : relProject.valueProject
+                          ? relProject.valueProject
+                          : relClient.valueClient
+                        ).toString()
+                      ) *
+                      (parseFloat(
+                        generateTotalHoursWithAdjustment(
+                          initial,
+                          final,
+                          adjustment ? adjustment : 0
+                        ).split(":")[0]
+                      ) +
+                        parseFloat(
+                          generateTotalHoursWithAdjustment(
+                            initial,
+                            final,
+                            adjustment ? adjustment : 0
+                          ).split(":")[1]
+                        ) /
+                          60)
+                    ).toFixed(2)
+                  : " "
+              }`,
           relActivity || relProject || relClient
             ? relActivity.gpActivity.length > 0
               ? relActivity.gpActivity
@@ -587,10 +586,10 @@ export function Timesheet() {
             : " ",
           `${relUser?.name} ${relUser?.surname}` || " ",
           relActivity ? relActivity.closedScope : " ",
-          approvedGP,
           billable,
-          released,
+          approvedGP,
           approved,
+          released,
           releasedCall || " ",
           `${generateDateWithTimestamp(createdAt)} ${generateTimeWithTimestamp(
             createdAt
@@ -1033,36 +1032,36 @@ export function Timesheet() {
         updatingId.activityDesc = description;
       }
     }
-    // Alterando Aprovado Gp
-    if (collumnChanged == 16) {
-      const value = newValue as boolean;
-      const updatingId = newChanges.find((o) => o.id === idChanged);
-      if (updatingId) {
-        updatingId.approvedGP = value;
-      }
-    }
     // Alterando Faturável
-    if (collumnChanged == 17) {
+    if (collumnChanged == 16) {
       const value = newValue as boolean;
       const updatingId = newChanges.find((o) => o.id === idChanged);
       if (updatingId) {
         updatingId.billable = value;
       }
     }
-    // Alterando Lançado
+    // Alterando Aprovado Gp
+    if (collumnChanged == 17) {
+      const value = newValue as boolean;
+      const updatingId = newChanges.find((o) => o.id === idChanged);
+      if (updatingId) {
+        updatingId.approvedGP = value;
+      }
+    }
+    // Alterando Aprovado ADM
     if (collumnChanged == 18) {
       const value = newValue as boolean;
       const updatingId = newChanges.find((o) => o.id === idChanged);
       if (updatingId) {
-        updatingId.released = value;
+        updatingId.approved = value;
       }
     }
-    // Alterando Aprovado ADM
+    // Alterando Lançado
     if (collumnChanged == 19) {
       const value = newValue as boolean;
       const updatingId = newChanges.find((o) => o.id === idChanged);
       if (updatingId) {
-        updatingId.approved = value;
+        updatingId.released = value;
       }
     }
     // Alterando Chamado Lançado
@@ -1121,27 +1120,43 @@ export function Timesheet() {
             : "Nenhum B.U.",
         DescricaoAtividade: activityDesc || " ",
         Valor:
-          Number(
-            (relActivity.valueActivity
-              ? relActivity.valueActivity
-              : relProject.valueProject
-              ? relProject.valueProject
-              : relClient.valueClient
-            ).toString()
-          ) *
-          (parseFloat(
-            generateTotalHoursWithAdjustment(initial, final, adjustment).split(
-              ":"
-            )[0]
-          ) +
-            parseFloat(
-              generateTotalHoursWithAdjustment(
-                initial,
-                final,
-                adjustment
-              ).split(":")[1]
-            ) /
-              60),
+          relActivity && relActivity.closedScope
+            ? `R$ ${
+                relActivity.valueActivity
+                  ? relActivity.valueActivity
+                  : relProject.valueProject
+                  ? relProject.valueProject
+                  : relClient.valueClient
+              }`
+            : `R$ ${
+                relActivity && relProject && relClient && initial && final
+                  ? (
+                      Number(
+                        (relActivity.valueActivity
+                          ? relActivity.valueActivity
+                          : relProject.valueProject
+                          ? relProject.valueProject
+                          : relClient.valueClient
+                        ).toString()
+                      ) *
+                      (parseFloat(
+                        generateTotalHoursWithAdjustment(
+                          initial,
+                          final,
+                          adjustment ? adjustment : 0
+                        ).split(":")[0]
+                      ) +
+                        parseFloat(
+                          generateTotalHoursWithAdjustment(
+                            initial,
+                            final,
+                            adjustment ? adjustment : 0
+                          ).split(":")[1]
+                        ) /
+                          60)
+                    ).toFixed(2)
+                  : " "
+              }`,
         GerenteProjetos:
           relActivity || relProject || relClient
             ? relActivity.gpActivity.length > 0
@@ -1160,10 +1175,10 @@ export function Timesheet() {
             : " ",
         Consultor: `${relUser?.name} ${relUser?.surname}` || " ",
         EscopoFechado: relActivity?.closedScope ? "sim" : "não",
-        AprovadoGP: approvedGP ? "sim" : "não",
         Faturável: billable ? "sim" : "não",
+        AprovadoGP: approvedGP ? "sim" : "não",
+        Ajustado: approved ? "sim" : "não",
         Lançado: released ? "sim" : "não",
-        Aprovado: approved ? "sim" : "não",
         ChamadoLancado: releasedCall ? releasedCall : " ",
         DataCriacao: `${generateDateWithTimestamp(
           createdAt
@@ -1231,33 +1246,43 @@ export function Timesheet() {
         relProject ? relProject?.title : " ",
         relActivity ? relActivity?.title : " ",
         activityDesc || " ",
-        relActivity && relProject && relClient && initial && final
-          ? (
-              Number(
-                (relActivity.valueActivity
-                  ? relActivity.valueActivity
-                  : relProject.valueProject
-                  ? relProject.valueProject
-                  : relClient.valueClient
-                ).toString()
-              ) *
-              (parseFloat(
-                generateTotalHoursWithAdjustment(
-                  initial,
-                  final,
-                  adjustment ? adjustment : 0
-                ).split(":")[0]
-              ) +
-                parseFloat(
-                  generateTotalHoursWithAdjustment(
-                    initial,
-                    final,
-                    adjustment ? adjustment : 0
-                  ).split(":")[1]
-                ) /
-                  60)
-            ).toFixed(2)
-          : " ",
+        relActivity && relActivity.closedScope
+          ? `R$ ${
+              relActivity.valueActivity
+                ? relActivity.valueActivity
+                : relProject.valueProject
+                ? relProject.valueProject
+                : relClient.valueClient
+            }`
+          : `R$ ${
+              relActivity && relProject && relClient && initial && final
+                ? (
+                    Number(
+                      (relActivity.valueActivity
+                        ? relActivity.valueActivity
+                        : relProject.valueProject
+                        ? relProject.valueProject
+                        : relClient.valueClient
+                      ).toString()
+                    ) *
+                    (parseFloat(
+                      generateTotalHoursWithAdjustment(
+                        initial,
+                        final,
+                        adjustment ? adjustment : 0
+                      ).split(":")[0]
+                    ) +
+                      parseFloat(
+                        generateTotalHoursWithAdjustment(
+                          initial,
+                          final,
+                          adjustment ? adjustment : 0
+                        ).split(":")[1]
+                      ) /
+                        60)
+                  ).toFixed(2)
+                : " "
+            }`,
         relActivity || relProject || relClient
           ? relActivity.gpActivity.length > 0
             ? relActivity.gpActivity
@@ -1275,10 +1300,10 @@ export function Timesheet() {
           : " ",
         `${relUser?.name} ${relUser?.surname}` || " ",
         relActivity ? relActivity.closedScope : " ",
-        approvedGP,
         billable,
-        released,
+        approvedGP,
         approved,
+        released,
         releasedCall || " ",
         `${generateDateWithTimestamp(createdAt)} ${generateTimeWithTimestamp(
           createdAt
@@ -1307,7 +1332,10 @@ export function Timesheet() {
     data: hoursDataGridData,
     filters: true,
     dropdownMenu: true,
+    contextMenu: true,
     rowHeaders: true,
+    manualColumnResize: true,
+    manualColumnFreeze: true,
     persistentState: true,
     autoSave: true, // habilita a função de autosave
   };
@@ -1638,13 +1666,13 @@ export function Timesheet() {
                   <button
                     className="lancarhoras"
                     onClick={async () => {
-                      console.log("Solucionando gambiarra:");
-                      console.log(clientsHook);
+                      // console.log("Solucionando gambiarra:");
+                      // console.log(clientsHook);
                       // console.log("modificações que serão enviadas no banco:");
                       // console.log("DELETAR:");
                       // console.log(idsSelectedForDelete);
-                      // console.log("EDIÇÕES:");
-                      // console.log(changes);
+                      console.log("EDIÇÕES:");
+                      console.log(changes);
                       // console.log("CRIAÇÕES:");
                       // console.log(numberOfNewReleases);
                       // console.log("HOURSDATAGRIDDATA:");
@@ -1671,19 +1699,27 @@ export function Timesheet() {
               settings={hotSettings}
               ref={hottable}
               className="handsontable"
+              fixedColumnsStart={2}
               height="60vh"
               width="100%"
               // mergeCells={}
               hiddenColumns={{
-                indicators: false,
+                indicators: true,
                 columns: [0, ...generateUserPermissions()],
                 // columns: [...generateUserPermissions()],
               }}
+              // afterDropdownMenuShow={(coords) => {}}
               afterOnCellMouseDown={(event, coords) => {
                 const column = coords.col;
                 const row = coords.row;
                 setActualClient("");
                 setActualProject("");
+
+                // abrindo o dropdown
+                hottable.current.hotInstance
+                  .getPlugin("dropdownMenu")
+                  .open(row, column);
+
                 // aqui fica a parte que seleciona o projeto e a atividade de acordo com o cliente
                 if (column == 9) {
                   setActualClient(hoursDataGridData[row][8]);
@@ -1746,7 +1782,7 @@ export function Timesheet() {
               }}
               afterSelection={async (
                 row,
-                _column,
+                column,
                 _row2,
                 _column2,
                 _preventScrolling,
@@ -1865,10 +1901,10 @@ export function Timesheet() {
               <HotColumn title="Gerente de Projetos" readOnly={true} />
               <HotColumn title="Consultor" readOnly={true} />
               <HotColumn title="Escopo Fechado" />
-              <HotColumn title="Aprovado GP" type="checkbox" />
               <HotColumn title="Faturável" type="checkbox" />
+              <HotColumn title="Aprovado GP" type="checkbox" />
+              <HotColumn title="Ajustado" type="checkbox" />
               <HotColumn title="Lançado" type="checkbox" />
-              <HotColumn title="Aprovado" type="checkbox" />
               <HotColumn title="Chamado Lançado" />
               <HotColumn title="Criado em" readOnly={true} />
               <HotColumn title="Editado em" readOnly={true} />

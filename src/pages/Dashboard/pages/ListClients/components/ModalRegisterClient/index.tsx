@@ -107,8 +107,8 @@ export function ModalRegisterClient({
         toast.success("Cadastro de cliente efetuado com sucesso!");
         setIsOpen((prevState) => !prevState);
       },
-      onError: () => {
-        toast.error("Ocorreu algum erro ao criar o cliente", {
+      onError: (err: any) => {
+        toast.error(err.response.data.message, {
           autoClose: 1500,
         });
       },
